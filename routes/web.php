@@ -17,7 +17,15 @@ use Laravel\Fortify\Features;
 // });
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('home');
 })->name('home');
+
+Route::get('/produk', function () {
+    return Inertia::render('product');
+})->name('product');
+
+Route::get('/mitra', function () {
+    return Inertia::render('mitra');
+})->name('mitra');
 
 require __DIR__.'/settings.php';
