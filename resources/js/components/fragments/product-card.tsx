@@ -12,7 +12,7 @@ interface ProductProps {
 
 export const ProductCard: React.FC<ProductProps> = () => {
     return (
-        <div className="flex h-fit shrink-0 flex-col gap-0 rounded-xl bg-slate-300 shadow-md md:w-75">
+        <div className="flex h-fit md:shrink-0 flex-col gap-0 rounded-xl bg-slate-300 shadow-md md:w-75">
             <div className="h-60 w-full">
                 <img
                     src="#"

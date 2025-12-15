@@ -1,5 +1,6 @@
 import { Button } from '../ui/button';
 import ContainerWrapper from './container-wrapper';
+import { ContainerReviewsCard } from './review-card';
 
 const JoinCard = () => {
     return (
@@ -44,11 +45,11 @@ const JoinCard = () => {
 
 const TopReviews = () => {
     return (
-        <div className="relative mt-20 flex h-40 w-full flex-col bg-secondary">
+        <div className="relative mt-20 flex h-fit w-full flex-col bg-secondary pb-10">
             <ContainerWrapper>
                 <JoinCard />
             </ContainerWrapper>
-            <div className="flex flex-col items-center justify-center bg-secondary py-50">
+            <div className="flex flex-col items-center justify-center bg-secondary pt-40">
                 <h1 className="w-full text-center font-poppins text-4xl font-bold text-white">
                     Apa Kata Orang-Orang
                 </h1>
@@ -56,6 +57,9 @@ const TopReviews = () => {
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Lorem ipsum dolor sit. lorem5
                 </p>
             </div>
+            <ContainerWrapper>
+                <ContainerReviewsCard />
+            </ContainerWrapper>
         </div>
     );
 };
