@@ -1,4 +1,4 @@
-import { home, mitra, product } from '@/routes';
+import { home, login, mitra, product } from '@/routes';
 import type { RouteDefinition } from '@/wayfinder';
 import { Link } from '@inertiajs/react';
 import ContainerWrapper from './fragments/container-wrapper';
@@ -43,7 +43,7 @@ const NavigationBar = () => {
                             className="h-8 rounded-sm px-8 text-xs font-bold"
                             asChild
                         >
-                            <Link href={home()}>Login</Link>
+                            <Link href={login()}>Login</Link>
                         </Button>
                     </div>
                 </div>

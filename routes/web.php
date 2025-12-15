@@ -10,11 +10,11 @@ use Laravel\Fortify\Features;
 //     ]);
 // })->name('home');
 
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('dashboard', function () {
-//         return Inertia::render('dashboard');
-//     })->name('dashboard');
-// });
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', function () {
+        return Inertia::render('dashboard');
+    })->name('dashboard');
+});
 
 Route::get('/', function () {
     return Inertia::render('home');
@@ -23,6 +23,14 @@ Route::get('/', function () {
 Route::get('/produk', function () {
     return Inertia::render('product');
 })->name('product');
+
+Route::get('/login', function () {
+    return Inertia::render('login');
+})->name('login');
+
+Route::get('/register', function () {
+    return Inertia::render('register');
+})->name('register');
 
 Route::get('/mitra', function () {
     return Inertia::render('mitra');
