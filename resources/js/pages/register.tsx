@@ -4,12 +4,25 @@ import Combobox from '@/components/ui/combobox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login } from '@/routes';
+import { registerSchema, RegisterSchema } from '@/schemas/register-validation';
+import { IRegisterInput } from '@/types/input-types';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from '@inertiajs/react';
 import { Eye, EyeClosed } from 'lucide-react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<RegisterSchema>({ resolver: zodResolver(registerSchema) });
+
+    const handleSubmitRegister = (data: IRegisterInput) => {
+        console.log(data);
+    };
 
     return (
         <MainLayout showFooter={false} showNavbar={false}>
@@ -22,7 +35,10 @@ const Register = () => {
                             className="h-full w-full rounded-l-2xl border-2 object-cover"
                         />
                     </div>
-                    <form className="flex min-h-[65vh] w-md flex-col items-start justify-center gap-6 rounded-r-2xl bg-white p-10">
+                    <form
+                        onSubmit={handleSubmit(handleSubmitRegister)}
+                        className="flex min-h-[65vh] w-md flex-col items-start justify-center gap-6 rounded-r-2xl bg-white p-10"
+                    >
                         <div className="flex flex-col gap-2">
                             <p className="text-4xl font-bold text-primary">
                                 Daftar
@@ -36,46 +52,84 @@ const Register = () => {
                             <div className="flex flex-col gap-4">
                                 <div className="flex flex-col gap-2">
                                     <Label>Nama Lengkap</Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Nama lengkap"
-                                    />
+                                    <div>
+                                        <Input
+                                            {...register('nama_lengkap')}
+                                            type="text"
+                                            placeholder="Nama lengkap"
+                                        />
+                                        {errors.nama_lengkap && (
+                                            <p className="text-xs text-red-500">
+                                                {errors.nama_lengkap.message}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <Label>Username</Label>
-                                    <Input type="text" placeholder="Username" />
+                                    <div>
+                                        <Input
+                                            {...register('username')}
+                                            type="text"
+                                            placeholder="Username"
+                                        />
+                                        {errors.username && (
+                                            <p className="text-xs text-red-500">
+                                                {errors.username.message}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <Label>Email</Label>
-                                    <Input
-                                        type="email"
-                                        placeholder="Contoh@gmail.com"
-                                    />
+                                    <div>
+                                        <Input
+                                            {...register('email')}
+                                            type="email"
+                                            placeholder="Contoh@gmail.com"
+                                        />
+                                        {errors.email && (
+                                            <p className="text-xs text-red-500">
+                                                {errors.email.message}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <Label>Password</Label>
-                                    <div className="relative">
-                                        <Input
-                                            type={
-                                                showPassword
-                                                    ? 'text'
-                                                    : 'password'
-                                            }
-                                            placeholder="Masukan passwordmu di sini"
-                                        />
-                                        <Button
-                                            type="button"
-                                            onClick={() =>
-                                                setShowPassword(!showPassword)
-                                            }
-                                            className="absolute top-1/2 right-1 -translate-y-1/2 bg-transparent text-primary hover:bg-transparent"
-                                        >
-                                            {showPassword ? (
-                                                <EyeClosed />
-                                            ) : (
-                                                <Eye />
-                                            )}
-                                        </Button>
+                                    <div>
+                                        <div className="relative">
+                                            <Input
+                                                type={
+                                                    showPassword
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
+                                                {...register('password')}
+                                                placeholder="Masukan passwordmu di sini"
+                                            />
+
+                                            <Button
+                                                type="button"
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword,
+                                                    )
+                                                }
+                                                className="absolute top-1/2 right-1 -translate-y-1/2 bg-transparent text-primary hover:bg-transparent"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeClosed />
+                                                ) : (
+                                                    <Eye />
+                                                )}
+                                            </Button>
+                                        </div>
+                                        {errors.password && (
+                                            <p className="text-xs text-red-500">
+                                                {errors.password.message}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -84,7 +138,9 @@ const Register = () => {
                                 </div>
                             </div>
                             <div className="flex w-full flex-col gap-4">
-                                <Button type='submit' size={'lg'}>Masuk</Button>
+                                <Button type="submit" size={'lg'}>
+                                    Masuk
+                                </Button>
                                 <p className="w-full text-center text-xs">
                                     Sudah punya akun?
                                     <Link
