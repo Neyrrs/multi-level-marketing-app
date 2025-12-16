@@ -12,15 +12,15 @@ const MainLayout = ({
     showFooter?: boolean;
 }) => {
     return (
-        <>
+        <div className="flex min-h-screen flex-col">
             {showNavbar && <NavigationBar />}
-            <div
-                className={`min-h-screen max-w-screen ${showNavbar ? 'pt-15' : ''}`}
-            >
+
+            <main className={`flex-1 ${showNavbar ? 'pt-15' : ''}`}>
                 {children}
-            </div>
+            </main>
+
             {showFooter && <Footer />}
-        </>
+        </div>
     );
 };
 

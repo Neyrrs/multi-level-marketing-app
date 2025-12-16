@@ -4,7 +4,7 @@ import ContainerWrapper from './fragments/container-wrapper';
 
 const Footer = () => {
     return (
-        <footer className='bg-white'>
+        <footer className="bg-white">
             <ContainerWrapper>
                 <div className="py-10">
                     <div className="flex flex-col gap-8 md:flex-row md:justify-between">
