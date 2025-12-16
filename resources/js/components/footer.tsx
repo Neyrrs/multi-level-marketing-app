@@ -4,12 +4,12 @@ import ContainerWrapper from './fragments/container-wrapper';
 
 const Footer = () => {
     return (
-        <footer>
+        <footer className='bg-white'>
             <ContainerWrapper>
                 <div className="py-10">
                     <div className="flex flex-col gap-8 md:flex-row md:justify-between">
                         <div className="max-w-md">
-                            <div className="mb-3 flex items-center gap-2 text-3xl">
+                            <div className="mb-3 flex items-center font-bold gap-2 text-3xl">
                                 ALUS
                             </div>
                             <p className="text-sm leading-relaxed">

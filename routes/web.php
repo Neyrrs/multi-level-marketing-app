@@ -36,4 +36,10 @@ Route::get('/mitra', function () {
     return Inertia::render('mitra');
 })->name('mitra');
 
+Route::get('/detail-product/{slug}', function ($slug) {
+    return Inertia::render('detail-product',[
+        'slug' => $slug,
+    ]);
+})->name('detail-product');
+
 require __DIR__.'/settings.php';
