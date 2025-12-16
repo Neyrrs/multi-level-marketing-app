@@ -9,7 +9,7 @@ const Footer = () => {
                 <div className="py-10">
                     <div className="flex flex-col gap-8 md:flex-row md:justify-between">
                         <div className="max-w-md">
-                            <div className="mb-3 flex items-center gap-2 text-3xl">
+                            <div className="mb-3 flex items-center gap-2 text-3xl font-bold">
                                 ALUS
                             </div>
                             <p className="text-sm leading-relaxed">
