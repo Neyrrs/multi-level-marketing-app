@@ -36,4 +36,16 @@ Route::get('/mitra', function () {
     return Inertia::render('mitra');
 })->name('mitra');
 
+Route::get('/profile', function () {
+    return Inertia::render('profile');
+})->name('profile');
+
+Route::get('/cart', function () {
+    return Inertia::render('cart');
+})->name('cart');
+
+Route::get('/edit-profile', function () {
+    return Inertia::render('edit-profile');
+})->name('edit-profile');
+
 require __DIR__.'/settings.php';
