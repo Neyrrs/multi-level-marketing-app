@@ -11,7 +11,6 @@ const Profile = () => {
         <MainLayout showNavbar showFooter>
             <div className="py-16">
                 <ContainerWrapper>
-                    {/* HEADER */}
                     <div className="mb-6 flex items-center gap-4">
                         <h1 className="text-2xl font-bold text-primary">
                             Profilku
@@ -19,7 +18,6 @@ const Profile = () => {
                         <div className="flex-1 border-t border-black" />
                     </div>
 
-                    {/* PROFILE CARD */}
                     <div className="mb-10 flex items-center gap-8 rounded-3xl bg-white p-8 shadow-lg">
                         <img
                             src=""
@@ -40,14 +38,17 @@ const Profile = () => {
                     </div>
 
                     <div className="mb-10 rounded-3xl bg-white p-8 shadow-lg">
-                        <div className="mb-6 flex items-center justify-between">
-                            <h2 className="text-lg font-semibold text-primary">
-                                Informasi Personal
-                            </h2>
+                        <div className="mb-6">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-lg font-semibold text-primary">
+                                    Informasi Personal
+                                </h2>
 
-                            <Button size="sm" asChild>
-                                <Link href={editProfile()}>Edit</Link>
-                            </Button>
+                                <Button size="sm" asChild>
+                                    <Link href={editProfile()}>Edit</Link>
+                                </Button>
+                            </div>
+                            <div className="mt-3 h-px w-full bg-black" />
                         </div>
 
                         <div className="grid grid-cols-1 gap-y-8 md:grid-cols-4 md:gap-x-12">

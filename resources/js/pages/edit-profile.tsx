@@ -1,19 +1,54 @@
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import MainLayout from '@/components/fragments/main-layout';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Link } from '@inertiajs/react';
 
 const EditProfile = () => {
     return (
         <MainLayout>
             <div className="pt-15 pb-16">
                 <ContainerWrapper>
-                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                        <div className="rounded-3xl bg-white p-8 shadow-lg">
-                            <h2 className="mb-4 text-lg font-semibold text-primary">
-                                Foto Profil
-                            </h2>
+                    <Breadcrumb className="mb-6">
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink asChild>
+                                    <Link
+                                        href="/profile"
+                                        className="text-base font-bold"
+                                    >
+                                        Profile
+                                    </Link>
+                                </BreadcrumbLink>
+                            </BreadcrumbItem>
+
+                            <BreadcrumbSeparator />
+
+                            <BreadcrumbItem>
+                                <BreadcrumbPage className="text-base font-bold text-primary">
+                                    Edit Profile
+                                </BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+
+                    <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+                        <div className="rounded-3xl bg-white p-8 shadow-lg lg:col-span-4">
+                            <div className="mb-6">
+                                <h2 className="text-lg font-semibold text-primary">
+                                    Foto Profil
+                                </h2>
+                                <div className="mt-2 h-px w-full bg-black" />
+                            </div>
 
                             <div className="flex flex-col items-center gap-4">
                                 <div className="h-40 w-40 overflow-hidden rounded-full border-4 border-primary">
@@ -29,10 +64,13 @@ const EditProfile = () => {
                             </div>
                         </div>
 
-                        <div className="rounded-3xl bg-white p-8 shadow-lg lg:col-span-2">
-                            <h2 className="mb-6 text-lg font-semibold text-primary">
-                                Informasi Personal
-                            </h2>
+                        <div className="rounded-3xl bg-white p-8 shadow-lg lg:col-span-8">
+                            <div className="mb-6">
+                                <h2 className="text-lg font-semibold text-primary">
+                                    Informasi Personal
+                                </h2>
+                                <div className="mt-2 h-px w-full bg-black" />
+                            </div>
 
                             <div className="grid grid-cols-1 gap-y-8 md:grid-cols-4 md:gap-x-12">
                                 <div>
@@ -65,13 +103,15 @@ const EditProfile = () => {
                                 </div>
                                 <div className="md:col-span-4">
                                     <Label>Alamat</Label>
-                                    <textarea className="mt-1 min-h-[120px] w-full resize-none rounded-md border border-input px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+                                    <textarea
+                                        className="mt-1 min-h-[160px] w-full resize-none rounded-md border-2 border-primary px-3 py-3 text-sm focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                                        defaultValue="Donec imperdiet euismod finibus. Sed eu nibh aliquet, ultrices erat a, fermentum leo. Duis purus turpis, scelerisque id nisl eget, aliquet porta ipsum. Vestibulum tortor enim, interdum ac cursus ut, egestas eget velit. Sed leo odio, viverra ac nibh quis, auctor egestas lacus. Vivamus vitae orci luctus, maximus nisi et, volutpat elit. Donec id fringilla lectus"
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* ACTION */}
                     <div className="mt-10 flex justify-end gap-4">
                         <Button
                             variant="outline"
