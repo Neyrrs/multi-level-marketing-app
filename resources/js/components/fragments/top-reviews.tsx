@@ -27,7 +27,7 @@ const JoinCard = () => {
                             <img
                                 src=""
                                 alt="ini adalah profil"
-                                className="h-full w-full rounded-full border"
+                                className="h-full w-full rounded-full border border-primary"
                             />
                         </div>
                         <div className="flex flex-col">
