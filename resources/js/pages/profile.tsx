@@ -125,11 +125,19 @@ const Profile = () => {
                         <h2 className="mb-2 text-lg font-semibold text-primary">
                             Kode Aktivasi
                         </h2>
+
                         <p className="mb-4 text-sm opacity-70">
                             Lorem ipsum dolor sit amet, consectetur adipiscing
                             elit. Nullam risus odio, dictum id turpis vitae.
                         </p>
-                        <Input placeholder="Masukkan kode aktivasi" />
+
+                        <div className="flex flex-col gap-4">
+                            <Input placeholder="Masukkan kode aktivasi" />
+
+                            <div className="flex justify-end">
+                                <Button>Simpan</Button>
+                            </div>
+                        </div>
                     </div>
                 </ContainerWrapper>
             </div>
