@@ -1,10 +1,11 @@
-import { home, login, mitra, product, profile } from '@/routes';
+import { cart, home, login, mitra, product, profile } from '@/routes';
 import type { RouteDefinition } from '@/wayfinder';
 import { Link } from '@inertiajs/react';
-import { LayoutDashboard, LogOut, User2 } from 'lucide-react';
+import { LayoutDashboard, LogOut, ShoppingCart, User2 } from 'lucide-react';
 import { useState } from 'react';
 import ContainerWrapper from './fragments/container-wrapper';
 import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 
 type UserRole = 'user' | 'admin';
 
@@ -42,9 +43,12 @@ const NavigationBar = () => {
         <nav className="fixed z-20 h-15 w-full bg-card">
             <ContainerWrapper>
                 <div className="flex h-full w-full items-center justify-between">
-                    <div className="flex h-full w-20 items-center text-2xl font-bold">
+                    <Link
+                        href={home()}
+                        className="flex h-full w-20 items-center text-2xl font-bold"
+                    >
                         Helo
-                    </div>
+                    </Link>
                     <div className="flex h-full w-fit items-center gap-5 font-poppins">
                         {links.map((item, i) => (
                             <Link
@@ -57,22 +61,28 @@ const NavigationBar = () => {
                         ))}
                     </div>
                     {isLoggedIn ? (
-                        <div className="flex items-center gap-2">
-                            <p className="font-poppins font-semibold text-primary">
-                                John Doe
-                            </p>
-                            <div
-                                className="relative h-10 w-10"
-                                onClick={() => setShowPopup(!showPopup)}
-                            >
-                                <img
-                                    src="#"
-                                    alt="Ini adalah profil"
-                                    className="aspect-square h-full w-full rounded-full border-2 border-primary object-fill"
-                                />
-                                {showPopup && (
-                                    <NavbarPopup userRole={userRole} />
-                                )}
+                        <div className="flex gap-4">
+                            <Button size={'icon'} className='shadow-none relative text-primary font-bold bg-transparent hover:bg-transparent' onClick={() => cart()}>
+                                <ShoppingCart className='size-6'/>
+                                <Badge className='bg-red-500 w-fit h-fit flex items-center justify-center absolute -top-1 -right-2 text-[10px]'>10</Badge>
+                            </Button>
+                            <div className="flex items-center gap-2">
+                                <p className="font-poppins font-semibold text-primary">
+                                    John Doe
+                                </p>
+                                <div
+                                    className="relative h-10 w-10"
+                                    onClick={() => setShowPopup(!showPopup)}
+                                >
+                                    <img
+                                        src="#"
+                                        alt="Ini adalah profil"
+                                        className="aspect-square h-full w-full rounded-full border-2 border-primary object-fill"
+                                    />
+                                    {showPopup && (
+                                        <NavbarPopup userRole={userRole} />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ) : (
@@ -114,7 +124,7 @@ const NavbarPopup = ({ userRole }: { userRole: UserRole }) => {
     ];
 
     return (
-        <div className="absolute top-full mt-4 flex w-45 -translate-x-35 flex-col gap-2 rounded-xl border-3 border-border bg-white py-5 px-2 shadow-md">
+        <div className="absolute top-full mt-4 flex w-45 -translate-x-35 flex-col gap-2 rounded-xl border-3 border-border bg-white px-2 py-5 shadow-md">
             {navigations
                 .filter((item) => !item.roles || item.roles.includes(userRole))
                 .map((item, idx) => (
@@ -123,7 +133,7 @@ const NavbarPopup = ({ userRole }: { userRole: UserRole }) => {
                         href={item.link}
                         className="group flex items-center justify-between rounded-md px-3 py-2 text-foreground transition-all duration-200 hover:bg-muted hover:text-primary"
                     >
-                        <div className="flex items-center justify-between w-full">
+                        <div className="flex w-full items-center justify-between">
                             {item.icon}
                             <span className="font-medium">{item.name}</span>
                         </div>
