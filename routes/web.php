@@ -36,13 +36,12 @@ Route::get('/mitra', function () {
     return Inertia::render('mitra');
 })->name('mitra');
 
-<<<<<<< HEAD
 Route::get('/detail-product/{slug}', function ($slug) {
     return Inertia::render('detail-product',[
         'slug' => $slug,
     ]);
 })->name('detail-product');
-=======
+
 Route::get('/profile', function () {
     return Inertia::render('profile');
 })->name('profile');
@@ -54,6 +53,5 @@ Route::get('/cart', function () {
 Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
->>>>>>> 095cb2497b3e155c1c3a0d7d2e9cf9ab3fd4e96d
 
 require __DIR__.'/settings.php';
