@@ -5,11 +5,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { editProfile } from '@/routes';
 import { Link } from '@inertiajs/react';
+import { useForm } from 'react-hook-form';
 
+interface IActivationCode {
+    activation_code: string;
+}
 const Profile = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<IActivationCode>();
+
+    const handleSubmitActivationCode = (data: IActivationCode) => {
+        console.log(data)
+    };
     return (
         <MainLayout showNavbar showFooter>
-            <div className="py-16">
+            <div className="py-10">
                 <ContainerWrapper>
                     <div className="mb-6 flex items-center gap-4">
                         <h1 className="text-2xl font-bold text-primary">
@@ -22,7 +35,7 @@ const Profile = () => {
                         <img
                             src=""
                             alt="Foto Profil"
-                            className="h-24 w-24 rounded-full object-cover"
+                            className="h-24 w-24 rounded-full object-cover border-3 border-primary"
                         />
                         <div className="flex flex-col">
                             <p className="text-lg font-bold text-primary">
@@ -90,7 +103,7 @@ const Profile = () => {
                                 <Label className="font-bold text-primary">
                                     Alamat
                                 </Label>
-                                <p className="max-w-xs text-sm leading-relaxed break-words whitespace-normal opacity-80">
+                                <p className="wrap-break-words max-w-xs text-sm leading-relaxed whitespace-normal opacity-80">
                                     Suspendisse pharetra accumsan venenatis. Sed
                                     consectetur non libero in
                                 </p>
@@ -121,23 +134,45 @@ const Profile = () => {
                         </div>
                     </div>
 
-                    <div className="rounded-3xl bg-white p-8 shadow-lg">
-                        <h2 className="mb-2 text-lg font-semibold text-primary">
+                    <div className="rounded-3xl bg-white p-6 shadow-lg">
+                        <Label
+                            htmlFor="activation_code"
+                            className="text-lg font-semibold text-primary"
+                        >
                             Kode Aktivasi
-                        </h2>
+                        </Label>
 
                         <p className="mb-4 text-sm opacity-70">
                             Lorem ipsum dolor sit amet, consectetur adipiscing
                             elit. Nullam risus odio, dictum id turpis vitae.
                         </p>
 
-                        <div className="flex flex-col gap-4">
-                            <Input placeholder="Masukkan kode aktivasi" />
+                        <form
+                            onSubmit={handleSubmit(handleSubmitActivationCode)}
+                            className="flex flex-col gap-2"
+                        >
+                            <div>
+                                <Input
+                                    placeholder="Masukkan kode aktivasi"
+                                    {...register('activation_code', {
+                                        required: {
+                                            value: true,
+                                            message:
+                                                'Kode aktivasi wajib diisi',
+                                        },
+                                    })}
+                                />
+                                {errors.activation_code && (
+                                    <p className="text-xs text-red-500">
+                                        {errors.activation_code.message}
+                                    </p>
+                                )}
+                            </div>
 
                             <div className="flex justify-end">
-                                <Button>Simpan</Button>
+                                <Button type="submit">Simpan</Button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </ContainerWrapper>
             </div>

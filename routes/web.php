@@ -54,8 +54,4 @@ Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
 
-Route::get('/all-product', function () {
-    return Inertia::render('all-product');
-})->name('all-product');
-
 require __DIR__.'/settings.php';
