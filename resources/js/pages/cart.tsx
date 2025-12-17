@@ -58,7 +58,7 @@ const Cart = () => {
 
     return (
         <MainLayout>
-            <div className="py-16">
+            <div className="py-10">
                 <ContainerWrapper>
                     <div className="mb-6 flex items-center gap-4">
                         <h1 className="text-2xl font-bold text-primary">
