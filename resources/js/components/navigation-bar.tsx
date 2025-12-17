@@ -4,8 +4,8 @@ import { Link } from '@inertiajs/react';
 import { LayoutDashboard, LogOut, ShoppingCart, User2 } from 'lucide-react';
 import { useState } from 'react';
 import ContainerWrapper from './fragments/container-wrapper';
-import { Button } from './ui/button';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
 
 type UserRole = 'user' | 'admin';
 
@@ -62,9 +62,16 @@ const NavigationBar = () => {
                     </div>
                     {isLoggedIn ? (
                         <div className="flex gap-4">
-                            <Button size={'icon'} className='shadow-none relative text-primary font-bold bg-transparent hover:bg-transparent' onClick={() => cart()}>
-                                <ShoppingCart className='size-6'/>
-                                <Badge className='bg-red-500 w-fit h-fit flex items-center justify-center absolute -top-1 -right-2 text-[10px]'>10</Badge>
+                            <Button
+                                className="relative bg-transparent font-bold text-primary shadow-none hover:bg-transparent"
+                                asChild
+                            >
+                                <Link href={cart()}>
+                                    <ShoppingCart className="size-6" />
+                                    <Badge className="absolute -top-1 -right-2 flex h-fit w-fit items-center justify-center bg-red-500 text-[10px]">
+                                        10
+                                    </Badge>
+                                </Link>
                             </Button>
                             <div className="flex items-center gap-2">
                                 <p className="font-poppins font-semibold text-primary">
