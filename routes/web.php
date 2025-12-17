@@ -36,16 +36,12 @@ Route::get('/mitra', function () {
     return Inertia::render('mitra');
 })->name('mitra');
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
 Route::get('/detail-product/{slug}', function ($slug) {
     return Inertia::render('detail-product',[
         'slug' => $slug,
     ]);
 })->name('detail-product');
-=======
->>>>>>> b0bda78d2d0da715b0f29abc987a95d91d657875
+
 Route::get('/profile', function () {
     return Inertia::render('profile');
 })->name('profile');
@@ -57,9 +53,9 @@ Route::get('/cart', function () {
 Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
-<<<<<<< HEAD
-=======
->>>>>>> 095cb2497b3e155c1c3a0d7d2e9cf9ab3fd4e96d
->>>>>>> b0bda78d2d0da715b0f29abc987a95d91d657875
+
+Route::get('/all-product', function () {
+    return Inertia::render('all-product');
+})->name('all-product');
 
 require __DIR__.'/settings.php';
