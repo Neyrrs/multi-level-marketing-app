@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Spatie\Permission\Models\Role;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -30,10 +31,21 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $this->passwordRules(),
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
         ]);
+
+        // Assign a default role if roles exist (avoid failing when seeder not run)
+        try {
+            if (Role::where('name', 'guest')->exists()) {
+                $user->assignRole('guest');
+            }
+        } catch (\Throwable $e) {
+            // If Spatie tables are not present or any error occurs, skip role assignment
+        }
+
+        return $user;
     }
 }
