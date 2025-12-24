@@ -12,6 +12,8 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginResponse;
+use App\Actions\Fortify\FortifyLoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,9 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        // Use custom login response to redirect users based on role
+        $this->app->singleton(LoginResponse::class, FortifyLoginResponse::class);
     }
 
     /**
