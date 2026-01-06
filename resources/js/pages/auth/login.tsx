@@ -110,7 +110,7 @@ const Login = () => {
                                     <p className="text-center text-xs">
                                         Belum punya akun?{' '}
                                         <Link
-                                            href={registerPage()}
+                                            href={register()}
                                             className="font-bold text-primary"
                                         >
                                             Daftar Sekarang
