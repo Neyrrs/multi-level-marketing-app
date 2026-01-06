@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { register as registerPage } from '@/routes';
+import AuthLayout from '@/layouts/auth-layout';
+import { register } from '@/routes/';
 import { store } from '@/routes/login';
 import { Form, Link } from '@inertiajs/react';
 import { Eye, EyeClosed } from 'lucide-react';
@@ -109,7 +110,7 @@ const Login = () => {
                                     <p className="text-center text-xs">
                                         Belum punya akun?{' '}
                                         <Link
-                                            href={registerPage()}
+                                            href={register()}
                                             className="font-bold text-primary"
                                         >
                                             Daftar Sekarang

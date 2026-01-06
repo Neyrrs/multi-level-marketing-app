@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Spatie\Permission\Middleware\RoleMiddleware;
+use App\Http\Controllers\Admin;
+use App\Http\Controllers\Manager;
+use App\Http\Controllers\Affiliate;
+use App\Http\Controllers\Logistik;
+use App\Http\Controllers\Finance;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -18,39 +23,140 @@ use Spatie\Permission\Middleware\RoleMiddleware;
 // });
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Guest / default dashboard (name: dashboard)
+    /*
+    |--------------------------------------------------------------------------
+    | GUEST
+    |--------------------------------------------------------------------------
+    */
     Route::middleware([RoleMiddleware::class . ':guest'])->group(function () {
-        Route::get('dashboard', function () {
-            return Inertia::render('guest/dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', fn () => Inertia::render('guest/dashboard'))
+            ->name('dashboard');
     });
 
-    // Admin dashboard (name: dashboard.admin)
-    Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
-        Route::get('admin/dashboard', function () {
-            return Inertia::render('admin/dashboard');
-        })->name('dashboard.admin');
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware([RoleMiddleware::class . ':admin'])
+        ->group(function () {
+
+        Route::get('dashboard', fn () => Inertia::render('admin/dashboard'))
+            ->name('dashboard');
+
+        Route::resource('products', Admin\MasterProdukController::class);
+        Route::resource('affiliates', Admin\ManajemenAffiliateController::class);
+        Route::resource('plans', Admin\PlanController::class);
+        Route::resource('commissions', Admin\KomisiController::class);
+
+        Route::resource('orders', Admin\OrderController::class);
+        Route::resource('transactions', Admin\TransactionController::class);
+
+        Route::get('reports/sales', [Admin\Report\SalesReportController::class, 'index'])
+            ->name('reports.sales');
+
+        Route::get('reports/affiliates', [Admin\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.affiliates');
+
+        Route::get('reports/finance', [Admin\Report\FinanceReportController::class, 'index'])
+            ->name('reports.finance');
+
+        Route::get('reports/products', [Admin\Report\ProductReportController::class, 'index'])
+            ->name('reports.products');
     });
 
-    // Manager dashboard (name: dashboard.manager)
-    Route::middleware([RoleMiddleware::class . ':manager'])->group(function () {
-        Route::get('manager/dashboard', function () {
-            return Inertia::render('manager/dashboard');
-        })->name('dashboard.manager');
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAGER
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('manager')
+        ->name('manager.')
+        ->middleware([RoleMiddleware::class . ':manager'])
+        ->group(function () {
+
+        Route::get('dashboard', fn () => Inertia::render('manager/dashboard'))
+            ->name('dashboard');
+
+        Route::get('reports/sales', [Manager\Report\SalesReportController::class, 'index'])
+            ->name('reports.sales');
+
+        Route::get('reports/affiliates', [Manager\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.affiliates');
+
+        Route::get('reports/finance', [Manager\Report\FinanceReportController::class, 'index'])
+            ->name('reports.finance');
+
+        Route::get('reports/products', [Manager\Report\ProductReportController::class, 'index'])
+            ->name('reports.products');
     });
 
-    // Logistik dashboard (name: dashboard.logistik)
-    Route::middleware([RoleMiddleware::class . ':logistik'])->group(function () {
-        Route::get('logistik/dashboard', function () {
-            return Inertia::render('logistik/dashboard');
-        })->name('dashboard.logistik');
+
+    /*
+    |--------------------------------------------------------------------------
+    | AFFILIATE
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('affiliate')
+        ->name('affiliate.')
+        ->middleware([RoleMiddleware::class . ':affiliate'])
+        ->group(function () {
+
+        Route::get('dashboard', fn () => Inertia::render('affiliate/dashboard'))
+            ->name('dashboard');
+
+        Route::resource('products', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('activation-codes', Affiliate\ActivationCodeController::class);
+        Route::resource('commissions', Affiliate\CommissionController::class)->only(['index']);
+
+        Route::get('network', [Affiliate\NetworkController::class, 'index'])
+            ->name('network');
     });
 
-    // Affiliate dashboard (name: dashboard.affiliate)
-    Route::middleware([RoleMiddleware::class . ':affiliate'])->group(function () {
-        Route::get('affiliate/dashboard', function () {
-            return Inertia::render('affiliate/dashboard');
-        })->name('dashboard.affiliate');
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOGISTIK
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('logistik')
+        ->name('logistik.')
+        ->middleware([RoleMiddleware::class . ':logistik'])
+        ->group(function () {
+
+        Route::get('dashboard', fn () => Inertia::render('logistik/dashboard'))
+            ->name('dashboard');
+
+        Route::resource('orders', Logistik\OrderController::class);
+        Route::resource('inventory', Logistik\InventoryController::class);
+        Route::resource('returns', Logistik\ReturnController::class);
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FINANCE
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('finance')
+        ->name('finance.')
+        ->middleware([RoleMiddleware::class . ':finance'])
+        ->group(function () {
+
+        Route::get('dashboard', fn () => Inertia::render('finance/dashboard'))
+            ->name('dashboard');
+
+        Route::resource('transactions', Finance\TransactionController::class);
+        Route::resource('withdrawals', Finance\WithdrawalController::class);
+
+        Route::get('reports', [Finance\FinanceReportController::class, 'index'])
+            ->name('reports.index');
+
+        Route::get('network', [Finance\NetworkController::class, 'index'])
+            ->name('network');
     });
 
 });
