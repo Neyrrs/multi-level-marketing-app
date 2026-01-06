@@ -198,5 +198,8 @@ Route::get('/cart', function () {
 Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
+Route::get('/dashboard-sementara', function () {
+    return Inertia::render('dashboard/dashboard');
+})->name('dashboard.dashboard');
 
 require __DIR__.'/settings.php';
