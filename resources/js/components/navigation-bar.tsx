@@ -1,4 +1,4 @@
-import { cart, home, login, mitra, product, profile } from '@/routes';
+import { cart, dashboard, home, login, mitra, product, profile } from '@/routes';
 import type { RouteDefinition } from '@/wayfinder';
 import { Link } from '@inertiajs/react';
 import { LayoutDashboard, LogOut, ShoppingCart, User2 } from 'lucide-react';
@@ -47,7 +47,7 @@ const NavigationBar = () => {
                         href={home()}
                         className="flex h-full w-20 items-center text-2xl font-bold"
                     >
-                        Helo
+                        Alus
                     </Link>
                     <div className="flex h-full w-fit items-center gap-5 font-poppins">
                         {links.map((item, i) => (
@@ -118,7 +118,7 @@ const NavbarPopup = ({ userRole }: { userRole: UserRole }) => {
         },
         {
             name: 'Dasbor',
-            link: home(),
+            link: dashboard(),
             icon: <LayoutDashboard className="h-5 w-5" />,
             roles: ['admin'],
         },
