@@ -17,19 +17,23 @@ class FortifyLoginResponse implements LoginResponseContract
 
         // Redirect based on role, fall back to generic dashboard
         if ($user->hasRole('admin')) {
-            return redirect()->intended(route('dashboard.admin'));
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         if ($user->hasRole('manager')) {
-            return redirect()->intended(route('dashboard.manager'));
+            return redirect()->intended(route('manager.dashboard'));
         }
 
         if ($user->hasRole('logistik')) {
-            return redirect()->intended(route('dashboard.logistik'));
+            return redirect()->intended(route('logistik.dashboard'));
         }
 
         if ($user->hasRole('affiliate')) {
-            return redirect()->intended(route('dashboard.affiliate'));
+            return redirect()->intended(route('affiliate.dashboard'));
+        }
+
+        if ($user->hasRole('finance')) {
+            return redirect()->intended(route('finance.dashboard'));
         }
 
         // default/guest

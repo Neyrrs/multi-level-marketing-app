@@ -21,6 +21,7 @@ class RoleSeeder extends Seeder
             'manager',
             'logistik',
             'affiliate',
+            'finance',
             'guest',
         ];
 
