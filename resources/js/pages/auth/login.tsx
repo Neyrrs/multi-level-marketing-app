@@ -1,120 +1,128 @@
+import MainLayout from '@/components/fragments/main-layout';
 import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
+import { register as registerPage } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/react';
+import { Form, Link } from '@inertiajs/react';
+import { Eye, EyeClosed } from 'lucide-react';
+import { useState } from 'react';
 
-interface LoginProps {
-    status?: string;
-    canResetPassword: boolean;
-    canRegister: boolean;
-}
+const Login = () => {
+    const [showPassword, setShowPassword] = useState(false);
 
-export default function Login({
-    status,
-    canResetPassword,
-    canRegister,
-}: LoginProps) {
     return (
-        <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
-        >
-            <Head title="Log in" />
+        <MainLayout showFooter={false} showNavbar={false}>
+            <div className="flex h-screen w-screen items-center justify-center">
+                <div className="flex h-fit w-fit shadow-md">
+                    {/* LEFT IMAGE */}
+                    <div className="h-[65vh] w-md">
+                        <img
+                            src="#"
+                            alt="login image"
+                            className="h-full w-full rounded-l-2xl border-2 object-cover"
+                        />
+                    </div>
 
-            <Form
-                {...store.form()}
-                resetOnSuccess={['password']}
-                className="flex flex-col gap-6"
-            >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
-
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
-                                        >
-                                            Forgot password?
-                                        </TextLink>
-                                    )}
+                    {/* FORM */}
+                    <Form
+                        {...store.form()}
+                        resetOnSuccess={['password']}
+                        className="flex h-[65vh] w-md flex-col justify-center gap-6 rounded-r-2xl bg-white p-10"
+                    >
+                        {({ processing, errors }) => (
+                            <>
+                                {/* TITLE */}
+                                <div className="flex flex-col gap-2">
+                                    <p className="text-4xl font-bold text-primary">
+                                        Masuk
+                                    </p>
+                                    <p className="text-xs opacity-80">
+                                        Silahkan masukan akun anda yang sudah
+                                        terdaftar.
+                                    </p>
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox
-                                    id="remember"
-                                    name="remember"
-                                    tabIndex={3}
-                                />
-                                <Label htmlFor="remember">Remember me</Label>
-                            </div>
+                                {/* INPUT */}
+                                <div className="flex flex-col gap-6">
+                                    {/* EMAIL */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label>Email</Label>
+                                        <Input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Contoh@gmail.com"
+                                            required
+                                        />
+                                        <InputError message={errors.email} />
+                                    </div>
 
-                            <Button
-                                type="submit"
-                                className="mt-4 w-full"
-                                tabIndex={4}
-                                disabled={processing}
-                                data-test="login-button"
-                            >
-                                {processing && <Spinner />}
-                                Log in
-                            </Button>
-                        </div>
+                                    {/* PASSWORD */}
+                                    <div className="flex flex-col gap-2">
+                                        <Label>Password</Label>
+                                        <div className="relative">
+                                            <Input
+                                                type={
+                                                    showPassword
+                                                        ? 'text'
+                                                        : 'password'
+                                                }
+                                                name="password"
+                                                placeholder="Masukan passwordmu di sini"
+                                                required
+                                            />
+                                            <Button
+                                                type="button"
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword,
+                                                    )
+                                                }
+                                                className="absolute top-1/2 right-2 -translate-y-1/2 bg-transparent text-primary hover:bg-transparent"
+                                            >
+                                                {showPassword ? (
+                                                    <EyeClosed />
+                                                ) : (
+                                                    <Eye />
+                                                )}
+                                            </Button>
+                                        </div>
+                                        <InputError message={errors.password} />
+                                    </div>
+                                </div>
 
-                        {canRegister && (
-                            <div className="text-center text-sm text-muted-foreground">
-                                Don't have an account?{' '}
-                                <TextLink href={register()} tabIndex={5}>
-                                    Sign up
-                                </TextLink>
-                            </div>
+                                {/* ACTION */}
+                                <div className="flex flex-col gap-4">
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        disabled={processing}
+                                    >
+                                        {processing && (
+                                            <Spinner className="mr-2" />
+                                        )}
+                                        Masuk
+                                    </Button>
+
+                                    <p className="text-center text-xs">
+                                        Belum punya akun?{' '}
+                                        <Link
+                                            href={registerPage()}
+                                            className="font-bold text-primary"
+                                        >
+                                            Daftar Sekarang
+                                        </Link>
+                                    </p>
+                                </div>
+                            </>
                         )}
-                    </>
-                )}
-            </Form>
-
-            {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {status}
+                    </Form>
                 </div>
-            )}
-        </AuthLayout>
+            </div>
+        </MainLayout>
     );
-}
+};
+
+export default Login;
