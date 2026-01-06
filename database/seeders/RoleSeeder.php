@@ -28,5 +28,7 @@ class RoleSeeder extends Seeder
         foreach ($roles as $role) {
             Role::findOrCreate($role, 'web');
         }
+        
+    
     }
 }

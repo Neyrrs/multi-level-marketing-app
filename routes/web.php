@@ -31,6 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware([RoleMiddleware::class . ':guest'])->group(function () {
         Route::get('/dashboard', fn () => Inertia::render('guest/dashboard'))
             ->name('dashboard');
+        Route::get('/DaftarAffiliate', fn () => Inertia::render('guest/DaftarAffiliate/register'))
+            ->name('DaftarAffiliate');
+        Route::get('/Contact', fn () => Inertia::render('guest/Contact/index'))
+            ->name('Contact');
+        Route::get('/CaraKerja', fn () => Inertia::render('guest/CaraKerja/index'))
+            ->name('CaraKerja');
     });
 
     /*
