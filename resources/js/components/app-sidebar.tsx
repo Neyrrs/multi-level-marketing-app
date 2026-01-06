@@ -87,6 +87,7 @@ export function AppSidebar() {
       { title: 'Laporan Komisi', href: getHref('manager.reports.commissions', '/manager/reports/commissions'), icon: Package },
       { title: 'Laporan Keuangan', href: getHref('manager.reports.finance', '/manager/reports/finance'), icon: Package },
       { title: 'Laporan Produk', href: getHref('manager.reports.products', '/manager/reports/products'), icon: Package },
+      { title: 'Laporan 111111', href: getHref('manager.reports.products', '/manager/reports/products'), icon: Package },
     ],
 
     affiliate: [

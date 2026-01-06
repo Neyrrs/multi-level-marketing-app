@@ -29,7 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware([RoleMiddleware::class . ':guest'])->group(function () {
-        Route::get('/', fn () => Inertia::render('guest/dashboard'))
+        Route::get('/dashboard', fn () => Inertia::render('guest/dashboard'))
             ->name('dashboard');
     });
 
