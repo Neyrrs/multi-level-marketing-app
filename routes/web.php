@@ -52,25 +52,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', fn () => Inertia::render('admin/dashboard'))
             ->name('dashboard');
 
-        Route::resource('products', Admin\MasterProdukController::class);
-        Route::resource('affiliates', Admin\ManajemenAffiliateController::class);
-        Route::resource('plans', Admin\PlanController::class);
-        Route::resource('commissions', Admin\KomisiController::class);
+        Route::resource('MasterProduk', Admin\MasterProdukController::class);
+        Route::resource('ManajemenAffiliate', Admin\ManajemenAffiliateController::class);
+        Route::resource('PengaturanPlan', Admin\PlanController::class);
+        Route::resource('PengaturanKomisi', Admin\KomisiController::class);
 
-        Route::resource('orders', Admin\OrderController::class);
-        Route::resource('transactions', Admin\TransactionController::class);
+        Route::resource('Orders', Admin\OrderController::class);
+        Route::resource('Transaksi', Admin\TransactionController::class);
 
-        Route::get('reports/sales', [Admin\Report\SalesReportController::class, 'index'])
-            ->name('reports.sales');
+        Route::resource('UsersRole', Admin\UserRole::class);
 
-        Route::get('reports/affiliates', [Admin\Report\AffiliateReportController::class, 'index'])
-            ->name('reports.affiliates');
+        Route::get('reports/LaporanPenjualan', [Admin\Report\SalesReportController::class, 'index'])
+            ->name('reports.LaporanPenjualan');
 
-        Route::get('reports/finance', [Admin\Report\FinanceReportController::class, 'index'])
-            ->name('reports.finance');
-
-        Route::get('reports/products', [Admin\Report\ProductReportController::class, 'index'])
-            ->name('reports.products');
+        Route::get('reports/LaporanAffiliate', [Admin\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.LaporanAffiliate');
+        Route::get('reports/LaporanKeuangan', [Admin\Report\FinanceReportController::class, 'index'])
+            ->name('reports.LaporanKeuangan');
+        Route::get('reports/LaporanKomisi', [Admin\Report\KomisiReportController::class, 'index'])
+            ->name('reports.LaporanKomisi');
+        Route::get('reports/LaporanProduk', [Admin\Report\ProductReportController::class, 'index'])
+            ->name('reports.LaporanProduk');
     });
 
 

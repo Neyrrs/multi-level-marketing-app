@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class AffiliateReportController extends Controller
+class KomisiReportController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('admin/LaporanAffiliate/index');
+        return Inertia::render('admin/LaporanKomisi/index');
     }
 }

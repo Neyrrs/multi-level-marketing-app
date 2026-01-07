@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Report;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class AffiliateReportController extends Controller
+class UserRole extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('admin/LaporanAffiliate/index');
+        return Inertia::render('admin/UsersRole/index');
     }
 }
