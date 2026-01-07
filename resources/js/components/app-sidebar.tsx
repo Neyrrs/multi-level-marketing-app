@@ -82,24 +82,24 @@ export function AppSidebar() {
     manager: [
       { title: 'Dashboard Monitoring', href: getHref('manager.dashboard', '/manager/dashboard'), icon: LayoutGrid },
 
-      { title: 'Laporan Penjualan', href: getHref('manager.reports.sales', '/manager/reports/sales'), icon: Package },
-      { title: 'Laporan Affiliate', href: getHref('manager.reports.affiliates', '/manager/reports/affiliates'), icon: Package },
-      { title: 'Laporan Komisi', href: getHref('manager.reports.commissions', '/manager/reports/commissions'), icon: Package },
-      { title: 'Laporan Keuangan', href: getHref('manager.reports.finance', '/manager/reports/finance'), icon: Package },
-      { title: 'Laporan Produk', href: getHref('manager.reports.products', '/manager/reports/products'), icon: Package },
-      { title: 'Laporan 111111', href: getHref('manager.reports.products', '/manager/reports/products'), icon: Package },
+      { title: 'Laporan Penjualan', href: getHref('manager.reports.LaporanPenjualan', '/manager/reports/LaporanPenjualan'), icon: Package },
+      { title: 'Laporan Affiliate', href: getHref('manager.reports.LaporanAffiliate', '/manager/reports/LaporanAffiliate'), icon: Package },
+      { title: 'Laporan Komisi', href: getHref('manager.reports.LaporanKomisi', '/manager/reports/LaporanKomisi'), icon: Package },
+      { title: 'Laporan Keuangan', href: getHref('manager.reports.LaporanKeuangan', '/manager/reports/LaporanKeuangan'), icon: Package },
+      { title: 'Laporan Produk', href: getHref('manager.reports.LaporanProduk', '/manager/reports/LaporanProduk'), icon: Package },
+      
     ],
 
     affiliate: [
       { title: 'Affiliate Dashboard', href: getHref('affiliate.dashboard', '/affiliate/dashboard'), icon: LayoutGrid },
 
       { title: 'Belanja Produk', href: getHref('affiliate.products.index', '/affiliate/products'), icon: Package },
-      { title: 'Kode Aktivasi', href: getHref('affiliate.activation-codes.index', '/affiliate/activation-codes'), icon: Package },
-      { title: 'Redeem Kode', href: getHref('affiliate.activation-codes.redeem', '/affiliate/activation-codes/redeem'), icon: Package },
+      { title: 'Kode Aktivasi', href: getHref('affiliate.kode.index', '/affiliate/kode'), icon: Package },
+      { title: 'Redeem Kode', href: getHref('affiliate.redeem.index', '/affiliate/redeem'), icon: Package },
 
-      { title: 'Binary Tree / Network', href: getHref('affiliate.network.index', '/affiliate/network'), icon: Package },
+      { title: 'Binary Tree / Network', href: getHref('affiliate.binary.index', '/affiliate/binary'), icon: Package },
 
-      { title: 'Komisi & Payout', href: getHref('affiliate.commissions.index', '/affiliate/commissions'), icon: Package },
+      { title: 'Komisi & Payout', href: getHref('affiliate.komisi.index', '/affiliate/komisi'), icon: Package },
 
       { title: 'Pengaturan Profil', href: getHref('profile', '/profile'), icon: Package },
     ],

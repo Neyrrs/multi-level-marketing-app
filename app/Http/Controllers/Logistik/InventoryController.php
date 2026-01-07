@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Logistik;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InventoryController extends Controller
 {
@@ -12,7 +13,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        //
+      return Inertia::render('logistik/inventory/index');
     }
 
     /**

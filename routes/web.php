@@ -89,17 +89,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', fn () => Inertia::render('manager/dashboard'))
             ->name('dashboard');
 
-        Route::get('reports/sales', [Manager\Report\SalesReportController::class, 'index'])
-            ->name('reports.sales');
+        Route::get('reports/LaporanPenjualan', [Manager\Report\SalesReportController::class, 'index'])
+            ->name('reports.laporanPenjualan');
 
-        Route::get('reports/affiliates', [Manager\Report\AffiliateReportController::class, 'index'])
-            ->name('reports.affiliates');
+        Route::get('reports/LaporanAffiliate', [Manager\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.laporanAffiliate');
 
-        Route::get('reports/finance', [Manager\Report\FinanceReportController::class, 'index'])
-            ->name('reports.finance');
+        Route::get('reports/LaporanKeuangan', [Manager\Report\FinanceReportController::class, 'index'])
+            ->name('reports.laporanKeuangan');
 
-        Route::get('reports/products', [Manager\Report\ProductReportController::class, 'index'])
-            ->name('reports.products');
+        Route::get('reports/LaporanProduk', [Manager\Report\ProductReportController::class, 'index'])
+            ->name('reports.laporanProduk');
+        Route::get('reports/LaporanKomisi', [Manager\Report\CommissionReportController::class, 'index'])
+            ->name('reports.laporanKomisi');
     });
 
 
@@ -117,11 +119,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('dashboard');
 
         Route::resource('products', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('activation-codes', Affiliate\ActivationCodeController::class);
-        Route::resource('commissions', Affiliate\CommissionController::class)->only(['index']);
+        Route::resource('kode', Affiliate\CodeController::class);
+        Route::resource('redeem', Affiliate\ActivationCodeController::class);
+        Route::resource('komisi', Affiliate\CommissionController::class)->only(['index']);
 
-        Route::get('network', [Affiliate\NetworkController::class, 'index'])
-            ->name('network');
+        Route::get('binary', [Affiliate\NetworkController::class, 'index'])
+            ->name('binary');
     });
 
 
