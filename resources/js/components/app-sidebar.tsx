@@ -126,10 +126,10 @@ export function AppSidebar() {
 
     guest: [
       { title: 'Home', href: getHref('home', '/'), icon: LayoutGrid },
-      { title: 'Produk', href: getHref('products.index', '/products'), icon: Package },
-      { title: 'Cara Kerja', href: getHref('howitworks', '/how-it-works'), icon: Package },
-      { title: 'Daftar Affiliate', href: getHref('affiliate.register', '/affiliate/register'), icon: Package },
-      { title: 'Contact', href: getHref('contact', '/contact'), icon: Package },
+      { title: 'Produk', href: getHref('produk.index', '/produk'), icon: Package },
+      { title: 'Cara Kerja', href: getHref('CaraKerja.index', '/CaraKerja'), icon: Package },
+      { title: 'Daftar Affiliate', href: getHref('DaftarAffiliate.register', '/DaftarAffiliate'), icon: Package },
+      { title: 'Contact', href: getHref('Contact.index', '/Contact'), icon: Package },
     ],
   };
 
