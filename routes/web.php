@@ -37,6 +37,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('Contact');
         Route::get('/CaraKerja', fn () => Inertia::render('guest/CaraKerja/index'))
             ->name('CaraKerja');
+        Route::get('/tree', fn () => Inertia::render('guest/tree/index'))
+            ->name('tree');
     });
 
     /*

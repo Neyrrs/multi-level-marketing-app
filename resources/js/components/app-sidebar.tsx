@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutGrid, Package, Folder, BookOpen } from 'lucide-react';
+import { LayoutGrid, Package, Folder, BookOpen, Network } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavFooter } from '@/components/nav-footer';
@@ -43,7 +43,7 @@ export function AppSidebar() {
   // Safe Ziggy route helper (returns fallback path if not available)
   const getHref = (routeName: string, fallback: string): string => {
     try {
-      // @ts-ignore - Ziggy exposes window.route
+      // @ts-expect-error - Ziggy exposes window.route
       const route = window.route?.(routeName);
       return route && route !== '#' ? route : fallback;
     } catch {
@@ -130,6 +130,7 @@ export function AppSidebar() {
       { title: 'Cara Kerja', href: getHref('CaraKerja.index', '/CaraKerja'), icon: Package },
       { title: 'Daftar Affiliate', href: getHref('DaftarAffiliate.register', '/DaftarAffiliate'), icon: Package },
       { title: 'Contact', href: getHref('Contact.index', '/Contact'), icon: Package },
+      { title: 'Pohon', href: getHref('tree.index', '/tree'), icon: Network },
     ],
   };
 
