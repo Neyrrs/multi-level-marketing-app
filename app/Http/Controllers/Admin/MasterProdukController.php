@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class MasterProdukController extends Controller
 {
@@ -12,7 +13,7 @@ class MasterProdukController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('admin/MasterProduk/index');
     }
 
     /**

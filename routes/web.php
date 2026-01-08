@@ -56,25 +56,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', fn () => Inertia::render('admin/dashboard'))
             ->name('dashboard');
 
-        Route::resource('products', Admin\MasterProdukController::class);
-        Route::resource('affiliates', Admin\ManajemenAffiliateController::class);
-        Route::resource('plans', Admin\PlanController::class);
-        Route::resource('commissions', Admin\KomisiController::class);
+        Route::resource('MasterProduk', Admin\MasterProdukController::class);
+        Route::resource('ManajemenAffiliate', Admin\ManajemenAffiliateController::class);
+        Route::resource('PengaturanPlan', Admin\PlanController::class);
+        Route::resource('PengaturanKomisi', Admin\KomisiController::class);
 
-        Route::resource('orders', Admin\OrderController::class);
-        Route::resource('transactions', Admin\TransactionController::class);
+        Route::resource('Orders', Admin\OrderController::class);
+        Route::resource('Transaksi', Admin\TransactionController::class);
 
-        Route::get('reports/sales', [Admin\Report\SalesReportController::class, 'index'])
-            ->name('reports.sales');
+        Route::resource('UsersRole', Admin\UserRole::class);
 
-        Route::get('reports/affiliates', [Admin\Report\AffiliateReportController::class, 'index'])
-            ->name('reports.affiliates');
+        Route::get('reports/LaporanPenjualan', [Admin\Report\SalesReportController::class, 'index'])
+            ->name('reports.LaporanPenjualan');
 
-        Route::get('reports/finance', [Admin\Report\FinanceReportController::class, 'index'])
-            ->name('reports.finance');
-
-        Route::get('reports/products', [Admin\Report\ProductReportController::class, 'index'])
-            ->name('reports.products');
+        Route::get('reports/LaporanAffiliate', [Admin\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.LaporanAffiliate');
+        Route::get('reports/LaporanKeuangan', [Admin\Report\FinanceReportController::class, 'index'])
+            ->name('reports.LaporanKeuangan');
+        Route::get('reports/LaporanKomisi', [Admin\Report\KomisiReportController::class, 'index'])
+            ->name('reports.LaporanKomisi');
+        Route::get('reports/LaporanProduk', [Admin\Report\ProductReportController::class, 'index'])
+            ->name('reports.LaporanProduk');
     });
 
 
@@ -91,17 +93,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', fn () => Inertia::render('manager/dashboard'))
             ->name('dashboard');
 
-        Route::get('reports/sales', [Manager\Report\SalesReportController::class, 'index'])
-            ->name('reports.sales');
+        Route::get('reports/LaporanPenjualan', [Manager\Report\SalesReportController::class, 'index'])
+            ->name('reports.laporanPenjualan');
 
-        Route::get('reports/affiliates', [Manager\Report\AffiliateReportController::class, 'index'])
-            ->name('reports.affiliates');
+        Route::get('reports/LaporanAffiliate', [Manager\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.laporanAffiliate');
 
-        Route::get('reports/finance', [Manager\Report\FinanceReportController::class, 'index'])
-            ->name('reports.finance');
+        Route::get('reports/LaporanKeuangan', [Manager\Report\FinanceReportController::class, 'index'])
+            ->name('reports.laporanKeuangan');
 
-        Route::get('reports/products', [Manager\Report\ProductReportController::class, 'index'])
-            ->name('reports.products');
+        Route::get('reports/LaporanProduk', [Manager\Report\ProductReportController::class, 'index'])
+            ->name('reports.laporanProduk');
+        Route::get('reports/LaporanKomisi', [Manager\Report\CommissionReportController::class, 'index'])
+            ->name('reports.laporanKomisi');
     });
 
 
@@ -119,11 +123,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('dashboard');
 
         Route::resource('products', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('activation-codes', Affiliate\ActivationCodeController::class);
-        Route::resource('commissions', Affiliate\CommissionController::class)->only(['index']);
+        Route::resource('kode', Affiliate\CodeController::class);
+        Route::resource('redeem', Affiliate\ActivationCodeController::class);
+        Route::resource('komisi', Affiliate\CommissionController::class)->only(['index']);
 
-        Route::get('network', [Affiliate\NetworkController::class, 'index'])
-            ->name('network');
+        Route::get('binary', [Affiliate\NetworkController::class, 'index'])
+            ->name('binary');
     });
 
 

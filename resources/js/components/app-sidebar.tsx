@@ -68,103 +68,27 @@ export function AppSidebar() {
                     icon: LayoutGrid,
                 },
 
-                // === MASTER DATA ===
-                {
-                    title: 'Master Produk',
-                    href: getHref('admin.products.index', '/admin/products'),
-                    icon: Package,
-                },
-                {
-                    title: 'Manajemen Affiliate',
-                    href: getHref(
-                        'admin.affiliates.index',
-                        '/admin/affiliates',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Pengaturan Plan',
-                    href: getHref('admin.plans.index', '/admin/plans'),
-                    icon: Package,
-                },
-                {
-                    title: 'Pengaturan Komisi',
-                    href: getHref(
-                        'admin.commissions.settings',
-                        '/admin/commissions/settings',
-                    ),
-                    icon: Package,
-                },
+      // === MASTER DATA ===
+      { title: 'Master Produk', href: getHref('admin.MasterProduk.index', '/admin/MasterProduk'), icon: Package },
+      { title: 'Manajemen Affiliate', href: getHref('admin.ManajemenAffiliate.index', '/admin/ManajemenAffiliate'), icon: Package },
+      { title: 'Pengaturan Plan', href: getHref('admin.PengaturanPlan.index', '/admin/PengaturanPlan'), icon: Package },
+      { title: 'Pengaturan Komisi', href: getHref('admin.PengaturanKomisi.index', '/admin/PengaturanKomisi'), icon: Package },
 
-                // === TRANSAKSI ===
-                {
-                    title: 'Orders / Penjualan',
-                    href: getHref('admin.orders.index', '/admin/orders'),
-                    icon: Package,
-                },
-                {
-                    title: 'Transaksi',
-                    href: getHref(
-                        'admin.transactions.index',
-                        '/admin/transactions',
-                    ),
-                    icon: Package,
-                },
+      // === TRANSAKSI ===
+      { title: 'Orders / Penjualan', href: getHref('admin.Orders.index', '/admin/Orders'), icon: Package },
+      { title: 'Transaksi', href: getHref('admin.Transaksi.index', '/admin/Transaksi'), icon: Package },
 
-                // === LAPORAN ===
-                {
-                    title: 'Laporan Penjualan',
-                    href: getHref(
-                        'admin.reports.sales',
-                        '/admin/reports/sales',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Affiliate',
-                    href: getHref(
-                        'admin.reports.affiliates',
-                        '/admin/reports/affiliates',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Komisi',
-                    href: getHref(
-                        'admin.reports.commissions',
-                        '/admin/reports/commissions',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Keuangan',
-                    href: getHref(
-                        'admin.reports.finance',
-                        '/admin/reports/finance',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Produk',
-                    href: getHref(
-                        'admin.reports.products',
-                        '/admin/reports/products',
-                    ),
-                    icon: Package,
-                },
+      // === LAPORAN ===
+      { title: 'Laporan Penjualan', href: getHref('admin.reports.LaporanPenjualan', '/admin/reports/LaporanPenjualan'), icon: Package },
+      { title: 'Laporan Affiliate', href: getHref('admin.reports.LaporanAffiliate', '/admin/reports/LaporanAffiliate'), icon: Package },
+      { title: 'Laporan Komisi', href: getHref('admin.reports.LaporanKomisi', '/admin/reports/LaporanKomisi'), icon: Package },
+      { title: 'Laporan Keuangan', href: getHref('admin.reports.LaporanKeuangan', '/admin/reports/LaporanKeuangan'), icon: Package },
+      { title: 'Laporan Produk', href: getHref('admin.reports.LaporanProduk', '/admin/reports/LaporanProduk'), icon: Package },
 
-                // === SYSTEM ===
-                {
-                    title: 'Users & Roles',
-                    href: getHref('admin.users.index', '/admin/users'),
-                    icon: Package,
-                },
-                {
-                    title: 'Settings',
-                    href: getHref('admin.settings', '/admin/settings'),
-                    icon: Package,
-                },
-            ],
+      // === SYSTEM ===
+      { title: 'Users & Roles', href: getHref('admin.UsersRole.index', '/admin/UsersRole'), icon: Package },
+      { title: 'Settings', href: getHref('admin.settings', '/admin/settings'), icon: Package },
+    ],
 
             manager: [
                 {
@@ -173,55 +97,13 @@ export function AppSidebar() {
                     icon: LayoutGrid,
                 },
 
-                {
-                    title: 'Laporan Penjualan',
-                    href: getHref(
-                        'manager.reports.sales',
-                        '/manager/reports/sales',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Affiliate',
-                    href: getHref(
-                        'manager.reports.affiliates',
-                        '/manager/reports/affiliates',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Komisi',
-                    href: getHref(
-                        'manager.reports.commissions',
-                        '/manager/reports/commissions',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Keuangan',
-                    href: getHref(
-                        'manager.reports.finance',
-                        '/manager/reports/finance',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Produk',
-                    href: getHref(
-                        'manager.reports.products',
-                        '/manager/reports/products',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan 111111',
-                    href: getHref(
-                        'manager.reports.products',
-                        '/manager/reports/products',
-                    ),
-                    icon: Package,
-                },
-            ],
+      { title: 'Laporan Penjualan', href: getHref('manager.reports.LaporanPenjualan', '/manager/reports/LaporanPenjualan'), icon: Package },
+      { title: 'Laporan Affiliate', href: getHref('manager.reports.LaporanAffiliate', '/manager/reports/LaporanAffiliate'), icon: Package },
+      { title: 'Laporan Komisi', href: getHref('manager.reports.LaporanKomisi', '/manager/reports/LaporanKomisi'), icon: Package },
+      { title: 'Laporan Keuangan', href: getHref('manager.reports.LaporanKeuangan', '/manager/reports/LaporanKeuangan'), icon: Package },
+      { title: 'Laporan Produk', href: getHref('manager.reports.LaporanProduk', '/manager/reports/LaporanProduk'), icon: Package },
+      
+    ],
 
             affiliate: [
                 {
