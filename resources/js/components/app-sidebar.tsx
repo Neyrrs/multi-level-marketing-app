@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Network, Package } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Network, Package, ShoppingBasket } from 'lucide-react';
 import { useMemo } from 'react';
 import AppLogo from './app-logo';
 
@@ -265,7 +265,7 @@ export function AppSidebar() {
                 {
                     title: 'Belanja',
                     href: getHref('shop.index', '/shop'),
-                    icon: Package,
+                    icon: ShoppingBasket,
                 },
                 {
                     title: 'Pohon',

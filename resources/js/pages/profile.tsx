@@ -1,5 +1,6 @@
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import MainLayout from '@/components/fragments/main-layout';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,12 +19,34 @@ const Profile = () => {
     } = useForm<IActivationCode>();
 
     const handleSubmitActivationCode = (data: IActivationCode) => {
-        console.log(data)
+        console.log(data);
     };
     return (
         <MainLayout showNavbar showFooter>
             <div className="py-10">
                 <ContainerWrapper>
+                    <Breadcrumb className="mb-6">
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink asChild>
+                                    <Link
+                                        href="/dashboard"
+                                        className="text-base font-medium"
+                                    >
+                                        Dasbor
+                                    </Link>
+                                </BreadcrumbLink>
+                            </BreadcrumbItem>
+
+                            <BreadcrumbSeparator />
+
+                            <BreadcrumbItem>
+                                <BreadcrumbPage className="text-base font-bold text-primary">
+                                    Profile
+                                </BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
                     <div className="mb-6 flex items-center gap-4">
                         <h1 className="text-2xl font-bold text-primary">
                             Profilku
@@ -35,7 +58,7 @@ const Profile = () => {
                         <img
                             src=""
                             alt="Foto Profil"
-                            className="h-24 w-24 rounded-full object-cover border-3 border-primary"
+                            className="h-24 w-24 rounded-full border-3 border-primary object-cover"
                         />
                         <div className="flex flex-col">
                             <p className="text-lg font-bold text-primary">
