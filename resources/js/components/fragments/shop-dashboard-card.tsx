@@ -24,8 +24,8 @@ export default function ProductCard({
     const [quantity, setQuantity] = useState(1);
 
     return (
-        <div className="group relative flex overflow-hidden rounded-2xl border bg-white shadow-sm">
-            <div className="relative w-40 flex-shrink-0">
+        <div className="group relative w-fit flex overflow-hidden rounded-2xl border bg-white shadow-sm">
+            <div className="relative w-40 shrink-0">
                 <div className="relative h-full overflow-hidden">
                     <img
                         src={image}

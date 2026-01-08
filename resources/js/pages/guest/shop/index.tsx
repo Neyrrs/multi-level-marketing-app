@@ -100,7 +100,7 @@ export default function CostumerDashboard() {
                 <h1 className="text-xl font-semibold text-primary">
                     Produk Tersedia
                 </h1>
-                <div className="grid auto-rows-fr gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="flex flex-wrap gap-4">
                     {products.map((item) => (
                         <ProductCard
                             key={item.id}
