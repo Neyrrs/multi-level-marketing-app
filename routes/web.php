@@ -37,13 +37,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('Contact');
         Route::get('/CaraKerja', fn () => Inertia::render('guest/CaraKerja/index'))
             ->name('CaraKerja');
-<<<<<<< HEAD
         Route::get('/tree', fn () => Inertia::render('guest/tree/index'))
             ->name('tree');
-=======
         Route::get('/shop', fn () => Inertia::render('guest/shop/index'))
             ->name('shop');
->>>>>>> a064431ab77db21a43b90876eebdd192ae289313
     });
 
     /*
