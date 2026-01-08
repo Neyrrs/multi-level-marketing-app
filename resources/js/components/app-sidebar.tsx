@@ -311,7 +311,7 @@ export function AppSidebar() {
     console.log('AppSidebar - mainNavItems:', mainNavItems);
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar collapsible="icon" className='pt-16' variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
