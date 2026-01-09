@@ -1,74 +1,62 @@
-"use client"
-
-import * as React from "react"
+import React from "react"
+import { Popover, PopoverContent, PopoverTrigger } from "./popover"
+import { Button } from "./button"
 import { Check, ChevronsUpDown } from "lucide-react"
-
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./command"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 
-const frameworks = [
-  {
-    value: "pria",
-    label: "Pria",
-  },
-  {
-    value: "wanite",
-    label: "Wanita",
-  },
+type ComboBoxProps = {
+  value: string
+  onChange: (value: string) => void
+}
+
+export function ComboBox({ value, onChange }: ComboBoxProps) {
+  const [open, setOpen] = React.useState(false)
+
+  const pageSizes = [
+  { value: "5", label: "5 / halaman" },
+  { value: "10", label: "10 / halaman" },
+  { value: "25", label: "25 / halaman" },
+  { value: "50", label: "50 / halaman" },
 ]
 
-export default function Combobox() {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="default"
           role="combobox"
           aria-expanded={open}
-          className="w-full bg-transparent justify-between border-3 border-primary"
+          className="w-full justify-between"
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Pilih Jenis Kelamin..."}
-          <ChevronsUpDown className="opacity-50" />
+            ? pageSizes.find((s) => s.value === value)?.label
+            : "Data / halaman"}
+          <ChevronsUpDown className="opacity-100" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-50 p-0">
+
+      <PopoverContent className="w-[180px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Cari jumlah..." className="h-9" />
           <CommandList>
-            <CommandEmpty>Jenis Kelamin tidak ditemukan</CommandEmpty>
+            <CommandEmpty>Tidak ditemukan</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {pageSizes.map((size) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={size.value}
+                  value={size.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
+                    onChange(currentValue) // 🔑 return ke parent
                     setOpen(false)
                   }}
                 >
-                  {framework.label}
+                  {size.label}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === size.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

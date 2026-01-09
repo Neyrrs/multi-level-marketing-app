@@ -10,7 +10,6 @@ interface AppLayoutProps {
 
 export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => (
     <>
-        <NavigationBar />
         <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
             {children}
         </AppLayoutTemplate>

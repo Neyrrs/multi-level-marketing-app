@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Network, Package, ShoppingBasket } from 'lucide-react';
+import { BookOpen, Folder, KeySquareIcon, LayoutGrid, Network, Package, ShoppingBasket } from 'lucide-react';
 import { useMemo } from 'react';
 import AppLogo from './app-logo';
 
@@ -272,6 +272,16 @@ export function AppSidebar() {
                     href: getHref('tree.index', '/tree'),
                     icon: Network,
                 },
+                {
+                    title: 'Riwayat Pin',
+                    href: getHref('pin-history.index', '/pin-history'),
+                    icon: KeySquareIcon,
+                },
+                {
+                    title: 'Daftar Pin',
+                    href: getHref('pin-list.index', '/pin-list'),
+                    icon: KeySquareIcon,
+                },
             ],
         };
     }
@@ -308,10 +318,10 @@ export function AppSidebar() {
     // Debug logs (remove in production)
     // console.log('AppSidebar - rawRoles:', rawRoles);
     // console.log('AppSidebar - roles:', roles);
-    console.log('AppSidebar - mainNavItems:', mainNavItems);
+    // console.log('AppSidebar - mainNavItems:', mainNavItems);
 
     return (
-        <Sidebar collapsible="icon" className='pt-16' variant="inset">
+        <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>

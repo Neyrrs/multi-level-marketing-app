@@ -41,6 +41,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('tree');
         Route::get('/shop', fn () => Inertia::render('guest/shop/index'))
             ->name('shop');
+        Route::get('/pin-history', fn () => Inertia::render('guest/pin-history/index'))
+            ->name('pin-history');
+        Route::get('/pin-list', fn () => Inertia::render('guest/pin-list/index'))
+            ->name('pin-list');
     });
 
     /*
