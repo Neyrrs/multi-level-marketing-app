@@ -1,6 +1,7 @@
 import {
     Table,
     TableBody,
+    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -51,7 +52,23 @@ export default function ShopHistory() {
             <Head title="Riwayat belanja" />
             <div className="flex h-fit w-full flex-col px-5">
                 <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
+                    <div className="flex w-full items-start border-b-2 pb-4">
+                        <div className="w-3/4">
+                            <div className="flex flex-col">
+                                <p className="text-lg font-bold text-primary md:text-2xl">
+                                    Riwayat Pin
+                                </p>
+                                <span className="text-sm">
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     <Table>
+                        <TableCaption>
+                            Ini adalah data riwayat pembelanjaan terbaru
+                        </TableCaption>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">No</TableHead>

@@ -66,12 +66,12 @@ export default function Reward() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>NO</TableHead>
-                                <TableHead>POIN R.O.</TableHead>
-                                <TableHead>SYARAT</TableHead>
-                                <TableHead>PENCAPAIAN</TableHead>
-                                <TableHead>HADIAH</TableHead>
-                                <TableHead>STATUS</TableHead>
+                                <TableHead>No</TableHead>
+                                <TableHead>Poin R.O.</TableHead>
+                                <TableHead>Syarat</TableHead>
+                                <TableHead>Pencapaian</TableHead>
+                                <TableHead>Hadiah</TableHead>
+                                <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
