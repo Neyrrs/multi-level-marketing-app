@@ -96,23 +96,35 @@ export default function CostumerDashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="CostumerDashboard" />
-            <div className="flex h-full flex-1 flex-col gap-6 overflow-x-auto rounded-xl p-6">
-                <h1 className="text-xl font-semibold text-primary">
-                    Produk Tersedia
-                </h1>
-                <div className="flex flex-wrap gap-4">
-                    {products.map((item) => (
-                        <ProductCard
-                            key={item.id}
-                            image={item.image}
-                            title={item.title}
-                            price={item.price}
-                            point={item.point}
-                            pin={item.pin}
-                            productInfo={item.productInfo}
-                            onAddToCart={() => console.log('Tambah:', item)}
-                        />
-                    ))}
+            <div className="flex h-fit w-full flex-col px-5">
+                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
+                    <div className="flex w-full items-start border-b-2 pb-4">
+                        <div className="w-3/4">
+                            <div className="flex flex-col">
+                                <p className="text-lg font-bold text-primary md:text-2xl">
+                                    Produk Tersedia
+                                </p>
+                                <span className="text-sm">
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap gap-4">
+                        {products.map((item) => (
+                            <ProductCard
+                                key={item.id}
+                                image={item.image}
+                                title={item.title}
+                                price={item.price}
+                                point={item.point}
+                                pin={item.pin}
+                                productInfo={item.productInfo}
+                                onAddToCart={() => console.log('Tambah:', item)}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         </AppLayout>

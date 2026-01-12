@@ -15,6 +15,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
     Folder,
+    Gift,
     KeySquareIcon,
     LayoutGrid,
     Network,
@@ -383,15 +384,21 @@ export function AppSidebar() {
                     href: getHref('Contact.index', '/Contact'),
                     icon: Package,
                 },
+
+                {
+                    title: 'Pohon',
+                    href: getHref('tree.index', '/tree'),
+                    icon: Network,
+                },
                 {
                     title: 'Belanja',
                     href: getHref('shop.index', '/shop'),
                     icon: ShoppingBasket,
                 },
                 {
-                    title: 'Pohon',
-                    href: getHref('tree.index', '/tree'),
-                    icon: Network,
+                    title: 'Riwayat Belanja',
+                    href: getHref('shop-history.index', '/shop-history'),
+                    icon: ShoppingBasket,
                 },
                 {
                     title: 'Riwayat Pin',
@@ -404,14 +411,9 @@ export function AppSidebar() {
                     icon: KeySquareIcon,
                 },
                 {
-                    title: 'Riwayat Belanja',
-                    href: getHref('shop-history.index', '/shop-history'),
-                    icon: Network,
-                },
-                {
                     title: 'hadiah',
                     href: getHref('reward.index', '/reward'),
-                    icon: Network,
+                    icon: Gift,
                 },
             ],
         };
