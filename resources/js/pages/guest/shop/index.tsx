@@ -1,8 +1,10 @@
+import SearchInput from '@/components/fragments/search-input';
 import ProductCard from '@/components/fragments/shop-dashboard-card';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
+import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -92,7 +94,35 @@ const products = [
     },
 ];
 
-export default function CostumerDashboard() {
+export default function Shop() {
+    const [search, setSearch] = useState<string>('');
+
+    const [perPage, setPerPage] = useState('10');
+
+    const handlePerPageChange = (value: string) => {
+        setPerPage(value);
+
+        router.get(
+            route('users.index'),
+            { perPage: value },
+            {
+                preserveState: true,
+                replace: true,
+            },
+        );
+    };
+
+    const handleSearch = (value: string) => {
+        router.get(
+            route('users.index'),
+            { search: value },
+            {
+                preserveState: true,
+                replace: true,
+            },
+        );
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="CostumerDashboard" />
@@ -109,6 +139,12 @@ export default function CostumerDashboard() {
                                     adipisicing elit.
                                 </span>
                             </div>
+                        </div>
+                        <div className="w-1/4">
+                            <SearchInput
+                                onSearchChange={handleSearch}
+                                value={search}
+                            />
                         </div>
                     </div>
                     <div className="flex flex-wrap gap-4">
