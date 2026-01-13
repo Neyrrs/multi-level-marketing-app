@@ -1,6 +1,7 @@
+import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
+import { HistoryModal } from '@/components/fragments/dialog-contents/history';
 import SearchInput from '@/components/fragments/search-input';
 import { Button } from '@/components/ui/button';
-import { ComboBox } from '@/components/ui/combobox';
 import {
     Table,
     TableBody,
@@ -109,12 +110,14 @@ export default function Downline() {
                         <div className="border-t-2 pt-4">
                             <div className="flex items-center gap-3">
                                 <Button size="sm">Lihat History</Button>
-
-                                <div className="ml-auto w-32">
-                                    <ComboBox
-                                        onChange={handlePerPageChange}
-                                        value={perPage}
-                                    />
+                                <div className="flex w-fit items-center gap-2">
+                                    <HistoryModal />
+                                    <div className="ml-auto w-32">
+                                        <PaginationCombobox
+                                            onChange={handlePerPageChange}
+                                            value={perPage}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

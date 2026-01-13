@@ -10,7 +10,7 @@ type ComboBoxProps = {
   onChange: (value: string) => void
 }
 
-export function ComboBox({ value, onChange }: ComboBoxProps) {
+export function PaginationCombobox({ value, onChange }: ComboBoxProps) {
   const [open, setOpen] = React.useState(false)
 
   const pageSizes = [

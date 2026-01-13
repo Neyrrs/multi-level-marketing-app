@@ -1,5 +1,5 @@
+import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
 import SearchInput from '@/components/fragments/search-input';
-import { ComboBox } from '@/components/ui/combobox';
 import {
     Table,
     TableBody,
@@ -100,7 +100,7 @@ export default function GenerationRO() {
                         <div className="border-t-2 pt-4">
                             <div className="flex items-center gap-3">
                                 <div className="ml-auto w-32">
-                                    <ComboBox
+                                    <PaginationCombobox
                                         onChange={handlePerPageChange}
                                         value={perPage}
                                     />

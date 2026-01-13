@@ -1,4 +1,4 @@
-import { ComboBox } from '@/components/fragments/combo-box/pagination-combobox';
+import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
 import { HistoryModal } from '@/components/fragments/dialog-contents/history';
 import SearchInput from '@/components/fragments/search-input';
 import {
@@ -82,7 +82,7 @@ export default function PinList() {
                         <p className="w-1/3">PIN: asdas</p>
                         <div className="flex w-fit items-center gap-2">
                             <div className="w-40">
-                                <ComboBox
+                                <PaginationCombobox
                                     onChange={handlePerPageChange}
                                     value={perPage}
                                 />

@@ -1,6 +1,6 @@
+import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
 import SearchInput from '@/components/fragments/search-input';
 import { Button } from '@/components/ui/button';
-import { ComboBox } from '@/components/ui/combobox';
 import {
     Table,
     TableBody,
@@ -111,7 +111,7 @@ export default function MatchingBonus() {
                                 <Button size="sm">Lihat History</Button>
 
                                 <div className="ml-auto w-32">
-                                    <ComboBox
+                                    <PaginationCombobox
                                         onChange={handlePerPageChange}
                                         value={perPage}
                                     />

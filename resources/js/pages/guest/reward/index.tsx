@@ -1,5 +1,5 @@
 import SearchInput from '@/components/fragments/search-input';
-import { ComboBox } from '@/components/fragments/combo-box/pagination-combobox';
+import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
 import {
     Table,
     TableBody,
@@ -117,7 +117,7 @@ export default function Reward() {
                     <div className="flex w-full justify-between">
                         <p className="w-1/3">Hadiah</p>
                         <div className="w-40">
-                            <ComboBox
+                            <PaginationCombobox
                                 onChange={handlePerPageChange}
                                 value={perPage}
                             />
