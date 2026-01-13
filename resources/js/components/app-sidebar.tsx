@@ -411,8 +411,28 @@ export function AppSidebar() {
                     icon: KeySquareIcon,
                 },
                 {
-                    title: 'hadiah',
+                    title: 'Hadiah',
                     href: getHref('reward.index', '/reward'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Sponsor',
+                    href: getHref('sponsor.index', '/sponsor'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Downline',
+                    href: getHref('downline.index', '/downline'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Personal RO',
+                    href: getHref('personal-ro.index', '/personal-ro'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Generasi RO',
+                    href: getHref('generation-ro.index', '/generation-ro'),
                     icon: Gift,
                 },
             ],

@@ -49,6 +49,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('pin-list');
         Route::get('/shop-history', fn () => Inertia::render('guest/shop-history/index'))
             ->name('shop-history');
+        Route::get('/sponsor', fn () => Inertia::render('guest/sponsor/index'))
+            ->name('sponsor');
+        Route::get('/downline', fn () => Inertia::render('guest/downline/index'))
+            ->name('downline');
+        Route::get('/personal-ro', fn () => Inertia::render('guest/personal-ro/index'))
+            ->name('personal-ro');
+        Route::get('/generation-ro', fn () => Inertia::render('guest/generation-ro/index'))
+            ->name('generation-ro');
     });
 
     /*
