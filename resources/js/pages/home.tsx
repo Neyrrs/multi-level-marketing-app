@@ -16,6 +16,7 @@ export default function Home({
     canRegister?: boolean;
 }) {
     const { auth } = usePage<SharedData>().props;
+    console.log(auth)
     const { updateAppearance, appearance } = useAppearance();
 
     return (

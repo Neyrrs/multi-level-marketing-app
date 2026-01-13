@@ -1,5 +1,6 @@
+import { ComboBox } from '@/components/fragments/combo-box/pagination-combobox';
+import { HistoryModal } from '@/components/fragments/dialog-contents/history';
 import SearchInput from '@/components/fragments/search-input';
-import { ComboBox } from '@/components/ui/combobox';
 import {
     Table,
     TableBody,
@@ -77,10 +78,15 @@ export default function PinList() {
                         </div>
                     </div>
 
-                    <div className="w-full flex justify-between">
-                        <p className='w-1/3'>PIN: asdas</p>
-                        <div className="w-40">
-                            <ComboBox onChange={handlePerPageChange} value={perPage} />
+                    <div className="flex w-full justify-between">
+                        <p className="w-1/3">PIN: asdas</p>
+                        <div className="flex w-fit items-center gap-2">
+                            <div className="w-40">
+                                <ComboBox
+                                    onChange={handlePerPageChange}
+                                    value={perPage}
+                                />
+                            </div>
                         </div>
                     </div>
 

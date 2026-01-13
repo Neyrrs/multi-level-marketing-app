@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
     BookOpen,
@@ -40,7 +40,7 @@ const footerNavItems: NavItem[] = [
 
 export function AppSidebar() {
     // Inertia props typing: adjust if your auth shape differs
-    const { auth } = usePage<{ auth?: { user?: { roles?: any[] } } }>().props;
+    const { auth } = usePage<SharedData>().props;
 
     // Raw roles from server (could be array of strings or objects)
     const rawRoles = auth?.user?.roles ?? [];

@@ -1,3 +1,5 @@
+import { CreateBranchPerson } from '@/components/fragments/dialog-contents/create-branch-person';
+import { CreateBranchPersonDialog } from '@/components/fragments/dialog-modal-create-branch-person';
 import { Badge } from '@/components/ui/badge';
 import { branchPersonDummy } from '@/data/tree-data';
 import AppLayout from '@/layouts/app-layout';
@@ -95,9 +97,6 @@ const BranchPerson = ({
     rewardPoint = { leftSide: 0, rightSide: 0 },
     couplePoint = { leftSide: 0, rightSide: 0 },
 }: IBranchPerson) => {
-    const createAffiliate = async () => {
-        alert('asyik mau coba buat akun ya')
-    };
     const isUserAvailable = nickname.length > 0 && username.length > 0;
 
     return (
@@ -109,12 +108,9 @@ const BranchPerson = ({
                     alt={nickname}
                 />
             ) : (
-                <span
-                    className="flex size-15 cursor-pointer items-center justify-center rounded-full border-3 border-secondary bg-primary text-white hover:bg-primary/95 md:size-30"
-                    onClick={!isUserAvailable ? createAffiliate : () => {}}
-                >
-                    <Plus className='size-8 md:size-12'/>
-                </span>
+                <CreateBranchPersonDialog>
+                    <CreateBranchPerson />
+                </CreateBranchPersonDialog>
             )}
             <div className="flex flex-col items-center pt-2 pb-1">
                 <p className="text-xs md:text-sm">{nickname}</p>

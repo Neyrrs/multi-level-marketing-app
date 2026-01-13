@@ -24,7 +24,6 @@ interface NavigationItem {
 
 const NavigationBar = () => {
     const { auth } = usePage<SharedData>().props;
-    const isLoggedIn = true;
     const links: LinkTypes[] = [
         {
             path: home(),

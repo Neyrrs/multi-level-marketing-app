@@ -1,7 +1,7 @@
 import MainLayout from '@/components/fragments/main-layout';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import Combobox from '@/components/ui/combobox';
+import Combobox from '@/components/fragments/combo-box/pagination-combobox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';

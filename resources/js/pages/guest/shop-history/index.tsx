@@ -1,5 +1,5 @@
 import SearchInput from '@/components/fragments/search-input';
-import { ComboBox } from '@/components/ui/combobox';
+import { ComboBox } from '@/components/fragments/combo-box/pagination-combobox';
 import {
     Table,
     TableBody,

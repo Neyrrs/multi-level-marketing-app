@@ -1,70 +1,91 @@
-import React from "react"
-import { Popover, PopoverContent, PopoverTrigger } from "./popover"
-import { Button } from "./button"
-import { Check, ChevronsUpDown } from "lucide-react"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./command"
-import { cn } from "@/lib/utils"
+import { Button } from '@/components/ui/button';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from '@/components/ui/command';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { useMemo } from 'react';
 
-type ComboBoxProps = {
-  value: string
-  onChange: (value: string) => void
+interface ComboBoxProps<T> {
+    options: T[];
+    value: string | number | null;
+    onChange: (value: string | number) => void;
+    getLabel: (item: T) => string;
+    getValue: (item: T) => string | number;
+    placeholder?: string;
+    disabled?: boolean;
+    error?: string;
+    dataType: string;
 }
 
-export function ComboBox({ value, onChange }: ComboBoxProps) {
-  const [open, setOpen] = React.useState(false)
+export function DynamicCombobox<T>({
+    options,
+    value,
+    onChange,
+    getLabel,
+    getValue,
+    placeholder = 'Pilih data...',
+    dataType = 'data',
+    error,
+}: ComboBoxProps<T>) {
+    const selected = useMemo(
+        () => options.find((item) => getValue(item) === value),
+        [options, value, getValue],
+    );
 
-  const pageSizes = [
-  { value: "5", label: "5 / halaman" },
-  { value: "10", label: "10 / halaman" },
-  { value: "25", label: "25 / halaman" },
-  { value: "50", label: "50 / halaman" },
-]
+    return (
+        <div className="space-y-1">
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between border-primary border-3"
+                    >
+                        {selected ? getLabel(selected) : placeholder}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                </PopoverTrigger>
 
+                <PopoverContent className="w-full p-0">
+                    <Command>
+                        <CommandInput placeholder={`Cari ${dataType}...`} />
+                        <CommandEmpty>{dataType} tidak ditemukan</CommandEmpty>
+                        <CommandGroup>
+                            {options.map((item) => {
+                                const itemValue = getValue(item);
+                                return (
+                                    <CommandItem
+                                        key={itemValue}
+                                        onSelect={() => onChange(itemValue)}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                'mr-2 h-4 w-4',
+                                                itemValue === value
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0',
+                                            )}
+                                        />
+                                        {getLabel(item)}
+                                    </CommandItem>
+                                );
+                            })}
+                        </CommandGroup>
+                    </Command>
+                </PopoverContent>
+            </Popover>
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="default"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between"
-        >
-          {value
-            ? pageSizes.find((s) => s.value === value)?.label
-            : "Data / halaman"}
-          <ChevronsUpDown className="opacity-100" />
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="w-[180px] p-0">
-        <Command>
-          <CommandInput placeholder="Cari jumlah..." className="h-9" />
-          <CommandList>
-            <CommandEmpty>Tidak ditemukan</CommandEmpty>
-            <CommandGroup>
-              {pageSizes.map((size) => (
-                <CommandItem
-                  key={size.value}
-                  value={size.value}
-                  onSelect={(currentValue) => {
-                    onChange(currentValue) // 🔑 return ke parent
-                    setOpen(false)
-                  }}
-                >
-                  {size.label}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === size.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
-  )
+            {error && <p className="text-sm text-red-500">{error}</p>}
+        </div>
+    );
 }
