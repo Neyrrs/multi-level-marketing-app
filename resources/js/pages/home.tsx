@@ -16,7 +16,6 @@ export default function Home({
     canRegister?: boolean;
 }) {
     const { auth } = usePage<SharedData>().props;
-    console.log(auth)
     const { updateAppearance, appearance } = useAppearance();
 
     return (
@@ -28,7 +27,7 @@ export default function Home({
                     rel="stylesheet"
                 />
             </Head>
-            {appearance == 'dark' ? (
+            {/* {appearance == 'dark' ? (
                 <Button onClick={() => updateAppearance('light')}>
                     <Sun />
                 </Button>
@@ -36,15 +35,15 @@ export default function Home({
                 <Button onClick={() => updateAppearance('dark')}>
                     <Moon />
                 </Button>
-            )}
+            )} */}
             <div className="flex flex-col gap-10">
                 <ContainerWrapper>
                     <div className="flex flex-col gap-6">
-                        <div className="h-160 w-full">
+                        <div className="h-80 md:h-160 w-full">
                             <img
                                 src=""
                                 alt="ini-foto"
-                                className="h-full w-full rounded-2xl border"
+                                className="h-full aspect-video w-full rounded-2xl border"
                             />
                         </div>
                         <ContainerProductCard />

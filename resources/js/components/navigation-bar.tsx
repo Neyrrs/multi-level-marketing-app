@@ -2,7 +2,9 @@ import { cart, dashboard, home, login, mitra, product } from '@/routes';
 import { SharedData } from '@/types';
 import type { RouteDefinition } from '@/wayfinder';
 import { Link, usePage } from '@inertiajs/react';
-import { ShoppingCart } from 'lucide-react';
+import { Menu, ShoppingCart, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 import ContainerWrapper from './fragments/container-wrapper';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -24,39 +26,29 @@ interface NavigationItem {
 
 const NavigationBar = () => {
     const { auth } = usePage<SharedData>().props;
+    const [open, setOpen] = useState(false);
+
     const links: LinkTypes[] = [
-        {
-            path: home(),
-            name: 'Home',
-            protected: false,
-        },
-        {
-            path: mitra(),
-            name: 'Mitra',
-            protected: false,
-        },
-        {
-            path: product(),
-            name: 'Produk',
-            protected: false,
-        },
-        {
-            path: dashboard(),
-            name: 'Dasbor',
-            protected: true,
-        },
+        { path: home(), name: 'Home', protected: false },
+        { path: mitra(), name: 'Mitra', protected: false },
+        { path: product(), name: 'Produk', protected: false },
+        { path: dashboard(), name: 'Dasbor', protected: true },
     ];
+
     return (
-        <nav className="fixed z-20 h-15 w-full bg-card">
+        <nav className="fixed z-20 h-15 w-full border-b bg-card">
             <ContainerWrapper>
                 <div className="flex h-full w-full items-center justify-between">
+                    {/* LOGO */}
                     <Link
                         href={home()}
-                        className="flex h-full w-20 items-center text-2xl font-bold"
+                        className="flex h-full w-20 items-center text-xl font-bold md:text-2xl"
                     >
                         Alus
                     </Link>
-                    <div className="flex h-full w-fit items-center gap-5 font-poppins">
+
+                    {/* DESKTOP NAV */}
+                    <div className="hidden h-full items-center gap-5 font-poppins md:flex">
                         {links.map((item, i) => {
                             if (item.protected && !auth.user) return null;
 
@@ -64,36 +56,117 @@ const NavigationBar = () => {
                                 <Link
                                     key={i}
                                     href={item.path}
-                                    className="opacity-100 hover:opacity-80"
+                                    className="hover:opacity-80"
                                 >
                                     {item.name}
                                 </Link>
                             );
                         })}
                     </div>
-                    <div className="flex gap-4">
+
+                    <div className="flex items-center gap-3">
                         <Button
-                            className="relative bg-transparent font-bold text-primary shadow-none hover:bg-transparent"
+                            className="relative bg-transparent text-primary shadow-none hover:bg-transparent"
                             asChild
                         >
                             <Link href={cart()}>
                                 <ShoppingCart className="size-6" />
-                                <Badge className="absolute -top-1 -right-2 flex h-fit w-fit items-center justify-center bg-red-500 text-[10px]">
+                                <Badge className="absolute -top-1 -right-2 bg-red-500 text-[10px]">
                                     10
                                 </Badge>
                             </Link>
                         </Button>
+
                         {auth.user === null && (
                             <Button
-                                className="h-8 rounded-sm px-8 text-xs font-bold"
+                                className="hidden h-8 rounded-sm px-6 text-xs font-bold md:inline-flex"
                                 asChild
                             >
                                 <Link href={login()}>Login</Link>
                             </Button>
                         )}
+                        <Button
+                            size={'icon'}
+                            variant={'ghost'}
+                            onClick={() => setOpen(!open)}
+                            className="md:hidden"
+                        >
+                            {open ? (
+                                <X className="size-6" />
+                            ) : (
+                                <Menu className="size-6" />
+                            )}
+                        </Button>
                     </div>
                 </div>
             </ContainerWrapper>
+
+            <AnimatePresence>
+                {open && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        className="border-t bg-card md:hidden"
+                    >
+                        <motion.div
+                            initial="hidden"
+                            animate="show"
+                            exit="hidden"
+                            variants={{
+                                hidden: { opacity: 0 },
+                                show: {
+                                    opacity: 1,
+                                    transition: {
+                                        staggerChildren: 0.06,
+                                    },
+                                },
+                            }}
+                            className="flex flex-col gap-4 px-6 py-6"
+                        >
+                            {links.map((item, i) => {
+                                if (item.protected && !auth.user) return null;
+
+                                return (
+                                    <motion.div
+                                        key={i}
+                                        variants={{
+                                            hidden: { opacity: 0, x: -10 },
+                                            show: { opacity: 1, x: 0 },
+                                        }}
+                                    >
+                                        <Link
+                                            href={item.path}
+                                            className="text-sm font-medium"
+                                            onClick={() => setOpen(false)}
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    </motion.div>
+                                );
+                            })}
+
+                            {auth.user === null && (
+                                <motion.div
+                                    className="w-full"
+                                    variants={{
+                                        hidden: { opacity: 0, y: 10 },
+                                        show: { opacity: 1, y: 0 },
+                                    }}
+                                >
+                                    <Button
+                                        className="mt-2 w-full md:h-9 text-sm font-bold"
+                                        asChild
+                                    >
+                                        <Link href={login()}>Login</Link>
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </nav>
     );
 };

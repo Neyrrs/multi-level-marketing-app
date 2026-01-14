@@ -19,11 +19,11 @@ const Login = () => {
             <div className="flex h-screen w-screen items-center justify-center">
                 <div className="flex h-fit w-fit shadow-md">
                     {/* LEFT IMAGE */}
-                    <div className="h-[65vh] w-md">
+                    <div className="md:h-[65vh] h-fit md:block hidden w-md">
                         <img
                             src="#"
                             alt="login image"
-                            className="h-full w-full rounded-l-2xl border-2 object-cover"
+                            className="h-full w-full rounded-l-3xl border-2 object-cover"
                         />
                     </div>
 
@@ -31,12 +31,12 @@ const Login = () => {
                     <Form
                         {...store.form()}
                         resetOnSuccess={['password']}
-                        className="flex h-[65vh] w-md flex-col justify-center gap-6 rounded-r-2xl bg-white p-10"
+                        className="flex h-fit md:py-0 py-10 md:h-[65vh] md:w-md flex-col justify-center gap-6 rounded-3xl md:rounded-r-3xl bg-white p-10"
                     >
                         {({ processing, errors }) => (
                             <>
                                 {/* TITLE */}
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col md:items-start items-center gap-2">
                                     <p className="text-4xl font-bold text-primary">
                                         Masuk
                                     </p>
