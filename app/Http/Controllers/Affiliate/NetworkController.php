@@ -13,7 +13,7 @@ class NetworkController extends Controller
      */
     public function index()
     {
-        return Inertia::render('affiliate/binary/index');
+        return Inertia::render('affiliate/shop/index');
     }
 
     /**

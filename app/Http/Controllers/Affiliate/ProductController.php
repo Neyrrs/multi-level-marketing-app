@@ -13,7 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Inertia::render('affiliate/belanja/index');
+        return Inertia::render('affiliate/tree/index');
     }
 
     /**

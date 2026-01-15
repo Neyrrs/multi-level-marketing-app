@@ -31,32 +31,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware([RoleMiddleware::class . ':guest'])->group(function () {
         Route::get('/dashboard', fn () => Inertia::render('guest/dashboard'))
             ->name('dashboard');
-        Route::get('/DaftarAffiliate', fn () => Inertia::render('guest/DaftarAffiliate/register'))
-            ->name('DaftarAffiliate');
-        Route::get('/Contact', fn () => Inertia::render('guest/Contact/index'))
-            ->name('Contact');
-        Route::get('/CaraKerja', fn () => Inertia::render('guest/CaraKerja/index'))
-            ->name('CaraKerja');
-        Route::get('/tree', fn () => Inertia::render('guest/tree/index'))
-            ->name('tree');
-        Route::get('/reward', fn () => Inertia::render('guest/reward/index'))
-            ->name('reward');
-        Route::get('/shop', fn () => Inertia::render('guest/shop/index'))
-            ->name('shop');
-        Route::get('/pin-history', fn () => Inertia::render('guest/pin-history/index'))
-            ->name('pin-history');
-        Route::get('/pin-list', fn () => Inertia::render('guest/pin-list/index'))
-            ->name('pin-list');
+        Route::get('/shop', fn () => Inertia::render('guest/shop/index'));
         Route::get('/shop-history', fn () => Inertia::render('guest/shop-history/index'))
             ->name('shop-history');
-        Route::get('/sponsor', fn () => Inertia::render('guest/sponsor/index'))
-            ->name('sponsor');
-        Route::get('/downline', fn () => Inertia::render('guest/downline/index'))
-            ->name('downline');
-        Route::get('/personal-ro', fn () => Inertia::render('guest/personal-ro/index'))
-            ->name('personal-ro');
-        Route::get('/generation-ro', fn () => Inertia::render('guest/generation-ro/index'))
-            ->name('generation-ro');
+
     });
 
     /*
@@ -138,13 +116,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', fn () => Inertia::render('affiliate/dashboard'))
             ->name('dashboard');
 
-        Route::resource('products', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('kode', Affiliate\CodeController::class);
-        Route::resource('redeem', Affiliate\ActivationCodeController::class);
-        Route::resource('komisi', Affiliate\CommissionController::class)->only(['index']);
-
-        Route::get('binary', [Affiliate\NetworkController::class, 'index'])
-            ->name('binary');
+        Route::resource('tree', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('shop', Affiliate\NetworkController::class)->only(['index', 'show']);
+        Route::resource('shop-history', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('pin-list', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('pin-history', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('generation-ro', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('personal-ro', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('matching-bonus', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('sponsor', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('reward', Affiliate\ProductController::class)->only(['index', 'show']);
     });
 
 
