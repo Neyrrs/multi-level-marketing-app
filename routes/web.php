@@ -48,13 +48,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('dashboard', fn () => Inertia::render('admin/dashboard'))
             ->name('dashboard');
-
+         Route::resource('UsersRole', Admin\UserRole::class);
         Route::resource('MasterProduk', Admin\MasterProdukController::class);
         Route::resource('ManajemenAffiliate', Admin\ManajemenAffiliateController::class);
         Route::resource('PengaturanPlan', Admin\PlanController::class);
         Route::resource('PengaturanKomisi', Admin\KomisiController::class);
-
-        Route::resource('Orders', Admin\OrderController::class);
+        
+        Route::resource('Orders', Admin\OrderController::class);    
         Route::resource('Transaksi', Admin\TransactionController::class);
 
         Route::resource('UsersRole', Admin\UserRole::class);
