@@ -114,17 +114,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('dashboard', fn () => Inertia::render('affiliate/dashboard'))
             ->name('dashboard');
+        Route::get('binary', [Affiliate\BinaryController::class, 'index']);
+        Route::get('komisi', [Affiliate\KomisiController::class, 'index']);
+        Route::get('kode', [Affiliate\KodeController::class, 'index']);
+        Route::get('pengaturan', [Affiliate\PengaturanController::class, 'index']);
+        Route::get('personal', [Affiliate\PersonalController::class, 'index']);
+        Route::get('downline', [Affiliate\DownlineController::class, 'index']);
 
-        Route::resource('tree', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('shop', Affiliate\NetworkController::class)->only(['index', 'show']);
-        Route::resource('shop-history', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('pin-list', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('pin-history', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('generation-ro', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('personal-ro', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('matching-bonus', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('sponsor', Affiliate\ProductController::class)->only(['index', 'show']);
-        Route::resource('reward', Affiliate\ProductController::class)->only(['index', 'show']);
+        Route::resource('tree', Affiliate\TreeController::class);
+        Route::resource('shop', Affiliate\ShopController::class);
+        Route::resource('shop-history', Affiliate\ShopHistoryController::class);
+        Route::resource('pin-list', Affiliate\PinListController::class);
+        Route::resource('pin-history', Affiliate\PinHistoryController::class);
+        Route::resource('generation-ro', Affiliate\GeneraionController::class);
+        Route::resource('personal-ro', Affiliate\PersonalController::class);
+        Route::resource('matching-bonus', Affiliate\MatchingController::class);
+        Route::resource('sponsor', Affiliate\SponsorController::class);
+        Route::resource('reward', Affiliate\ProductController::class);
     });
 
 

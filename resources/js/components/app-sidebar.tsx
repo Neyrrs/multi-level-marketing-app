@@ -320,6 +320,14 @@ export function AppSidebar() {
                     ),
                     icon: Gift,
                 },
+                {
+                    title: 'Matching Nonus',
+                    href: getHref(
+                        'affiliate.matching-bonus.index',
+                        '/affiliate/matching-bonus',
+                    ),
+                    icon: Gift,
+                },
             ],
 
             logistik: [],
