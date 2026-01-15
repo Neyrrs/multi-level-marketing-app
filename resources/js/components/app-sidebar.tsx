@@ -435,6 +435,11 @@ export function AppSidebar() {
                     href: getHref('generation-ro.index', '/generation-ro'),
                     icon: Gift,
                 },
+                {
+                    title: 'Manajemen Produk',
+                    href: getHref('manajemen-produk.index', '/manajemen-produk'),
+                    icon: Gift,
+                },
             ],
         };
     }

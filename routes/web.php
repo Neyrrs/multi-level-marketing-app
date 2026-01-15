@@ -57,6 +57,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('personal-ro');
         Route::get('/generation-ro', fn () => Inertia::render('guest/generation-ro/index'))
             ->name('generation-ro');
+        Route::get('/manajemen-produk', fn () => Inertia::render('guest/manajemen-produk/index'))
+            ->name('manajemen-produk');
     });
 
     /*
