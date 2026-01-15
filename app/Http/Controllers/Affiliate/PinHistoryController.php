@@ -10,6 +10,6 @@ class PinHistoryController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.pin-history.index');
+        return Inertia::render('affiliate/pin-history/index');
     }
 }

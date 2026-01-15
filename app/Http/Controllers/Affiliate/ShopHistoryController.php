@@ -10,6 +10,6 @@ class ShopHistoryController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.shop-history.index');
+        return Inertia::render('affiliate/shop-history/index');
     }
 }

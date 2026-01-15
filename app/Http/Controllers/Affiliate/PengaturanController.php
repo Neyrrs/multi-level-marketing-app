@@ -10,6 +10,6 @@ class PengaturanController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.pengaturan.index');
+        return Inertia::render('affiliate/pengaturan/index');
     }
 }

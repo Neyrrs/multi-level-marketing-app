@@ -10,6 +10,6 @@ class ShopController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.shop.index');
+        return Inertia::render('affiliate/shop/index');
     }
 }

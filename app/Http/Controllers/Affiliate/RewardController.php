@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ReedemController extends Controller
+class RewardController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate/reedem/index');
+        return Inertia::render('affiliate/reward/index');
     }
 }
