@@ -13,9 +13,8 @@ import {
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
-    BookOpen,
-    Folder,
     Gift,
+    Home,
     KeySquareIcon,
     LayoutGrid,
     Network,
@@ -27,14 +26,9 @@ import AppLogo from './app-logo';
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Beranda',
+        href: '/',
+        icon: Home,
     },
 ];
 
@@ -76,111 +70,138 @@ export function AppSidebar() {
                     href: getHref('admin.dashboard', '/admin/dashboard'),
                     icon: LayoutGrid,
                 },
-                 {
-                    title: 'Manajemen Produk',
-                    href: getHref('manajemen-produk.index', '/manajemen-produk'),
-                    icon: Gift,
-                },
-
-                // === MASTER DATA ===
                 {
-                    title: 'Master Produk',
+                    title: 'Manajemen Produk',
                     href: getHref(
-                        'admin.MasterProduk.index',
-                        '/admin/MasterProduk',
+                        'manajemen-produk.index',
+                        '/admin/product-management',
                     ),
-                    icon: Package,
+                    icon: Gift,
                 },
                 {
                     title: 'Manajemen Affiliate',
                     href: getHref(
-                        'admin.ManajemenAffiliate.index',
-                        '/admin/ManajemenAffiliate',
+                        'manajemen-affiliate.index',
+                        '/admin/affiliate-management',
                     ),
-                    icon: Package,
-                },
-                {
-                    title: 'Pengaturan Plan',
-                    href: getHref(
-                        'admin.PengaturanPlan.index',
-                        '/admin/PengaturanPlan',
-                    ),
-                    icon: Package,
+                    icon: Gift,
                 },
                 {
                     title: 'Pengaturan Komisi',
                     href: getHref(
-                        'admin.PengaturanKomisi.index',
-                        '/admin/PengaturanKomisi',
+                        'pengaturan-komisi.index',
+                        '/admin/commission-setting',
                     ),
-                    icon: Package,
+                    icon: Gift,
                 },
+                {
+                    title: 'Pengaturan Plan',
+                    href: getHref(
+                        'pengaturan-plan.index',
+                        '/admin/plan-setting',
+                    ),
+                    icon: Gift,
+                },
+
+                // // === MASTER DATA ===
+                // {
+                //     title: 'Master Produk',
+                //     href: getHref(
+                //         'admin.MasterProduk.index',
+                //         '/admin/MasterProduk',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Manajemen Affiliate',
+                //     href: getHref(
+                //         'admin.ManajemenAffiliate.index',
+                //         '/admin/ManajemenAffiliate',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Pengaturan Plan',
+                //     href: getHref(
+                //         'admin.PengaturanPlan.index',
+                //         '/admin/PengaturanPlan',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Pengaturan Komisi',
+                //     href: getHref(
+                //         'admin.PengaturanKomisi.index',
+                //         '/admin/PengaturanKomisi',
+                //     ),
+                //     icon: Package,
+                // },
 
                 // === TRANSAKSI ===
-                {
-                    title: 'Orders / Penjualan',
-                    href: getHref('admin.Orders.index', '/admin/Orders'),
-                    icon: Package,
-                },
-                {
-                    title: 'Transaksi',
-                    href: getHref('admin.Transaksi.index', '/admin/Transaksi'),
-                    icon: Package,
-                },
+                // {
+                //     title: 'Orders / Penjualan',
+                //     href: getHref('admin.Orders.index', '/admin/Orders'),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Transaksi',
+                //     href: getHref('admin.Transaksi.index', '/admin/Transaksi'),
+                //     icon: Package,
+                // },
 
-                // === LAPORAN ===
-                {
-                    title: 'Laporan Penjualan',
-                    href: getHref(
-                        'admin.reports.LaporanPenjualan',
-                        '/admin/reports/LaporanPenjualan',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Affiliate',
-                    href: getHref(
-                        'admin.reports.LaporanAffiliate',
-                        '/admin/reports/LaporanAffiliate',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Komisi',
-                    href: getHref(
-                        'admin.reports.LaporanKomisi',
-                        '/admin/reports/LaporanKomisi',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Keuangan',
-                    href: getHref(
-                        'admin.reports.LaporanKeuangan',
-                        '/admin/reports/LaporanKeuangan',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Produk',
-                    href: getHref(
-                        'admin.reports.LaporanProduk',
-                        '/admin/reports/LaporanProduk',
-                    ),
-                    icon: Package,
-                },
+                // // === LAPORAN ===
+                // {
+                //     title: 'Laporan Penjualan',
+                //     href: getHref(
+                //         'admin.reports.LaporanPenjualan',
+                //         '/admin/reports/LaporanPenjualan',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Laporan Affiliate',
+                //     href: getHref(
+                //         'admin.reports.LaporanAffiliate',
+                //         '/admin/reports/LaporanAffiliate',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Laporan Komisi',
+                //     href: getHref(
+                //         'admin.reports.LaporanKomisi',
+                //         '/admin/reports/LaporanKomisi',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Laporan Keuangan',
+                //     href: getHref(
+                //         'admin.reports.LaporanKeuangan',
+                //         '/admin/reports/LaporanKeuangan',
+                //     ),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Laporan Produk',
+                //     href: getHref(
+                //         'admin.reports.LaporanProduk',
+                //         '/admin/reports/LaporanProduk',
+                //     ),
+                //     icon: Package,
+                // },
 
-                // === SYSTEM ===
-                {
-                    title: 'Users & Roles',
-                    href: getHref('admin.UsersRole.index', '/admin/UsersRole'),
-                    icon: Package,
-                },
-                {
-                    title: 'Settings',
-                    href: getHref('admin.settings', '/admin/settings'),
-                    icon: Package,
-                },
+                // // === SYSTEM ===
+                // {
+                //     title: 'Users & Roles',
+                //     href: getHref('admin.UsersRole.index', '/admin/UsersRole'),
+                //     icon: Package,
+                // },
+                // {
+                //     title: 'Settings',
+                //     href: getHref('admin.settings', '/admin/settings'),
+                //     icon: Package,
+                // },
             ],
 
             manager: [
@@ -327,11 +348,10 @@ export function AppSidebar() {
             finance: [],
 
             guest: [
-                { title: 'Home', href: getHref('home', '/'), icon: LayoutGrid },
                 {
-                    title: 'Produk',
-                    href: getHref('produk.index', '/produk'),
-                    icon: Package,
+                    title: 'Depan',
+                    href: getHref('home', '/dashboard'),
+                    icon: LayoutGrid,
                 },
                 {
                     title: 'Belanja',
