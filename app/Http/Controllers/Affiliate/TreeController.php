@@ -10,6 +10,6 @@ class TreeController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.tree.index');
+        return Inertia::render('affiliate/tree/index');
     }
 }
