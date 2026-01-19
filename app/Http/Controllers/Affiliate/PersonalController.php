@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class DownlineController extends Controller
+class PersonalController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate/downline/index');
+        return Inertia::render('affiliate.personal.index');
     }
 }
