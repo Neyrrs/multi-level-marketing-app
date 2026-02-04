@@ -25,7 +25,7 @@ export function PaginationCombobox({ value, onChange }: ComboBoxProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="default"
+          variant="outline"
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"

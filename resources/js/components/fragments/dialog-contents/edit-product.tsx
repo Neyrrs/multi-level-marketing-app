@@ -30,11 +30,12 @@ const DialogEditProduct = ({
         email: '',
         gender: '',
     });
+
     return (
         <>
             <div className="">
                 <Dialog>
-                    <DialogTrigger asChild>{children}</DialogTrigger>
+                    <DialogTrigger asChild onClick={() => console.log(editData)}>{children}</DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
                             <DialogTitle>Edit Produk</DialogTitle>

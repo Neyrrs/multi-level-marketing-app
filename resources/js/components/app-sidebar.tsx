@@ -18,8 +18,10 @@ import {
     KeySquareIcon,
     LayoutGrid,
     Network,
+    Newspaper,
     Package,
     ShoppingBasket,
+    User,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import AppLogo from './app-logo';
@@ -66,52 +68,85 @@ export function AppSidebar() {
         return {
             admin: [
                 {
-                    title: 'Dashboard Utama',
-                    href: getHref('admin.dashboard', '/admin/dashboard'),
+                    title: 'Master Data',
                     icon: LayoutGrid,
+                    children: [
+                        {
+                            title: 'Master Produk',
+                            href: getHref(
+                                'manajemen-produk.index',
+                                '/admin/product-management',
+                            ),
+                        },
+                        {
+                            title: 'Pengaturan Komisi',
+                            href: getHref(
+                                'pengaturan-komisi.index',
+                                '/admin/commission-setting',
+                            ),
+                        },
+                        {
+                            title: 'Pengaturan Plan',
+                            href: getHref(
+                                'pengaturan-plan.index',
+                                '/admin/plan-setting',
+                            ),
+                        },
+                    ],
                 },
                 {
-                    title: 'Manajemen Produk',
+                    title: 'Pusat Laporan',
+                    icon: Newspaper,
+                    children: [
+                        {
+                            title: 'Laporan Penjualan',
+                            href: getHref(
+                                'admin.reports.LaporanPenjualan',
+                                '/admin/reports/LaporanPenjualan',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Affiliate',
+                            href: getHref(
+                                'admin.reports.LaporanAffiliate',
+                                '/admin/reports/LaporanAffiliate',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Komisi',
+                            href: getHref(
+                                'admin.reports.LaporanKomisi',
+                                '/admin/reports/LaporanKomisi',
+                            ),
+                            icon: Package,
+                        },
+                        {
+                            title: 'Laporan Keuangan',
+                            href: getHref(
+                                'admin.reports.LaporanKeuangan',
+                                '/admin/reports/LaporanKeuangan',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Produk',
+                            href: getHref(
+                                'admin.reports.LaporanProduk',
+                                '/admin/reports/LaporanProduk',
+                            ),
+                        },
+                    ],
+                },
+                {
+                    title: 'Manajemen User',
                     href: getHref(
                         'manajemen-produk.index',
                         '/admin/product-management',
                     ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Manajemen Affiliate',
-                    href: getHref(
-                        'manajemen-affiliate.index',
-                        '/admin/affiliate-management',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Pengaturan Komisi',
-                    href: getHref(
-                        'pengaturan-komisi.index',
-                        '/admin/commission-setting',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Pengaturan Plan',
-                    href: getHref(
-                        'pengaturan-plan.index',
-                        '/admin/plan-setting',
-                    ),
-                    icon: Gift,
+                    icon: User,
                 },
 
                 // // === MASTER DATA ===
-                // {
-                //     title: 'Master Produk',
-                //     href: getHref(
-                //         'admin.MasterProduk.index',
-                //         '/admin/MasterProduk',
-                //     ),
-                //     icon: Package,
-                // },
+
                 // {
                 //     title: 'Manajemen Affiliate',
                 //     href: getHref(
@@ -146,48 +181,6 @@ export function AppSidebar() {
                 // {
                 //     title: 'Transaksi',
                 //     href: getHref('admin.Transaksi.index', '/admin/Transaksi'),
-                //     icon: Package,
-                // },
-
-                // // === LAPORAN ===
-                // {
-                //     title: 'Laporan Penjualan',
-                //     href: getHref(
-                //         'admin.reports.LaporanPenjualan',
-                //         '/admin/reports/LaporanPenjualan',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Affiliate',
-                //     href: getHref(
-                //         'admin.reports.LaporanAffiliate',
-                //         '/admin/reports/LaporanAffiliate',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Komisi',
-                //     href: getHref(
-                //         'admin.reports.LaporanKomisi',
-                //         '/admin/reports/LaporanKomisi',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Keuangan',
-                //     href: getHref(
-                //         'admin.reports.LaporanKeuangan',
-                //         '/admin/reports/LaporanKeuangan',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Produk',
-                //     href: getHref(
-                //         'admin.reports.LaporanProduk',
-                //         '/admin/reports/LaporanProduk',
-                //     ),
                 //     icon: Package,
                 // },
 
