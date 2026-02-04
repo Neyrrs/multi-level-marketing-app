@@ -1,0 +1,220 @@
+﻿PS C:\Project\alus-astech> php artisan test:mlm-binary-comprehensive
+╔════════════════════════════════════════════════════════════╗
+║  COMPREHENSIVE MLM BINARY TREE TESTING - GEN 0 TO GEN 3    ║
+╚════════════════════════════════════════════════════════════╝\n
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 1: SETUP ADMIN & MASTER DATA                        ║
+╚════════════════════════════════════════════════════════════╝\n
+✅ Admin found: test@example.com
+\n📊 Setting up Commission Methods...
+  ✅ Sponsor Method: 10% commission to direct sponsor
+  ✅ Level Method: L1=8%, L2=5%, L3=2%
+  ✅ Generation Method: Gen1=7%, Gen2=4%, Gen3=1%
+
+✅ Phase 1 Complete: Master data setup
+
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 2: CREATE FIRST AFFILIATE (ABDU) - GEN 1            ║
+╚════════════════════════════════════════════════════════════╝\n
+\n📝 Creating order for Abdu...
+✅ Order created: ORD-GEN1-20260123063536
+   Total: Rp 3.000.000
+\n📝 Generating activation codes...
+✅ Generated 2 codes:
+   └─ PWEQ5QEGLYIW
+   └─ XKTUGT8BHFQM
+
+✅ Phase 2 Complete: Abdu (Gen 1) created
+
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 3: CREATE GUEST & FIRST ORDER                       ║
+╚════════════════════════════════════════════════════════════╝\n
+📝 Creating guest user...
+\n📝 Guest making purchase from app.com/abduibrahim...
+✅ Order created: ORD-GUEST-20260123063536
+   Sponsor: Abdu (from link)
+   Total: Rp 2.000.000
+\n📝 Generating activation codes from guest order...
+✅ Generated 2 codes for guest to become affiliate:
+   └─ URF5B8CSZTVQ
+   └─ XSDJBAGFUPYZ
+
+┌─ GUEST TRACKING
+│ Name: Guest Customer 001
+│ Email: guest001@test.com
+│ Order Number: ORD-GUEST-20260123063536
+│ Order Amount: Rp 2.000.000
+│ Sponsor: Abdu Ibrahim (@abduibrahim)
+│ Activation Codes Generated: 2
+└─ End
+
+
+✅ Phase 3 Complete: Guest order processed
+
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 4: CREATE GENERATION 2 (RAHMAN)                     ║
+╚════════════════════════════════════════════════════════════╝\n
+📝 Guest becomes affiliate (Rahman)...
+\n📝 Creating order for Rahman...
+✅ Order created: ORD-GEN2-20260123063536
+✅ Generated 4 codes
+\n💰 Calculating commissions for Rahman order...
+
+┌─ RAHMAN (GEN 2) TRACKING
+│ Name: Guest Customer 001 (Rahman)
+│ Link: app.com/guestcustomer001
+│ Position: RIGHT (Binary)
+│ Sponsor: Abdu Ibrahim
+│ Upline: Abdu Ibrahim
+│ Direct Downline: 0
+│ Order Amount: Rp 2.500.000
+│ Codes Generated: 4
+│ Commission Generated: Rp 0
+└─ End
+
+
+┌─ ABDU TRACKING AFTER GEN 2
+│ Name: Abdu Ibrahim
+│ Total Direct Downline: 0
+│ Total Commission: Rp 0
+│ Direct Downline Count: 1
+└─ End
+
+
+✅ Phase 4 Complete: Generation 2 (Rahman) created
+
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 5: CREATE GENERATION 3 (14 AFFILIATES)              ║
+╚════════════════════════════════════════════════════════════╝\n
+📝 Creating Gen 3 Affiliate #1: Siti Gen3 20260123063536
+   ✅ Already registered: app.com/sitigen320260123061047
+
+📝 Creating Gen 3 Affiliate #2: Budi Gen3 20260123063536
+   ✅ Already registered: app.com/budigen320260123061338
+
+📝 Creating Gen 3 Affiliate #3: Dewi Gen3 20260123063536
+   ✅ Already registered: app.com/dewigen320260123061909
+
+📝 Creating Gen 3 Affiliate #4: Ahmad Gen3 20260123063536
+   ✅ Already registered: app.com/ahmadgen320260123062137
+
+📝 Creating Gen 3 Affiliate #5: Rini Gen3 20260123063536
+   ✅ Already registered: app.com/rinigen320260123062435
+
+📝 Creating Gen 3 Affiliate #6: Hendra Gen3 20260123063536
+   ✅ Already registered: app.com/hendragen320260123062809
+
+✅ Phase 5 Complete: 14 Generation 3 affiliates created
+
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 6: COMPREHENSIVE TRACKING & REPORTS                 ║
+╚════════════════════════════════════════════════════════════╝\n
+
+┌─ ADMIN (GEN 0) - ROOT SPONSOR
+│ Name: Test User
+│ Direct Downline: 2
+│ Total Downline: 2
+│ Total Commission: Rp 0
+│ Total Sales Volume: Rp 0
+└─ End
+
+
+┌─ ABDU (GEN 1) - DETAILED TRACKING
+│ Name: Abdu Ibrahim
+│ Link: app.com/abduibrahim
+│ Position: LEFT (Root)
+│ Level: 1
+│ Direct Downline: 1
+│ Total Commission: Rp 0
+│ Total Order Sales: Rp 50.000.000
+│ Activation Codes Used: 40
+└─ End
+
+
+📊 Abdu Direct Downlines:
+  └─ Guest Customer 001 (@guestcustomer001) [right]
+\n
+
+┌─ RAHMAN (GEN 2) - DETAILED TRACKING
+│ Name: Guest Customer 001
+│ Link: app.com/guestcustomer001
+│ Position: RIGHT (Binary)
+│ Sponsor: Abdu Ibrahim
+│ Level: 2
+│ Direct Downline: 6
+│ Total Commission: Rp 0
+│ Total Order Sales: Rp 22.500.000
+│ Activation Codes Generated: 36
+└─ End
+
+
+📊 Rahman Direct Downlines (Gen 3):
+  └─ Rini Gen3 20260123062435 (@rinigen320260123062435) [left]
+  └─ Siti Gen3 20260123061047 (@sitigen320260123061047) [left]
+  └─ Hendra Gen3 20260123062809 (@hendragen320260123062809) [right]
+  └─ Dewi Gen3 20260123061909 (@dewigen320260123061909) [left]
+  └─ Ahmad Gen3 20260123062137 (@ahmadgen320260123062137) [right]
+  └─ Budi Gen3 20260123061338 (@budigen320260123061338) [right]
+\n
+
+┌─ GENERATION 3 - SUMMARY TRACKING
+│ Total Gen 3 Affiliates: 6
+│ Total Gen 3 Orders: 0
+│ Total Gen 3 Sales: Rp 0
+│ Total Gen 3 Commission: Rp 0
+└─ End
+
+\n
+
+┌─ COMMISSION BREAKDOWN
+│ Total Commissions Generated: Rp 0
+│ Pending Commissions: Rp 0
+│ Approved Commissions: Rp 0
+│ Paid Commissions: Rp 0
+└─ End
+
+\n
+🌳 MLM BINARY TREE STRUCTURE:
+
+
+✅ Phase 6 Complete: Tracking and reporting
+
+╔════════════════════════════════════════════════════════════╗
+║  PHASE 7: ADDITIONAL ROLE & FEATURE TESTING                ║
+╚════════════════════════════════════════════════════════════╝\n
+📦 Testing Logistics Role...
+  ✅ Order tracking system
+  ✅ Shipping status monitoring
+  ✅ Delivery address validation
+  ✅ Logistics provider integration\n
+💳 Testing Midtrans Payment System...
+  ✅ Mock transaction creation
+  ✅ Payment verification
+  ✅ Transaction history tracking
+  ✅ Refund simulation\n
+📋 Testing Audit Log System...
+  ✅ Commission approval logging
+  ✅ User role change logging
+  ✅ Order modification tracking
+  ✅ Commission withdrawal logging\n
+🔐 Testing Role-Based Access Control...
+  ✅ Admin can approve commissions
+  ✅ Affiliate can view own commissions
+  ✅ Guest cannot access commission data
+  ✅ Logistics staff can update shipping\n
+
+┌─ FINAL SYSTEM STATISTICS
+│ Total Users: 9
+│ Total Affiliates: 9
+│ Total Orders: 29
+│ Total Revenue: Rp 72.500.000
+│ Total Commissions: Rp 0
+│ Activation Codes Generated: 77
+│ MLM Tree Depth: 0
+└─ End
+
+
+✅ Phase 7 Complete: Additional testing
+
+
+✅ COMPREHENSIVE TEST COMPLETED SUCCESSFULLY!
