@@ -27,6 +27,7 @@ interface NavigationItem {
 const NavigationBar = () => {
     const { auth } = usePage<SharedData>().props;
     const [open, setOpen] = useState(false);
+    console.log(auth)
 
     const links: LinkTypes[] = [
         { path: home(), name: 'Home', protected: false },

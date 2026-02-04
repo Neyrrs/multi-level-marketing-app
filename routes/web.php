@@ -48,6 +48,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('dashboard', fn () => Inertia::render('admin/dashboard'))
             ->name('dashboard');
+        Route::get('product-management', fn () => Inertia::render('admin/manajemen-produk/index'))
+            ->name('product-management');
+        Route::get('affiliate-management', fn () => Inertia::render('admin/manajemen-affiliate/index'))
+            ->name('affiliate-management');
+        Route::get('commission-setting', fn () => Inertia::render('admin/pengaturan-komisi/index'))
+            ->name('commission-setting');
+        Route::get('plan-setting', fn () => Inertia::render('admin/pengaturan-plan/index'))
+            ->name('plan-setting');
+
          Route::resource('UsersRole', Admin\UserRole::class);
         Route::resource('MasterProduk', Admin\MasterProdukController::class);
         Route::resource('ManajemenAffiliate', Admin\ManajemenAffiliateController::class);
