@@ -251,43 +251,9 @@ export function AppSidebar() {
 
             affiliate: [
                 {
-                    title: 'Affiliate Dashboard',
-                    href: getHref(
-                        'affiliate.dashboard',
-                        '/affiliate/dashboard',
-                    ),
-                    icon: LayoutGrid,
-                },
-                {
-                    title: 'Pengaturan Profil',
-                    href: getHref('affiliate.dashboard', '/profile'),
-                    icon: Package,
-                },
-                {
-                    title: 'Pohon',
-                    href: getHref('affiliate.tree.index', '/affiliate/tree'),
-                    icon: Network,
-                },
-                {
                     title: 'Belanja',
                     href: getHref('affiliate.shop.index', '/affiliate/shop'),
                     icon: ShoppingBasket,
-                },
-                {
-                    title: 'Riwayat Belanja',
-                    href: getHref(
-                        'affiliate.shop-history.index',
-                        '/affiliate/shop-history',
-                    ),
-                    icon: ShoppingBasket,
-                },
-                {
-                    title: 'Riwayat Pin',
-                    href: getHref(
-                        'affiliate.pin-history.index',
-                        '/affiliate/pin-history',
-                    ),
-                    icon: KeySquareIcon,
                 },
                 {
                     title: 'Daftar Pin',
@@ -298,53 +264,109 @@ export function AppSidebar() {
                     icon: KeySquareIcon,
                 },
                 {
-                    title: 'Hadiah',
-                    href: getHref(
-                        'affiliate.reward.index',
-                        '/affiliate/reward',
-                    ),
-                    icon: Gift,
+                    title: 'Jaringan',
+                    icon: Network,
+                    children: [
+                        {
+                            title: 'Pohon',
+                            href: getHref(
+                                'affiliate.tree.index',
+                                '/affiliate/tree',
+                            ),
+                        },
+                        {
+                            title: 'Repeat Order',
+                            href: getHref(
+                                'affiliate.tree.index',
+                                '/affiliate/tree',
+                            ),
+                        },
+                    ],
                 },
-                {
-                    title: 'Sponsor',
-                    href: getHref(
-                        'affiliate.sponsor.index',
-                        '/affiliate/sponsor',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Downline',
-                    href: getHref(
-                        'affiliate.downline.index',
-                        '/affiliate/downline',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Personal RO',
-                    href: getHref(
-                        'affiliate.personal-ro.index',
-                        '/affiliate/personal-ro',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Generasi RO',
-                    href: getHref(
-                        'affiliate.generation-ro.index',
-                        '/affiliate/generation-ro',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Matching Nonus',
-                    href: getHref(
-                        'affiliate.matching-bonus.index',
-                        '/affiliate/matching-bonus',
-                    ),
-                    icon: Gift,
-                },
+                // {
+                //     title: 'Affiliate Dashboard',
+                //     href: getHref(
+                //         'affiliate.dashboard',
+                //         '/affiliate/dashboard',
+                //     ),
+                //     icon: LayoutGrid,
+                // },
+                // {
+                //     title: 'Pengaturan Profil',
+                //     href: getHref('affiliate.dashboard', '/profile'),
+                //     icon: Package,
+                // },
+
+                // {
+                //     title: 'Belanja',
+                //     href: getHref('affiliate.shop.index', '/affiliate/shop'),
+                //     icon: ShoppingBasket,
+                // },
+                // {
+                //     title: 'Riwayat Belanja',
+                //     href: getHref(
+                //         'affiliate.shop-history.index',
+                //         '/affiliate/shop-history',
+                //     ),
+                //     icon: ShoppingBasket,
+                // },
+                // {
+                //     title: 'Riwayat Pin',
+                //     href: getHref(
+                //         'affiliate.pin-history.index',
+                //         '/affiliate/pin-history',
+                //     ),
+                //     icon: KeySquareIcon,
+                // },
+
+                // {
+                //     title: 'Hadiah',
+                //     href: getHref(
+                //         'affiliate.reward.index',
+                //         '/affiliate/reward',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Sponsor',
+                //     href: getHref(
+                //         'affiliate.sponsor.index',
+                //         '/affiliate/sponsor',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Downline',
+                //     href: getHref(
+                //         'affiliate.downline.index',
+                //         '/affiliate/downline',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Personal RO',
+                //     href: getHref(
+                //         'affiliate.personal-ro.index',
+                //         '/affiliate/personal-ro',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Generasi RO',
+                //     href: getHref(
+                //         'affiliate.generation-ro.index',
+                //         '/affiliate/generation-ro',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Matching Nonus',
+                //     href: getHref(
+                //         'affiliate.matching-bonus.index',
+                //         '/affiliate/matching-bonus',
+                //     ),
+                //     icon: Gift,
+                // },
             ],
 
             logistik: [],
