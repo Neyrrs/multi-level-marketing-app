@@ -13,6 +13,6 @@ class FinanceReportController extends Controller
      */
     public function index()
     {
-        return Inertia::render('manager/LaporanKeuangan/index');
+        return Inertia::render('manager/finance-record/index');
     }
 }

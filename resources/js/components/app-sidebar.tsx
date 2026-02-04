@@ -210,46 +210,49 @@ export function AppSidebar() {
                     href: getHref('manager.dashboard', '/manager/dashboard'),
                     icon: LayoutGrid,
                 },
-
                 {
-                    title: 'Laporan Penjualan',
-                    href: getHref(
-                        'manager.reports.LaporanPenjualan',
-                        '/manager/reports/LaporanPenjualan',
-                    ),
+                    title: 'Laporan',
                     icon: Package,
-                },
-                {
-                    title: 'Laporan Affiliate',
-                    href: getHref(
-                        'manager.reports.LaporanAffiliate',
-                        '/manager/reports/LaporanAffiliate',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Komisi',
-                    href: getHref(
-                        'manager.reports.LaporanKomisi',
-                        '/manager/reports/LaporanKomisi',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Keuangan',
-                    href: getHref(
-                        'manager.reports.LaporanKeuangan',
-                        '/manager/reports/LaporanKeuangan',
-                    ),
-                    icon: Package,
-                },
-                {
-                    title: 'Laporan Produk',
-                    href: getHref(
-                        'manager.reports.LaporanProduk',
-                        '/manager/reports/LaporanProduk',
-                    ),
-                    icon: Package,
+                    children: [
+                        {
+                            title: 'Penjualan',
+                            href: getHref(
+                                'manager.reports.sold-record',
+                                '/manager/reports/sold-record',
+                            ),
+                        },
+                        {
+                            title: 'Produk',
+                            href: getHref(
+                                'manager.reports.product-record',
+                                '/manager/reports/product-record',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Affiliate',
+                            href: getHref(
+                                'manager.reports.affiliate-record',
+                                '/manager/reports/affiliate-record',
+                            ),
+                            icon: Package,
+                        },
+                        {
+                            title: 'Laporan Komisi',
+                            href: getHref(
+                                'manager.reports.commission-record',
+                                '/manager/reports/commission-record',
+                            ),
+                            icon: Package,
+                        },
+                        {
+                            title: 'Laporan Keuangan',
+                            href: getHref(
+                                'manager.reports.finance-record',
+                                '/manager/reports/finance-record',
+                            ),
+                            icon: Package,
+                        },
+                    ],
                 },
             ],
 
@@ -381,10 +384,14 @@ export function AppSidebar() {
         const items = roles.length
             ? roles.flatMap((role) => menus[role] ?? [])
             : menus['guest'];
-        // Deduplicate by href
+
         const seen = new Set<string>();
+
         return items.filter((item) => {
+            if (!item.href) return true;
+
             if (seen.has(item.href)) return false;
+
             seen.add(item.href);
             return true;
         });

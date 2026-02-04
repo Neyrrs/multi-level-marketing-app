@@ -13,6 +13,6 @@ class SalesReportController extends Controller
      */
     public function index()
     {
-        return Inertia::render('manager/LaporanPenjualan/index');
+        return Inertia::render('manager/sold-record/index');
     }
 }
