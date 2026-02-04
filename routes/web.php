@@ -62,8 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('ManajemenAffiliate', Admin\ManajemenAffiliateController::class);
         Route::resource('PengaturanPlan', Admin\PlanController::class);
         Route::resource('PengaturanKomisi', Admin\KomisiController::class);
-        
-        Route::resource('Orders', Admin\OrderController::class);    
+
+        Route::resource('Orders', Admin\OrderController::class);
         Route::resource('Transaksi', Admin\TransactionController::class);
 
         Route::resource('UsersRole', Admin\UserRole::class);
@@ -95,19 +95,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dashboard', fn () => Inertia::render('manager/dashboard'))
             ->name('dashboard');
 
-        Route::get('reports/LaporanPenjualan', [Manager\Report\SalesReportController::class, 'index'])
-            ->name('reports.laporanPenjualan');
+        Route::get('reports/sold-record', [Manager\Report\SalesReportController::class, 'index'])
+            ->name('reports.sold-record');
 
-        Route::get('reports/LaporanAffiliate', [Manager\Report\AffiliateReportController::class, 'index'])
-            ->name('reports.laporanAffiliate');
+        Route::get('reports/finance-record', [Manager\Report\FinanceReportController::class, 'index'])
+            ->name('reports.finance-record');
 
-        Route::get('reports/LaporanKeuangan', [Manager\Report\FinanceReportController::class, 'index'])
-            ->name('reports.laporanKeuangan');
+        Route::get('reports/product-record', [Manager\Report\ProductReportController::class, 'index'])
+            ->name('reports.product-record');
 
-        Route::get('reports/LaporanProduk', [Manager\Report\ProductReportController::class, 'index'])
-            ->name('reports.laporanProduk');
-        Route::get('reports/LaporanKomisi', [Manager\Report\CommissionReportController::class, 'index'])
-            ->name('reports.laporanKomisi');
+        Route::get('reports/commission-record', [Manager\Report\CommissionReportController::class, 'index'])
+            ->name('reports.commission-record');
+
+        Route::get('reports/affiliate-record', [Manager\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.affiliate-record');
     });
 
 

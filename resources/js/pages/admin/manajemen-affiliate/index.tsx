@@ -134,7 +134,7 @@ export default function ManajemenAffiliate() {
                                 />
                             </div>
                             <DialogCreateProduct>
-                                <Button variant={'outline'}>
+                                <Button>
                                     <PlusCircleIcon /> Buat Affiliator
                                 </Button>
                             </DialogCreateProduct>

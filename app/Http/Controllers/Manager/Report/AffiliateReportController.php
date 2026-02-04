@@ -13,6 +13,6 @@ class AffiliateReportController extends Controller
      */
     public function index()
     {
-        return Inertia::render('manager/LaporanAffiliate/index');
+        return Inertia::render('manager/affiliate-record/index');
     }
 }

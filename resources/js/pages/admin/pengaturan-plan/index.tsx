@@ -134,7 +134,7 @@ export default function PengaturanPlan() {
                                 />
                             </div>
                             <DialogCreateProduct>
-                                <Button variant={'outline'}>
+                                <Button>
                                     <PlusCircleIcon /> Buat Plan
                                 </Button>
                             </DialogCreateProduct>
