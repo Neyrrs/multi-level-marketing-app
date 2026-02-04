@@ -13,6 +13,6 @@ class ProductReportController extends Controller
      */
     public function index()
     {
-        return Inertia::render('manager/LaporanProduk/index');
+        return Inertia::render('manager/product-record/index');
     }
 }

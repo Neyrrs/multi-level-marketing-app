@@ -13,6 +13,6 @@ class CommissionReportController extends Controller
      */
     public function index()
     {
-        return Inertia::render('manager/LaporanKomisi/index');
+        return Inertia::render('manager/commission-record/index');
     }
 }
