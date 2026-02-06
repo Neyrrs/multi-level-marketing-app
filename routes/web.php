@@ -138,6 +138,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('downline', [Affiliate\DownlineController::class, 'index']);
 
         Route::resource('tree', Affiliate\TreeController::class);
+        Route::resource('repeat-order', Affiliate\CommissionController::class);
         Route::resource('shop', Affiliate\ShopController::class);
         Route::resource('shop-history', Affiliate\ShopHistoryController::class);
         Route::resource('pin-list', Affiliate\PinListController::class);

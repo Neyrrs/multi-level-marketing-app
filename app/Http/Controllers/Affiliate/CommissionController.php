@@ -10,6 +10,6 @@ class CommissionController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate/komisi/index');
+        return Inertia::render('affiliate/repeat-order/index');
     }
 }
