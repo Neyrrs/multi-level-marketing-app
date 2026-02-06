@@ -13,7 +13,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-      return Inertia::render('logistik/inventory/index');
+      return Inertia::render('logistik/shipping-status/index');
     }
 
     /**

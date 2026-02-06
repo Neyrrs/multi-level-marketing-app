@@ -13,7 +13,12 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        return Inertia::render('finance/transactions/index');
+        return Inertia::render('finance/transactions-management/index');
+    }
+
+    public function ManageOrders()
+    {
+
     }
 
     /**

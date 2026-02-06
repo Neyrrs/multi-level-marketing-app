@@ -9,6 +9,10 @@ use App\Http\Controllers\Manager;
 use App\Http\Controllers\Affiliate;
 use App\Http\Controllers\Logistik;
 use App\Http\Controllers\Finance;
+use App\Http\Controllers\Logistik\OrderController;
+use App\Http\Controllers\Finance\FinanceReportController;
+use App\Http\Controllers\Finance\TransactionController;
+
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -107,8 +111,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('reports/commission-record', [Manager\Report\CommissionReportController::class, 'index'])
             ->name('reports.commission-record');
 
-        Route::get('reports/affiliate-record', [Manager\Report\AffiliateReportController::class, 'index'])
-            ->name('reports.affiliate-record');
+        // Route::get('reports/affiliate-record', [Manager\Report\AffiliateReportController::class, 'index'])
+        //     ->name('reports.affiliate-record');
+        Route::get('reports/nyoba', [Manager\Report\AffiliateReportController::class, 'index'])
+            ->name('reports.nyoba');
     });
 
 
@@ -154,13 +160,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->middleware([RoleMiddleware::class . ':logistik'])
         ->group(function () {
 
-        Route::get('dashboard', fn () => Inertia::render('logistik/dashboard'))
-            ->name('dashboard');
+            Route::get('dashboard', fn () =>
+                Inertia::render('logistik/dashboard')
+            )->name('dashboard');
 
-        Route::resource('orders', Logistik\OrderController::class);
-        Route::resource('inventory', Logistik\InventoryController::class);
-        Route::resource('returns', Logistik\ReturnController::class);
-    });
+            Route::prefix('orders')
+                ->name('orders.')
+                ->group(function () {
+
+                    Route::get('/manage-orders', [OrderController::class, 'ManageOrders'])
+                        ->name('manage-orders');
+                    Route::get('/shipping-status', [OrderController::class, 'shippingStatus'])
+                        ->name('shipping-status');
+                    Route::get('/product-stock-management', [OrderController::class, 'ProductStockManagement'])
+                        ->name('product-stock-management');
+                    Route::get('/stock-movement', [OrderController::class, 'StockMovement'])
+                        ->name('stock-movement');
+                    Route::get('/product-returns', [OrderController::class, 'ProductReturns'])
+                        ->name('product-returns');
+                    Route::get('/return-history', [OrderController::class, 'ReturnHistory'])
+                        ->name('return-history');
+                });
+
+            Route::resource('returns', ReturnController::class);
+        });
 
 
     /*
@@ -175,15 +198,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('dashboard', fn () => Inertia::render('finance/dashboard'))
             ->name('dashboard');
+        Route::get('/transaction-management', [FinanceReportController::class, 'TransactionManagement'])
+            ->name('transaction-management');
+        Route::get('/withdraw-request', [FinanceReportController::class, 'WithdrawRequest'])
+            ->name('withdraw-request');
+        Route::get('/withdraw-approval', [FinanceReportController::class, 'WithdrawApproval'])
+            ->name('withdraw-approval');
+        Route::get('/financial-report', [FinanceReportController::class, 'FinancialReport'])
+            ->name('financial-report');
+        Route::get('/commission-report', [FinanceReportController::class, 'CommissionReport'])
+            ->name('commission-report');
+        Route::get('/tree', [FinanceReportController::class, 'Tree'])
+            ->name('tree');
 
-        Route::resource('transactions', Finance\TransactionController::class);
-        Route::resource('withdrawals', Finance\WithdrawalController::class);
 
-        Route::get('reports', [Finance\FinanceReportController::class, 'index'])
-            ->name('reports.index');
-
-        Route::get('network', [Finance\NetworkController::class, 'index'])
-            ->name('network');
     });
 
 });
