@@ -412,7 +412,6 @@ export function AppSidebar() {
         });
     }, [roles]);
 
-    // Determine logo link based on roles (priority order)
     const getLogoDashboard = (): string => {
         if (roles.includes('admin'))
             return getHref('admin.dashboard', '/admin/dashboard');
@@ -425,11 +424,6 @@ export function AppSidebar() {
         if (roles.includes('guest')) return getHref('dashboard', '/dashboard');
         return getHref('home', '/');
     };
-
-    // Debug logs (remove in production)
-    // console.log('AppSidebar - rawRoles:', rawRoles);
-    // console.log('AppSidebar - roles:', roles);
-    // console.log('AppSidebar - mainNavItems:', mainNavItems);
 
     return (
         <Sidebar collapsible="icon" variant="inset">
