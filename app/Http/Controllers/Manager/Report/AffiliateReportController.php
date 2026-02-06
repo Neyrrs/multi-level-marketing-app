@@ -13,6 +13,6 @@ class AffiliateReportController extends Controller
      */
     public function index()
     {
-        return Inertia::render('manager/affiliate-record/index');
+        return Inertia::render('manager/nyoba/index');
     }
 }

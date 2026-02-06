@@ -11,9 +11,40 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
+     // Manage Orders
     public function index()
     {
-        return Inertia::render('logistik/orders/index');
+        // return Inertia::render('logistik/manage-orders/index');
+    }
+
+    public function ManageOrders()
+    {
+        return Inertia::render('logistik/manage-orders/index');
+    }
+
+    public function shippingStatus()
+    {
+        return Inertia::render('logistik/shipping-status/index');
+    }
+
+    public function ProductStockManagement()
+    {
+        return Inertia::render('logistik/product-stock-management/index');
+    }
+
+    public function StockMovement()
+    {
+        return Inertia::render('logistik/stock-movement/index');
+    }
+
+    public function ProductReturns()
+    {
+        return Inertia::render('logistik/product-returns/index');
+    }
+
+    public function ReturnHistory()
+    {
+        return Inertia::render('logistik/return-history/index');
     }
 
     /**

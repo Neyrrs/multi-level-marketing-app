@@ -13,6 +13,9 @@ import {
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
+    BarChart3,
+    Boxes,
+    CreditCard,
     Gift,
     Home,
     KeySquareIcon,
@@ -20,7 +23,9 @@ import {
     Network,
     Newspaper,
     Package,
+    RotateCcw,
     ShoppingBasket,
+    ShoppingCart,
     User,
 } from 'lucide-react';
 import { useMemo } from 'react';
@@ -204,6 +209,14 @@ export function AppSidebar() {
                     icon: LayoutGrid,
                 },
                 {
+                    title: 'Nyoba',
+                    href: getHref(
+                        'nyoba.reports.index',
+                        '/manager/reports/nyoba',
+                    ),
+                    icon: Gift,
+                },
+                {
                     title: 'Laporan',
                     icon: Package,
                     children: [
@@ -277,8 +290,8 @@ export function AppSidebar() {
                         {
                             title: 'Repeat Order',
                             href: getHref(
-                                'affiliate.tree.index',
-                                '/affiliate/tree',
+                                'affiliate.repeat-order.index',
+                                '/affiliate/repeat-order',
                             ),
                         },
                     ],
@@ -369,9 +382,140 @@ export function AppSidebar() {
                 // },
             ],
 
-            logistik: [],
+            logistik: [
+                {
+                    title: 'Pesanan',
+                    icon: ShoppingCart,
+                    children: [
+                        {
+                            title: 'Manage Orders',
+                            href: getHref(
+                                'logistik.orders.manage-orders',
+                                '/logistik/orders/manage-orders',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                        {
+                            title: 'Shipping Status',
+                            href: getHref(
+                                'logistik.orders.shipping-status',
+                                '/logistik/orders/shipping-status',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                    ],
+                },
+                {
+                    title: 'Stok',
+                    icon: Boxes,
+                    children: [
+                        {
+                            title: 'Managemen Stok Produk',
+                            href: getHref(
+                                'logistik.orders.product-stock-management',
+                                '/logistik/orders/product-stock-management',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                        {
+                            title: 'Mutasi Stock',
+                            href: getHref(
+                                'logistik.orders.stock-movement',
+                                '/logistik/orders/stock-movement',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                    ],
+                },
+                {
+                    title: 'Retur',
+                    icon: RotateCcw,
+                    children: [
+                        {
+                            title: 'Retur Produk',
+                            href: getHref(
+                                'logistik.orders.product-returns',
+                                '/logistik/orders/product-returns',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                        {
+                            title: 'Riwayat Retur',
+                            href: getHref(
+                                'logistik.orders.return-history',
+                                '/logistik/orders/return-history',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                    ],
+                },
+            ],
 
-            finance: [],
+            finance: [
+                {
+                    title: 'Transaksi',
+                    icon: CreditCard,
+                    children: [
+                        {
+                            title: 'Transaction Management',
+                            href: getHref(
+                                'finance.transaction-management',
+                                '/finance/transaction-management',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                        {
+                            title: 'Pengajuan Withdraw',
+                            href: getHref(
+                                'finance.withdraw-request',
+                                '/finance/withdraw-request',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                        {
+                            title: 'Persetujuan Withdraw',
+                            href: getHref(
+                                'finance.withdraw-approval',
+                                '/finance/withdraw-approval',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                    ],
+                },
+                {
+                    title: 'Laporan',
+                    icon: BarChart3,
+                    children: [
+                        {
+                            title: 'Laporan Keuangan',
+                            href: getHref(
+                                'finance.financial-report',
+                                '/finance/financial-report',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                        {
+                            title: 'Laporan Komisi',
+                            href: getHref(
+                                'finance.commission-report',
+                                '/finance/commission-report',
+                            ),
+                            icon: LayoutGrid,
+                        },
+                    ],
+                },
+                {
+                    title: 'Affiliate',
+                    icon: Network,
+                    children: [
+                        {
+                            title: 'Pohon Mitra',
+                            href: getHref('finance.tree', '/finance/tree'),
+                            icon: LayoutGrid,
+                        },
+                    ],
+                },
+            ],
 
             guest: [
                 {
