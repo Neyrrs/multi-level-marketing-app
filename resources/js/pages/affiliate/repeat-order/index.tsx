@@ -1,7 +1,9 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -9,8 +11,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
+import { Eye, EyeClosed } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 /* ===== MOCK DATA ===== */
@@ -36,6 +44,7 @@ export default function RepeatOrder() {
     const [pin, setPin] = useState('');
     const [searchName, setSearchName] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const [name, setName] = useState('');
     const [city, setCity] = useState('');
@@ -77,32 +86,44 @@ export default function RepeatOrder() {
             <Head title="Posting RO" />
 
             <div className="flex w-full flex-col px-5">
-                <div className="flex min-h-screen flex-col gap-6 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="border-b pb-4">
-                        <p className="text-lg font-bold text-primary md:text-2xl">
-                            Posting RO
-                        </p>
-                        <span className="text-sm text-muted-foreground">
-                            Form pernyataan dan proses Posting RO
-                        </span>
-                    </div>
-
-                    <div className="space-y-1 text-sm text-slate-600">
-                        <p>1. Pilih PIN untuk RO</p>
-                        <p>2. Ketik nama lengkap mitra</p>
-                        <p>3. Pastikan data otomatis muncul</p>
-                        <p>4. Masukan password login</p>
-                        <p>5. Klik PROSES</p>
+                <div className="flex flex-col gap-6 rounded-xl bg-white px-4 py-8 md:px-5">
+                    <div className="flex items-end justify-between border-b pb-4">
+                        <div className="w-full">
+                            <p className="text-lg font-bold text-primary md:text-2xl">
+                                Posting RO
+                            </p>
+                            <span className="text-sm text-muted-foreground">
+                                Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Modi minus minima molestiae
+                                nemo, repellendus qui dignissimos nihil dolores
+                                neque vitae porro maiores possimus iure, esse
+                                omnis explicabo tempora itaque sunt.
+                            </span>
+                        </div>
+                        <div className="hidden space-y-1 text-sm text-slate-600 md:block">
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <Badge className="bg-gray-500">?</Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>1. Pilih PIN untuk RO</p>
+                                    <p>2. Ketik nama lengkap mitra</p>
+                                    <p>3. Pastikan data otomatis muncul</p>
+                                    <p>4. Masukan password login</p>
+                                    <p>5. Klik PROSES</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <div>
-                            <label className="text-sm font-medium">
+                        <div className="flex flex-col gap-2">
+                            <Label className="text-sm font-medium">
                                 Pilih PIN untuk RO
-                            </label>
+                            </Label>
                             <Select onValueChange={setPin}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder="-- Pilih PIN --" />
+                                    <SelectValue placeholder="Pilih PIN" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="PIN001">
@@ -115,14 +136,14 @@ export default function RepeatOrder() {
                             </Select>
                         </div>
 
-                        <div>
-                            <label className="text-sm font-medium">
-                                Siapa yang Akan RO?
-                            </label>
+                        <div className="flex flex-col gap-2">
+                            <Label>
+                                Tujuan <i>Repeat Order</i>
+                            </Label>
                             <Input
                                 value={searchName}
                                 onChange={(e) => setSearchName(e.target.value)}
-                                placeholder="contoh: Andi Wijaya"
+                                placeholder="Contoh: Andi Wijaya"
                                 className={
                                     error
                                         ? 'border-red-500 focus-visible:ring-red-500'
@@ -160,21 +181,32 @@ export default function RepeatOrder() {
 
                     <div className="grid grid-cols-1 items-end gap-4 md:grid-cols-3">
                         <div className="md:col-span-2">
-                            <label className="text-sm text-slate-600">
-                                Password Login
-                            </label>
-                            <Input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
+                            <Label>Password</Label>
+                            <div className="relative">
+                                <Input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    placeholder="Masukan passwordmu di sini"
+                                    required
+                                />
+                                <Button
+                                    type="button"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    className="absolute top-1/2 right-2 -translate-y-1/2 bg-transparent text-primary hover:bg-transparent"
+                                >
+                                    {showPassword ? <EyeClosed /> : <Eye />}
+                                </Button>
+                            </div>
                         </div>
 
                         <Button
-                            disabled={!isValid}
-                            className="h-11 bg-rose-500 text-white disabled:opacity-50"
+                            // disabled={!isValid}
+                            variant={'default'}
+                            className="disabled:opacity-50"
                         >
-                            PROSES RO
+                            Proses Repeat Order
                         </Button>
                     </div>
                 </div>
