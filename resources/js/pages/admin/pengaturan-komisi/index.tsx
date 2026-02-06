@@ -134,7 +134,7 @@ export default function PengaturanKomisi() {
                                 />
                             </div>
                             <DialogCreateProduct>
-                                <Button variant={'outline'}>
+                                <Button>
                                     <PlusCircleIcon /> Buat Komisi
                                 </Button>
                             </DialogCreateProduct>

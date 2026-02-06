@@ -21,10 +21,12 @@ import {
     KeySquareIcon,
     LayoutGrid,
     Network,
+    Newspaper,
     Package,
     RotateCcw,
     ShoppingBasket,
     ShoppingCart,
+    User,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import AppLogo from './app-logo';
@@ -71,52 +73,85 @@ export function AppSidebar() {
         return {
             admin: [
                 {
-                    title: 'Dashboard Utama',
-                    href: getHref('admin.dashboard', '/admin/dashboard'),
+                    title: 'Master Data',
                     icon: LayoutGrid,
+                    children: [
+                        {
+                            title: 'Master Produk',
+                            href: getHref(
+                                'manajemen-produk.index',
+                                '/admin/product-management',
+                            ),
+                        },
+                        {
+                            title: 'Pengaturan Komisi',
+                            href: getHref(
+                                'pengaturan-komisi.index',
+                                '/admin/commission-setting',
+                            ),
+                        },
+                        {
+                            title: 'Pengaturan Plan',
+                            href: getHref(
+                                'pengaturan-plan.index',
+                                '/admin/plan-setting',
+                            ),
+                        },
+                    ],
                 },
                 {
-                    title: 'Manajemen Produk',
+                    title: 'Pusat Laporan',
+                    icon: Newspaper,
+                    children: [
+                        {
+                            title: 'Laporan Penjualan',
+                            href: getHref(
+                                'admin.reports.LaporanPenjualan',
+                                '/admin/reports/LaporanPenjualan',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Affiliate',
+                            href: getHref(
+                                'admin.reports.LaporanAffiliate',
+                                '/admin/reports/LaporanAffiliate',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Komisi',
+                            href: getHref(
+                                'admin.reports.LaporanKomisi',
+                                '/admin/reports/LaporanKomisi',
+                            ),
+                            icon: Package,
+                        },
+                        {
+                            title: 'Laporan Keuangan',
+                            href: getHref(
+                                'admin.reports.LaporanKeuangan',
+                                '/admin/reports/LaporanKeuangan',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Produk',
+                            href: getHref(
+                                'admin.reports.LaporanProduk',
+                                '/admin/reports/LaporanProduk',
+                            ),
+                        },
+                    ],
+                },
+                {
+                    title: 'Manajemen User',
                     href: getHref(
                         'manajemen-produk.index',
                         '/admin/product-management',
                     ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Manajemen Affiliate',
-                    href: getHref(
-                        'manajemen-affiliate.index',
-                        '/admin/affiliate-management',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Pengaturan Komisi',
-                    href: getHref(
-                        'pengaturan-komisi.index',
-                        '/admin/commission-setting',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Pengaturan Plan',
-                    href: getHref(
-                        'pengaturan-plan.index',
-                        '/admin/plan-setting',
-                    ),
-                    icon: Gift,
+                    icon: User,
                 },
 
                 // // === MASTER DATA ===
-                // {
-                //     title: 'Master Produk',
-                //     href: getHref(
-                //         'admin.MasterProduk.index',
-                //         '/admin/MasterProduk',
-                //     ),
-                //     icon: Package,
-                // },
+
                 // {
                 //     title: 'Manajemen Affiliate',
                 //     href: getHref(
@@ -151,48 +186,6 @@ export function AppSidebar() {
                 // {
                 //     title: 'Transaksi',
                 //     href: getHref('admin.Transaksi.index', '/admin/Transaksi'),
-                //     icon: Package,
-                // },
-
-                // // === LAPORAN ===
-                // {
-                //     title: 'Laporan Penjualan',
-                //     href: getHref(
-                //         'admin.reports.LaporanPenjualan',
-                //         '/admin/reports/LaporanPenjualan',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Affiliate',
-                //     href: getHref(
-                //         'admin.reports.LaporanAffiliate',
-                //         '/admin/reports/LaporanAffiliate',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Komisi',
-                //     href: getHref(
-                //         'admin.reports.LaporanKomisi',
-                //         '/admin/reports/LaporanKomisi',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Keuangan',
-                //     href: getHref(
-                //         'admin.reports.LaporanKeuangan',
-                //         '/admin/reports/LaporanKeuangan',
-                //     ),
-                //     icon: Package,
-                // },
-                // {
-                //     title: 'Laporan Produk',
-                //     href: getHref(
-                //         'admin.reports.LaporanProduk',
-                //         '/admin/reports/LaporanProduk',
-                //     ),
                 //     icon: Package,
                 // },
 
@@ -271,43 +264,9 @@ export function AppSidebar() {
 
             affiliate: [
                 {
-                    title: 'Affiliate Dashboard',
-                    href: getHref(
-                        'affiliate.dashboard',
-                        '/affiliate/dashboard',
-                    ),
-                    icon: LayoutGrid,
-                },
-                {
-                    title: 'Pengaturan Profil',
-                    href: getHref('affiliate.dashboard', '/profile'),
-                    icon: Package,
-                },
-                {
-                    title: 'Pohon',
-                    href: getHref('affiliate.tree.index', '/affiliate/tree'),
-                    icon: Network,
-                },
-                {
                     title: 'Belanja',
                     href: getHref('affiliate.shop.index', '/affiliate/shop'),
                     icon: ShoppingBasket,
-                },
-                {
-                    title: 'Riwayat Belanja',
-                    href: getHref(
-                        'affiliate.shop-history.index',
-                        '/affiliate/shop-history',
-                    ),
-                    icon: ShoppingBasket,
-                },
-                {
-                    title: 'Riwayat Pin',
-                    href: getHref(
-                        'affiliate.pin-history.index',
-                        '/affiliate/pin-history',
-                    ),
-                    icon: KeySquareIcon,
                 },
                 {
                     title: 'Daftar Pin',
@@ -318,53 +277,109 @@ export function AppSidebar() {
                     icon: KeySquareIcon,
                 },
                 {
-                    title: 'Hadiah',
-                    href: getHref(
-                        'affiliate.reward.index',
-                        '/affiliate/reward',
-                    ),
-                    icon: Gift,
+                    title: 'Jaringan',
+                    icon: Network,
+                    children: [
+                        {
+                            title: 'Pohon',
+                            href: getHref(
+                                'affiliate.tree.index',
+                                '/affiliate/tree',
+                            ),
+                        },
+                        {
+                            title: 'Repeat Order',
+                            href: getHref(
+                                'affiliate.repeat-order.index',
+                                '/affiliate/repeat-order',
+                            ),
+                        },
+                    ],
                 },
-                {
-                    title: 'Sponsor',
-                    href: getHref(
-                        'affiliate.sponsor.index',
-                        '/affiliate/sponsor',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Downline',
-                    href: getHref(
-                        'affiliate.downline.index',
-                        '/affiliate/downline',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Personal RO',
-                    href: getHref(
-                        'affiliate.personal-ro.index',
-                        '/affiliate/personal-ro',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Generasi RO',
-                    href: getHref(
-                        'affiliate.generation-ro.index',
-                        '/affiliate/generation-ro',
-                    ),
-                    icon: Gift,
-                },
-                {
-                    title: 'Matching Nonus',
-                    href: getHref(
-                        'affiliate.matching-bonus.index',
-                        '/affiliate/matching-bonus',
-                    ),
-                    icon: Gift,
-                },
+                // {
+                //     title: 'Affiliate Dashboard',
+                //     href: getHref(
+                //         'affiliate.dashboard',
+                //         '/affiliate/dashboard',
+                //     ),
+                //     icon: LayoutGrid,
+                // },
+                // {
+                //     title: 'Pengaturan Profil',
+                //     href: getHref('affiliate.dashboard', '/profile'),
+                //     icon: Package,
+                // },
+
+                // {
+                //     title: 'Belanja',
+                //     href: getHref('affiliate.shop.index', '/affiliate/shop'),
+                //     icon: ShoppingBasket,
+                // },
+                // {
+                //     title: 'Riwayat Belanja',
+                //     href: getHref(
+                //         'affiliate.shop-history.index',
+                //         '/affiliate/shop-history',
+                //     ),
+                //     icon: ShoppingBasket,
+                // },
+                // {
+                //     title: 'Riwayat Pin',
+                //     href: getHref(
+                //         'affiliate.pin-history.index',
+                //         '/affiliate/pin-history',
+                //     ),
+                //     icon: KeySquareIcon,
+                // },
+
+                // {
+                //     title: 'Hadiah',
+                //     href: getHref(
+                //         'affiliate.reward.index',
+                //         '/affiliate/reward',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Sponsor',
+                //     href: getHref(
+                //         'affiliate.sponsor.index',
+                //         '/affiliate/sponsor',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Downline',
+                //     href: getHref(
+                //         'affiliate.downline.index',
+                //         '/affiliate/downline',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Personal RO',
+                //     href: getHref(
+                //         'affiliate.personal-ro.index',
+                //         '/affiliate/personal-ro',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Generasi RO',
+                //     href: getHref(
+                //         'affiliate.generation-ro.index',
+                //         '/affiliate/generation-ro',
+                //     ),
+                //     icon: Gift,
+                // },
+                // {
+                //     title: 'Matching Nonus',
+                //     href: getHref(
+                //         'affiliate.matching-bonus.index',
+                //         '/affiliate/matching-bonus',
+                //     ),
+                //     icon: Gift,
+                // },
             ],
 
             logistik: [

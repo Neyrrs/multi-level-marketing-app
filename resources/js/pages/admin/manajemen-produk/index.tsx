@@ -134,7 +134,7 @@ export default function ManajemenProduk() {
                                 />
                             </div>
                             <DialogCreateProduct>
-                                <Button variant={'outline'}>
+                                <Button>
                                     <PlusCircleIcon /> Buat Produk
                                 </Button>
                             </DialogCreateProduct>
