@@ -10,6 +10,6 @@ class SponsorController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.sponsor.index');
+        return Inertia::render('affiliate/sponsor/index');
     }
 }

@@ -10,6 +10,6 @@ class PinListController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.pin-list.index');
+        return Inertia::render('affiliate/pin-list/index');
     }
 }

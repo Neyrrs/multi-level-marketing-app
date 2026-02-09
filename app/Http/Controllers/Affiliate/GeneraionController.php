@@ -10,6 +10,6 @@ class GeneraionController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.generation.index');
+        return Inertia::render('affiliate/generation-ro/index');
     }
 }

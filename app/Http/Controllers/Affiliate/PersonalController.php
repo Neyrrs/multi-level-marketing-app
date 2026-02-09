@@ -10,6 +10,6 @@ class PersonalController extends Controller
 {
     public function index()
     {
-        return Inertia::render('affiliate.personal.index');
+        return Inertia::render('affiliate/personal-ro/index');
     }
 }
