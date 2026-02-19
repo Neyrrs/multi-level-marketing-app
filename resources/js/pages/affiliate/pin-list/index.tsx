@@ -95,11 +95,12 @@ export default function PinList() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-25">No</TableHead>
-                                <TableHead>Tanggal</TableHead>
-                                <TableHead>Keterangan</TableHead>
-                                <TableHead>Awal</TableHead>
-                                <TableHead>Jumlah</TableHead>
-                                <TableHead>Saldo</TableHead>
+                                <TableHead>Kode PIN</TableHead>
+                                <TableHead>Harga</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Kadaluwarsa</TableHead>
+                                <TableHead>Nilai</TableHead>
+                                <TableHead>Harga</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
