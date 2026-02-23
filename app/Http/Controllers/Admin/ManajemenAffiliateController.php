@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,9 +12,30 @@ class ManajemenAffiliateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('admin/ManajemenAffiliate/index');
+        $search = $request->input('search', '');
+        $perPage = (int) $request->input('per_page', 10);
+
+        $query = Affiliate::with('user', 'sponsor');
+        if ($search) {
+            $query->where('username', 'like', "%{$search}%")
+                ->orWhereRelation('user', 'name', 'like', "%{$search}%");
+        }
+
+        $affiliates = $query->paginate($perPage);
+
+        return Inertia::render('admin/ManajemenAffiliate/index', [
+            'affiliates' => $affiliates->items(),
+            'pagination' => [
+                'total' => $affiliates->total(),
+                'currentPage' => $affiliates->currentPage(),
+                'perPage' => $affiliates->perPage(),
+                'lastPage' => $affiliates->lastPage(),
+                'hasMore' => $affiliates->hasMorePages(),
+            ],
+            'search' => $search,
+        ]);
     }
 
     /**

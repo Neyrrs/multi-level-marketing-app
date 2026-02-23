@@ -1,128 +1,51 @@
-import SearchInput from '@/components/fragments/search-input';
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard Costumer',
-        href: dashboard().url,
-    },
+    { title: 'Riwayat PIN', href: '/affiliate/pin-history' },
 ];
 
-export default function PinHistory() {
-    const [search, setSearch] = useState<string>('');
+interface Props {
+    history: { data: Array<any>; total: number };
+}
 
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
+export default function PinHistory({ history }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Riwayat Pin
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="w-full flex justify-between">
-                        <p className='w-1/3'>PIN: asdas</p>
-                        <div className="w-40">
-                            <PaginationCombobox onChange={handlePerPageChange} value={perPage} />
-                        </div>
-                    </div>
-
-                    <Table>
-                        <TableCaption>Ini adalah data pin terbaru</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-25">No</TableHead>
-                                <TableHead>Tanggal</TableHead>
-                                <TableHead>Keterangan</TableHead>
-                                <TableHead>Awal</TableHead>
-                                <TableHead>Jumlah</TableHead>
-                                <TableHead>Saldo</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell className="font-medium">
-                                        {invoice.invoice}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentStatus}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentMethod}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {invoice.totalAmount}
-                                    </TableCell>
+            <Head title="Riwayat PIN" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <div className="rounded-xl border bg-white p-4">
+                    <h3 className="font-semibold mb-4">Riwayat PIN yang Digunakan</h3>
+                    {history?.data?.length > 0 ? (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>No</TableHead>
+                                    <TableHead>PIN</TableHead>
+                                    <TableHead>Produk</TableHead>
+                                    <TableHead>Dibuat</TableHead>
+                                    <TableHead>Digunakan</TableHead>
+                                    <TableHead>Dipakai Oleh</TableHead>
                                 </TableRow>
-                            ))} */}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan={5}>Total</TableCell>
-                                <TableCell className="text-right">
-                                    {/* $2,500.00 */}
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {history.data.map((item, i) => (
+                                    <TableRow key={item.id}>
+                                        <TableCell>{i + 1}</TableCell>
+                                        <TableCell className="font-mono">{item.code}</TableCell>
+                                        <TableCell>{item.product_name}</TableCell>
+                                        <TableCell>{new Date(item.created_at).toLocaleDateString('id-ID')}</TableCell>
+                                        <TableCell>{new Date(item.used_at).toLocaleDateString('id-ID')}</TableCell>
+                                        <TableCell>{item.used_by_name}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">No history</div>
+                    )}
                 </div>
             </div>
         </AppLayout>

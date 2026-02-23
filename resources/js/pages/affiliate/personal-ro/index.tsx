@@ -1,154 +1,69 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import SearchInput from '@/components/fragments/search-input';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard Costumer',
-        href: dashboard().url,
-    },
+    { title: 'Komisi Personal', href: '/affiliate/personal' },
 ];
 
-export default function PersonalRO() {
-    const [search, setSearch] = useState<string>('');
+interface Props {
+    personalCommissions: { data: Array<any>; total: number };
+    stats?: any;
+}
 
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
+export default function PersonalRO({ personalCommissions, stats }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Personal RO
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
+            <Head title="Komisi Personal" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                {stats && (
+                    <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+                        <Card>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm">Total Personal</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">Rp {stats.totalPersonal?.toLocaleString?.('id-ID') || '0'}</div>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm">Total Volume</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">Rp {stats.totalVolume?.toLocaleString?.('id-ID') || '0'}</div>
+                            </CardContent>
+                        </Card>
                     </div>
-
-                    <div className="space-y-2 text-sm">
-                        <h3 className="text-base font-semibold text-primary">
-                            Bonus Personal Sales
-                        </h3>
-
-                        <div className="space-y-1">
-                            <p className="flex">
-                                <span className="w-40">Akan</span>
-                                <span>: </span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Sudah</span>
-                                <span>: </span>
-                            </p>
-                            <p className="flex font-semibold">
-                                <span className="w-40">Total</span>
-                                <span>: Rp</span>
-                            </p>
-                        </div>
-
-                        <div className="border-t-2 pt-4">
-                            <div className="flex items-center gap-3">
-                                <div className="ml-auto w-32">
-                                    <PaginationCombobox
-                                        onChange={handlePerPageChange}
-                                        value={perPage}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <Table>
-                        <TableCaption>
-                            Ini adalah data persona-ro terbaru
-                        </TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-25">No</TableHead>
-                                <TableHead>Tanggal</TableHead>
-                                <TableHead>Akun</TableHead>
-                                <TableHead>Jenis</TableHead>
-                                <TableHead>Nilai</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell className="font-medium">
-                                        {invoice.invoice}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentStatus}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentMethod}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {invoice.totalAmount}
-                                    </TableCell>
+                )}
+                <div className="rounded-xl border bg-white p-4">
+                    <h3 className="font-semibold mb-4">Komisi Personal</h3>
+                    {personalCommissions?.data?.length > 0 ? (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>No</TableHead>
+                                    <TableHead>Amount</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Date</TableHead>
                                 </TableRow>
-                            ))} */}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan={5}>Total</TableCell>
-                                <TableCell className="text-right">
-                                    {/* $2,500.00 */}
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {personalCommissions.data.map((item, i) => (
+                                    <TableRow key={item.id}>
+                                        <TableCell>{i + 1}</TableCell>
+                                        <TableCell>Rp {item.amount?.toLocaleString?.('id-ID')}</TableCell>
+                                        <TableCell>{item.status}</TableCell>
+                                        <TableCell>{new Date(item.created_at).toLocaleDateString('id-ID')}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">No data</div>
+                    )}
                 </div>
             </div>
         </AppLayout>

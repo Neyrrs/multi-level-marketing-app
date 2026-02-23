@@ -1,92 +1,63 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import DialogCreateProduct from '@/components/fragments/dialog-contents/create-product';
-import DialogEditProduct from '@/components/fragments/dialog-contents/edit-product';
 import SearchInput from '@/components/fragments/search-input';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Edit, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { Edit, PlusCircleIcon, Trash2, CheckCircle, XCircle } from 'lucide-react';
 import { useState } from 'react';
+import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
 
-const rewards = [
-    {
-        no: 1,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '12 | 12',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 250.000',
-        status: 'PENDING',
-    },
-    {
-        no: 2,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '100 | 100',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 1.000.000',
-        status: 'PENDING',
-    },
-    {
-        no: 3,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '500 | 500',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 3.750.000',
-        status: 'PENDING',
-    },
-    {
-        no: 4,
-        poin: '0 | 0',
-        level: 'Diamond',
-        syarat: '4 | 4',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 100.000.000',
-        status: 'PENDING',
-    },
-];
+interface User {
+    name: string;
+    email: string;
+}
+
+interface Sponsor {
+    username: string;
+}
+
+interface Affiliate {
+    id: number;
+    username: string;
+    user?: User;
+    sponsor?: Sponsor;
+    is_active: boolean;
+    position?: string;
+    total_downline: number;
+    total_volume: number;
+    sponsored_at?: string;
+}
+
+interface Pagination {
+    total: number;
+    currentPage: number;
+    perPage: number;
+    lastPage: number;
+    hasMore: boolean;
+}
+
+interface Props {
+    affiliates: Affiliate[];
+    pagination: Pagination;
+    search: string;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard Register',
-        href: dashboard().url,
-    },
+    { title: 'Dashboard', href: dashboard().url },
+    { title: 'Manajemen Affiliate', href: '/admin/affiliate-management' },
 ];
 
-export default function ManajemenAffiliate() {
-    const [search, setSearch] = useState<string>('');
-
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
+export default function ManajemenAffiliate({ affiliates = [], pagination, search: initialSearch = '' }: Props) {
+    const [search, setSearch] = useState<string>(initialSearch);
+    const [perPage, setPerPage] = useState(pagination?.perPage?.toString() || '10');
 
     const handleSearch = (value: string) => {
+        setSearch(value);
         router.get(
-            route('users.index'),
+            '/admin/affiliate-management',
             { search: value },
             {
                 preserveState: true,
@@ -95,111 +66,171 @@ export default function ManajemenAffiliate() {
         );
     };
 
-    const handleDelete = () => {
-        alert('mencoba menghapus data')
-        // return false
-    }
+    const handlePerPageChange = (value: string) => {
+        setPerPage(value);
+        router.get(
+            '/admin/affiliate-management',
+            { per_page: value },
+            {
+                preserveState: true,
+                replace: true,
+            },
+        );
+    };
+
+    const handleDelete = (id: number) => {
+        if (confirm('Apakah Anda yakin ingin menghapus affiliate ini?')) {
+            router.delete(`/admin/ManajemenAffiliate/${id}`, {
+                onSuccess: () => {
+                    alert('Affiliate berhasil dihapus');
+                },
+                onError: () => {
+                    alert('Gagal menghapus affiliate');
+                },
+            });
+        }
+    };
+
+    const handleEdit = (id: number) => {
+        router.get(`/admin/ManajemenAffiliate/${id}/edit`);
+    };
+
+    const activeCount = affiliates.filter((a) => a.is_active).length;
+    const totalVolume = affiliates.reduce((sum, a) => sum + (a.total_volume || 0), 0);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Manajemen Affiliator
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
+            <Head title="Manajemen Affiliate" />
+            <div className="flex flex-col gap-6 p-6">
+                {/* Statistics Cards */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <Card className="p-6">
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-600">Total Affiliate</p>
+                            <p className="text-3xl font-bold">{pagination?.total || 0}</p>
+                            <p className="text-xs text-gray-500">Aktif: {activeCount}</p>
                         </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
+                    </Card>
+                    <Card className="p-6">
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-600">Total Volume</p>
+                            <p className="text-3xl font-bold">Rp {(totalVolume / 1000000).toFixed(1)}M</p>
+                            <p className="text-xs text-gray-500">Semua Affiliate</p>
+                        </div>
+                    </Card>
+                    <Card className="p-6">
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-600">Page</p>
+                            <p className="text-3xl font-bold">{pagination?.currentPage || 1}/{pagination?.lastPage || 1}</p>
+                            <p className="text-xs text-gray-500">Total Pages</p>
+                        </div>
+                    </Card>
+                </div>
+
+                {/* Controls */}
+                <div className="flex w-full justify-between items-center">
+                    <div className="w-1/3">
+                        <p className="text-sm font-medium">Data Affiliate</p>
+                    </div>
+                    <div className="flex w-fit flex-col-reverse items-end gap-2 md:flex-row md:items-center">
+                        <div className="w-40">
+                            <PaginationCombobox
+                                onChange={handlePerPageChange}
+                                value={perPage}
                             />
                         </div>
+                        <Button>
+                            <PlusCircleIcon /> Tambah Affiliate
+                        </Button>
                     </div>
+                </div>
 
-                    <div className="flex w-full justify-between">
-                        <p className="w-1/3">Hadiah</p>
-                        <div className="flex w-fit flex-col-reverse items-end gap-2 md:flex-row md:items-center">
-                            <div className="w-40">
-                                <PaginationCombobox
-                                    onChange={handlePerPageChange}
-                                    value={perPage}
-                                />
-                            </div>
-                            <DialogCreateProduct>
-                                <Button>
-                                    <PlusCircleIcon /> Buat Affiliator
-                                </Button>
-                            </DialogCreateProduct>
-                        </div>
-                    </div>
+                {/* Search */}
+                <Card className="p-4">
+                    <SearchInput onSearchChange={handleSearch} value={search} placeholder="Cari nama atau username affiliate..." />
+                </Card>
 
+                {/* Table */}
+                <Card className="overflow-hidden">
                     <Table>
                         <TableCaption>
-                            Ini adalah data hadiah terbaru
+                            {affiliates.length === 0 ? 'Tidak ada data affiliate' : `Menampilkan ${affiliates.length} dari ${pagination?.total || 0} affiliate`}
                         </TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>No</TableHead>
-                                <TableHead>Poin R.O.</TableHead>
-                                <TableHead>Syarat</TableHead>
-                                <TableHead>Pencapaian</TableHead>
-                                <TableHead>Hadiah</TableHead>
+                                <TableHead>Username</TableHead>
+                                <TableHead>Nama</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Sponsor</TableHead>
+                                <TableHead className="text-right">Downline</TableHead>
+                                <TableHead className="text-right">Volume</TableHead>
                                 <TableHead>Status</TableHead>
+                                <TableHead>Posisi</TableHead>
                                 <TableHead>Aksi</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {rewards.map((reward, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-
-                                    <TableCell>
-                                        <div>{reward.poin}</div>
-                                        <div>{reward.level}</div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div>{reward.syarat}</div>
-                                        <div>{reward.level}</div>
-                                    </TableCell>
-
-                                    <TableCell>{reward.pencapaian}</TableCell>
-
-                                    <TableCell>{reward.hadiah}</TableCell>
-
-                                    <TableCell>
-                                        <span>{reward.status}</span>
-                                    </TableCell>
-                                    <TableCell className="flex h-fit w-fit items-center gap-2">
-                                        <DialogEditProduct>
+                            {affiliates.length > 0 ? (
+                                affiliates.map((affiliate) => (
+                                    <TableRow key={affiliate.id}>
+                                        <TableCell className="font-medium">{affiliate.username}</TableCell>
+                                        <TableCell>{affiliate.user?.name || '-'}</TableCell>
+                                        <TableCell>{affiliate.user?.email || '-'}</TableCell>
+                                        <TableCell>{affiliate.sponsor?.username || '-'}</TableCell>
+                                        <TableCell className="text-right">{affiliate.total_downline || 0}</TableCell>
+                                        <TableCell className="text-right">Rp {((affiliate.total_volume || 0) / 1000000).toFixed(2)}M</TableCell>
+                                        <TableCell>
+                                            {affiliate.is_active ? (
+                                                <span className="flex items-center gap-1 text-xs px-2 py-1 rounded bg-green-100 text-green-800">
+                                                    <CheckCircle className="w-3 h-3" /> Aktif
+                                                </span>
+                                            ) : (
+                                                <span className="flex items-center gap-1 text-xs px-2 py-1 rounded bg-yellow-100 text-yellow-800">
+                                                    <XCircle className="w-3 h-3" /> Pending
+                                                </span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">
+                                                {affiliate.position || 'none'}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell className="flex h-fit w-fit items-center gap-2">
                                             <Button
                                                 size={'sm'}
                                                 variant={'default'}
+                                                onClick={() => handleEdit(affiliate.id)}
                                             >
-                                                <Edit /> Edit
+                                                <Edit className="w-4 h-4" />
                                             </Button>
-                                        </DialogEditProduct>
-                                        <Button
-                                            onClick={handleDelete}
-                                            size={'sm'}
-                                            variant={'destructive'}
-                                        >
-                                            <Trash2 /> Hapus
-                                        </Button>
+                                            <Button
+                                                onClick={() => handleDelete(affiliate.id)}
+                                                size={'sm'}
+                                                variant={'destructive'}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={9} className="text-center py-8 text-gray-500">
+                                        Tidak ada data affiliate ditemukan
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
-                </div>
+                </Card>
+
+                {/* Pagination Info */}
+                {pagination && pagination.total > 0 && (
+                    <div className="text-sm text-gray-600 text-center">
+                        Menampilkan halaman {pagination.currentPage} dari {pagination.lastPage} 
+                        ({pagination.perPage} item per halaman)
+                    </div>
+                )}
             </div>
         </AppLayout>
     );

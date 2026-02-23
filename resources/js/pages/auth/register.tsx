@@ -1,13 +1,13 @@
 import MainLayout from '@/components/fragments/main-layout';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import Combobox from '@/components/fragments/combo-box/pagination-combobox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+import { Combobox } from '@headlessui/react';
 
 import { Form, Head, Link } from '@inertiajs/react';
 import { Eye, EyeClosed } from 'lucide-react';

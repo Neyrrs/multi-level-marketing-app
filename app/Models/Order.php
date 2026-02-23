@@ -127,6 +127,22 @@ class Order extends Model
         );
     }
 
+    /**
+     * Shipment(s) for this order
+     */
+    public function shipments(): HasMany
+    {
+        return $this->hasMany(Shipment::class);
+    }
+
+    /**
+     * Get the primary shipment for this order
+     */
+    public function shipment(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Shipment::class)->latest();
+    }
+
     // ===== SCOPES =====
 
     public function scopePending($query)

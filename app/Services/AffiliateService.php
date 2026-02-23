@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Affiliate;
 use App\Models\ActivationCode;
+use App\Services\ActivationService;
+use App\Services\CommissionService;
 use App\Models\Commission;
 use App\Models\CommissionCalculation;
 use App\Models\CommissionLedger;
@@ -12,6 +14,7 @@ use App\Models\MlmTree;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class AffiliateService
 {
@@ -135,41 +138,9 @@ class AffiliateService
      */
     public function generateActivationCodesFromOrder(Order $order, int $count = 1): array
     {
-        $codes = [];
-
-        // Code diberikan ke sponsor affiliate (bukan customer/buyer)
-        $sponsorUser = $order->affiliate?->user;
-        if (!$sponsorUser) {
-            return $codes;
-        }
-
-        // Ambil products/packages dari order
-        $orderItems = $order->items()->first();
-
-        for ($i = 0; $i < $count; $i++) {
-            $code = ActivationCode::create([
-                'code' => $this->generateUniqueCode(),
-                'owner_id' => $sponsorUser->id,  // ← Sponsor dapat codes
-                'generated_by' => $order->affiliate->user_id,
-                'generated_from' => 'order',
-                'product_id' => $orderItems?->product_id,
-                'package_id' => $orderItems?->package_id,
-                'price' => $order->total_amount,
-                'value' => $order->total_amount,
-                'gives_commission' => true,
-                'commission_value' => ($order->total_amount * 10) / 100,  // 10% default
-                'usage_count' => 1,
-                'remaining_usage' => 1,
-                'status' => 'available',
-                'valid_from' => now(),
-                'valid_until' => now()->addMonths(1),
-                'notes' => "Generated dari order {$order->order_number}",
-            ]);
-
-            $codes[] = $code;
-        }
-
-        return $codes;
+        // Delegate to ActivationService to centralize creation
+        $activationService = new ActivationService();
+        return $activationService->generateFromOrder($order, $count);
     }
 
     /**
@@ -180,18 +151,9 @@ class AffiliateService
         ?int $usageCount = 1,
         ?string $productType = null
     ): ActivationCode {
-        return ActivationCode::create([
-            'code' => $this->generateUniqueCode(),
-            'owner_id' => $owner->id,
-            'generated_by' => auth()?->user()?->id,
-            'generated_from' => 'manual',
-            'status' => 'available',
-            'usage_count' => $usageCount ?? 1,
-            'remaining_usage' => $usageCount ?? 1,
-            'valid_from' => now(),
-            'valid_until' => now()->addMonths(1),
-            'gives_commission' => true,
-        ]);
+        $activationService = new ActivationService();
+        // Use package_id = null when not known
+        return $activationService->generateCodeWithOwner($productType ? (int)$productType : 0, $owner->id, $usageCount ?? 1);
     }
 
     /**
@@ -251,40 +213,19 @@ class AffiliateService
                 break;
             }
 
-            // Create commission record
-            $commission = Commission::create([
-                'affiliate_id' => $tempAffiliate->id,
-                'order_id' => $order->id,
-                'method_id' => $method->id,
-                'rule_id' => $rule->id,
-                'amount' => $commissionAmount,
-                'commission_type' => 'level',
-                'depth_level' => $level,
-                'calculation_detail' => [
-                    'level' => $level,
-                    'rule_name' => $rule->rule_name,
-                    'order_amount' => $order->total_amount,
-                    'calculated_amount' => $commissionAmount,
-                ],
-                'status' => 'pending',
-            ]);
+                // Delegate creation to CommissionService
+                $commissionService = new CommissionService();
+                $commission = $commissionService->distributeCommission(
+                    $tempAffiliate->id,
+                    $commissionAmount,
+                    $method->id,
+                    $rule->id,
+                    'level',
+                    $order->id,
+                    $level
+                );
 
-            // Create ledger entry
-            CommissionLedger::create([
-                'affiliate_id' => $tempAffiliate->id,
-                'commission_id' => $commission->id,
-                'order_id' => $order->id,
-                'type' => 'credit',
-                'amount' => $commissionAmount,
-                'description' => "Commission Level {$level} dari order {$order->order_number}",
-                'balance_before' => 0,
-                'balance_after' => $commissionAmount,
-                'reference' => $order->order_number,
-                'reference_type' => 'order',
-                'status' => 'posted',
-            ]);
-
-            $commissions[] = $commission;
+                $commissions[] = $commission;
 
             // Move to next level (parent affiliate)
             $tempAffiliate = Affiliate::where('user_id', $tempAffiliate->upline_id)
@@ -405,5 +346,159 @@ class AffiliateService
         }
 
         return 0;
+    }
+
+    /**
+     * Create a downline affiliate under a sponsor.
+     * Returns the created Affiliate model.
+     */
+    public function createDownline(int $sponsorId, int $packageId, string $position = 'left') : Affiliate
+    {
+        $sponsor = Affiliate::findOrFail($sponsorId);
+
+        // Create a user placeholder for the downline (email generated)
+        $user = User::create([
+            'name' => 'affiliate_' . uniqid(),
+            'email' => 'aff_' . uniqid() . '@example.local',
+            'password' => bcrypt('password'),
+            'email_verified_at' => now(),
+        ]);
+
+        // Create affiliate using existing logic
+        return $this->registerNewAffiliate($user, $sponsor, $position, null);
+    }
+
+    /**
+     * Place affiliate position (left/right) under its sponsor/upline.
+     */
+    public function placePosition(int $affiliateId, string $side): Affiliate
+    {
+        $affiliate = Affiliate::findOrFail($affiliateId);
+        if (!in_array($side, ['left', 'right'])) {
+            throw new \InvalidArgumentException('Side must be left or right');
+        }
+
+        $affiliate->update(['position' => $side]);
+        return $affiliate;
+    }
+
+    /**
+     * Calculate depth (level) of an affiliate in the tree.
+     */
+    public function calculateDepth(int $affiliateId): int
+    {
+        $affiliate = Affiliate::findOrFail($affiliateId);
+        $depth = 0;
+        $current = $affiliate;
+        while ($current && $current->upline_id) {
+            $depth++;
+            $current = Affiliate::where('user_id', $current->upline_id)->first();
+        }
+
+        return $depth;
+    }
+
+    /**
+     * Get tree structure (downlines) for visualization.
+     */
+    public function getTree(int $affiliateId): array
+    {
+        $root = Affiliate::with('user')->findOrFail($affiliateId);
+
+        $build = function (Affiliate $node) use (&$build) {
+            $children = Affiliate::where('upline_id', $node->user_id)->get();
+            return [
+                'id' => $node->id,
+                'username' => $node->username,
+                'user' => $node->user->name ?? null,
+                'position' => $node->position,
+                'children' => $children->map(fn($c) => $build($c))->toArray(),
+            ];
+        };
+
+        return $build($root);
+    }
+
+    /**
+     * Create a pending affiliate record (awaiting user confirmation).
+     */
+    public function registerPendingAffiliate(User $user, Affiliate $sponsor): Affiliate
+    {
+        // don't create mlm tree node yet; wait for confirmation
+        $affiliate = Affiliate::create([
+            'user_id' => $user->id,
+            'sponsor_id' => $sponsor->user_id,
+            'upline_id' => $sponsor->user_id,
+            'username' => $this->generateUniqueUsername($user->name),
+            'slug' => Str::slug($user->name) . '-' . uniqid(),
+            'position' => 'none',
+            'level' => $sponsor->level + 1,
+            'is_active' => false,
+        ]);
+
+        return $affiliate;
+    }
+
+    /**
+     * Confirm a pending affiliate and place them into the tree.
+     */
+    public function confirmAffiliate(int $affiliateId, string $position = 'left'): Affiliate
+    {
+        $affiliate = Affiliate::findOrFail($affiliateId);
+        if ($affiliate->is_active) {
+            return $affiliate; // already active
+        }
+
+        // set position and active
+        $affiliate->update([
+            'position' => in_array($position, ['left','right']) ? $position : 'none',
+            'is_active' => true,
+            'activated_at' => now(),
+        ]);
+
+        // create mlm tree node under sponsor's tree
+        $sponsor = Affiliate::where('user_id', $affiliate->sponsor_id)->first();
+        $parentTree = $sponsor->mlmTree ?? null;
+        $parentId = $parentTree?->id ?? null;
+
+        $node = MlmTree::create([
+            'affiliate_id' => $affiliate->id,
+            'parent_id' => $parentId,
+            'position' => $affiliate->position,
+            'depth' => $sponsor->level ?? 1,
+            'path' => null,
+        ]);
+
+        // recalc nested set
+        $this->updateNestedSet($affiliate->id);
+
+        return $affiliate;
+    }
+
+    /**
+     * Recalculate nested set positions for MLM tree.
+     * This is a recursive DFS assigner starting from root nodes.
+     */
+    public function updateNestedSet(?int $changedAffiliateId = null): void
+    {
+        // start from all root nodes (parent_id is null)
+        $counter = 1;
+
+        $roots = MlmTree::whereNull('parent_id')->orderBy('id')->get();
+
+        $recurse = function ($node) use (&$recurse, &$counter) {
+            $left = $counter++;
+            $children = MlmTree::where('parent_id', $node->id)->orderBy('id')->get();
+            foreach ($children as $child) {
+                $recurse($child);
+            }
+            $right = $counter++;
+
+            $node->update(['left_position' => $left, 'right_position' => $right]);
+        };
+
+        foreach ($roots as $root) {
+            $recurse($root);
+        }
     }
 }
