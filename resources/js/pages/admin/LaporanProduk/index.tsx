@@ -1,192 +1,87 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import DialogCreateProduct from '@/components/fragments/dialog-contents/create-product';
-import DialogEditProduct from '@/components/fragments/dialog-contents/edit-product';
 import SearchInput from '@/components/fragments/search-input';
-import { Button } from '@/components/ui/button';
-
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import { dashboardUrl } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { Edit, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { Head } from '@inertiajs/react';
 import { useState } from 'react';
-
-const rewards = [
-    {
-        no: 1,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '12 | 12',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 250.000',
-        status: 'PENDING',
-    },
-    {
-        no: 2,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '100 | 100',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 1.000.000',
-        status: 'PENDING',
-    },
-    {
-        no: 3,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '500 | 500',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 3.750.000',
-        status: 'PENDING',
-    },
-    {
-        no: 4,
-        poin: '0 | 0',
-        level: 'Diamond',
-        syarat: '4 | 4',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 100.000.000',
-        status: 'PENDING',
-    },
-];
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard Register',
-        href: dashboard().url,
+        title: 'Admin',
+        href: '/admin/dashboard',
+    },
+    {
+        title: 'Laporan Produk',
+        href: '/admin/LaporanProduk',
     },
 ];
 
+interface ProductData {
+    id: number;
+    nama_produk: string;
+    stock: number;
+    terjual: number;
+    sisa: number;
+    harga: number;
+    total_revenue: number;
+}
+
+const dummyData: ProductData[] = [
+    { id: 1, nama_produk: 'Produk A Premium', stock: 100, terjual: 35, sisa: 65, harga: 150000, total_revenue: 5250000 },
+    { id: 2, nama_produk: 'Produk B Standard', stock: 150, terjual: 80, sisa: 70, harga: 100000, total_revenue: 8000000 },
+    { id: 3, nama_produk: 'Produk C Limited', stock: 50, terjual: 25, sisa: 25, harga: 500000, total_revenue: 12500000 },
+];
+
 export default function LaporanProduk() {
-    const [search, setSearch] = useState<string>('');
-
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
+    const [search, setSearch] = useState('');
+    const [filtered, setFiltered] = useState(dummyData);
 
     const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
+        setSearch(value);
+        setFiltered(dummyData.filter(item => item.nama_produk.toLowerCase().includes(value.toLowerCase())));
     };
 
-    const handleDelete = () => {
-        alert('mencoba menghapus data');
-        // return false
-    };
+    const totalTerjual = filtered.reduce((sum, item) => sum + item.terjual, 0);
+    const totalRevenue = filtered.reduce((sum, item) => sum + item.total_revenue, 0);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Laporan produk" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Laporan Produk
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex w-full justify-between">
-                        <p className="w-1/3">Hadiah</p>
-                        <div className="flex w-fit flex-col-reverse items-end gap-2 md:flex-row md:items-center">
-                            <div className="w-40">
-                                <PaginationCombobox
-                                    onChange={handlePerPageChange}
-                                    value={perPage}
-                                />
-                            </div>
-                            <DialogCreateProduct>
-                                <Button>
-                                    <PlusCircleIcon /> Buat Affiliator
-                                </Button>
-                            </DialogCreateProduct>
-                        </div>
-                    </div>
-
+            <Head title="Laporan Produk" />
+            <div className="flex flex-col gap-6 p-6">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Terjual</p><p className="text-3xl font-bold">{totalTerjual}</p><p className="text-xs text-gray-500">Unit Produk</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Revenue</p><p className="text-3xl font-bold">Rp {(totalRevenue / 1000000).toFixed(1)}M</p><p className="text-xs text-gray-500">Dari Penjualan</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Jenis Produk</p><p className="text-3xl font-bold">{dummyData.length}</p><p className="text-xs text-gray-500">Total SKU</p></div></Card>
+                </div>
+                <Card className="p-6"><SearchInput onSearchChange={handleSearch} value={search}/></Card>
+                <Card className="overflow-hidden">
                     <Table>
-                        <TableCaption>
-                            Ini adalah data hadiah terbaru
-                        </TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>No</TableHead>
-                                <TableHead>Nama Item</TableHead>
-                                <TableHead>Tipe Produk (Paketan/satuan)</TableHead>
-                                <TableHead>Jumlah order</TableHead>
-                                <TableHead>Aksi</TableHead>
+                                <TableHead>Nama Produk</TableHead>
+                                <TableHead className="text-right">Stock</TableHead>
+                                <TableHead className="text-right">Terjual</TableHead>
+                                <TableHead className="text-right">Sisa</TableHead>
+                                <TableHead className="text-right">Harga</TableHead>
+                                <TableHead className="text-right">Revenue</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {rewards.map((reward, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-
-                                    <TableCell>{reward.poin}</TableCell>
-
-                                    <TableCell>{reward.pencapaian}</TableCell>
-
-                                    <TableCell>{reward.hadiah}</TableCell>
-
-                                    <TableCell className="flex h-fit w-fit items-center gap-2">
-                                        <DialogEditProduct>
-                                            <Button
-                                                size={'sm'}
-                                                variant={'default'}
-                                            >
-                                                <Edit /> Edit
-                                            </Button>
-                                        </DialogEditProduct>
-                                        <Button
-                                            onClick={handleDelete}
-                                            size={'sm'}
-                                            variant={'destructive'}
-                                        >
-                                            <Trash2 /> Hapus
-                                        </Button>
-                                    </TableCell>
+                            {filtered.map(item => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="font-medium">{item.nama_produk}</TableCell>
+                                    <TableCell className="text-right">{item.stock}</TableCell>
+                                    <TableCell className="text-right text-green-600 font-semibold">{item.terjual}</TableCell>
+                                    <TableCell className="text-right">{item.sisa}</TableCell>
+                                    <TableCell className="text-right">Rp {item.harga.toLocaleString('id-ID')}</TableCell>
+                                    <TableCell className="text-right font-semibold">Rp {item.total_revenue.toLocaleString('id-ID')}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
-                </div>
+                </Card>
             </div>
         </AppLayout>
     );

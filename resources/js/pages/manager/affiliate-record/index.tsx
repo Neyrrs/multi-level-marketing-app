@@ -10,7 +10,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import { dashboard } from '@/routes/';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
@@ -31,7 +31,7 @@ export default function AffiliateRecord() {
         setPerPage(value);
 
         router.get(
-            route('users.index'),
+            '/manager/reports/affiliate-record',
             { perPage: value },
             {
                 preserveState: true,
@@ -42,7 +42,7 @@ export default function AffiliateRecord() {
 
     const handleSearch = (value: string) => {
         router.get(
-            route('users.index'),
+            '/manager/reports/affiliate-record',
             { search: value },
             {
                 preserveState: true,

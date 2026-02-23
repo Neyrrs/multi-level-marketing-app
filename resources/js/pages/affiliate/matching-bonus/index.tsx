@@ -1,165 +1,88 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import SearchInput from '@/components/fragments/search-input';
-import { Button } from '@/components/ui/button';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard Costumer',
-        href: dashboard().url,
-    },
+    { title: 'Bonus Matching', href: '/affiliate/matching-bonus' },
 ];
 
-export default function MatchingBonus() {
-    const [search, setSearch] = useState<string>('');
+interface Props {
+    matchingHistory: { data: Array<any>; total: number };
+    stats: any;
+}
 
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
+export default function MatchingBonus({ matchingHistory, stats }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Matching Bonus
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2 text-sm">
-                        <h3 className="text-base font-semibold text-primary">
-                            Bonus Matching
-                        </h3>
-
-                        <div className="space-y-1">
-                            <p className="flex">
-                                <span className="w-40">Poin Pasangan</span>
-                                <span>: </span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Bonus Pasangan</span>
-                                <span>: </span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Akan Di TF</span>
-                                <span>: Rp</span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Sudah Di TF</span>
-                                <span>: Rp</span>
-                            </p>
-                            <p className="flex font-semibold">
-                                <span className="w-40">Total</span>
-                                <span>: Rp</span>
-                            </p>
-                        </div>
-
-                        <div className="border-t-2 pt-4">
-                            <div className="flex items-center gap-3">
-                                <Button size="sm">Lihat History</Button>
-
-                                <div className="ml-auto w-32">
-                                    <PaginationCombobox
-                                        onChange={handlePerPageChange}
-                                        value={perPage}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <Table>
-                        <TableCaption>
-                            Ini adalah data sponsor terbaru
-                        </TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-25">No</TableHead>
-                                <TableHead>Tanggal</TableHead>
-                                <TableHead>Akun</TableHead>
-                                <TableHead>Jenis</TableHead>
-                                <TableHead>Nilai</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell className="font-medium">
-                                        {invoice.invoice}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentStatus}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentMethod}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {invoice.totalAmount}
-                                    </TableCell>
+            <Head title="Bonus Matching" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <div className="grid auto-rows-min gap-4 md:grid-cols-4">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Total Matching</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">Rp {stats?.totalMatching?.toLocaleString('id-ID')}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Bulan Ini</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-blue-600">Rp {stats?.thisMonth?.toLocaleString('id-ID')}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Total Kiri</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{stats?.leftCount}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Total Kanan</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{stats?.rightCount}</div>
+                        </CardContent>
+                    </Card>
+                </div>
+                <div className="rounded-xl border bg-white p-4">
+                    <h3 className="font-semibold mb-4">Riwayat Matching</h3>
+                    {matchingHistory?.data?.length > 0 ? (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>No</TableHead>
+                                    <TableHead>Period</TableHead>
+                                    <TableHead>Vol Kiri</TableHead>
+                                    <TableHead>Vol Kanan</TableHead>
+                                    <TableHead>Pasangan</TableHead>
+                                    <TableHead>Bonus</TableHead>
                                 </TableRow>
-                            ))} */}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan={5}>Total</TableCell>
-                                <TableCell className="text-right">
-                                    {/* $2,500.00 */}
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {matchingHistory.data.map((r, i) => (
+                                    <TableRow key={r.id}>
+                                        <TableCell>{i + 1}</TableCell>
+                                        <TableCell>{r.period}</TableCell>
+                                        <TableCell>Rp {r.left_volume?.toLocaleString?.('id-ID')}</TableCell>
+                                        <TableCell>Rp {r.right_volume?.toLocaleString?.('id-ID')}</TableCell>
+                                        <TableCell>{r.pair_count}</TableCell>
+                                        <TableCell className="font-semibold text-green-600">Rp {r.bonus?.toLocaleString?.('id-ID')}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">No matching data</div>
+                    )}
                 </div>
             </div>
         </AppLayout>

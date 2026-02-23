@@ -1,9 +1,4 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import DialogCreateProduct from '@/components/fragments/dialog-contents/create-product';
-import DialogEditProduct from '@/components/fragments/dialog-contents/edit-product';
 import SearchInput from '@/components/fragments/search-input';
-import { Button } from '@/components/ui/button';
-
 import {
     Table,
     TableBody,
@@ -13,192 +8,249 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import { dashboardUrl } from '@/routes';
+
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Edit, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { DownloadIcon, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-
-const rewards = [
-    {
-        no: 1,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '12 | 12',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 250.000',
-        status: 'PENDING',
-    },
-    {
-        no: 2,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '100 | 100',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 1.000.000',
-        status: 'PENDING',
-    },
-    {
-        no: 3,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '500 | 500',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 3.750.000',
-        status: 'PENDING',
-    },
-    {
-        no: 4,
-        poin: '0 | 0',
-        level: 'Diamond',
-        syarat: '4 | 4',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 100.000.000',
-        status: 'PENDING',
-    },
-];
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard Register',
-        href: dashboard().url,
+        title: 'Admin',
+        href: '/admin/dashboard',
+    },
+    {
+        title: 'Laporan Penjualan',
+        href: '/admin/LaporanPenjualan',
+    },
+];
+
+interface SalesData {
+    id: number;
+    tanggal: string;
+    nama_member: string;
+    produk: string;
+    jumlah: number;
+    harga: number;
+    total: number;
+    status: 'completed' | 'pending' | 'failed';
+}
+
+// Dummy data
+const dummySalesData: SalesData[] = [
+    {
+        id: 1,
+        tanggal: '2026-02-10',
+        nama_member: 'Budi Santoso',
+        produk: 'Produk A Premium',
+        jumlah: 2,
+        harga: 150000,
+        total: 300000,
+        status: 'completed',
+    },
+    {
+        id: 2,
+        tanggal: '2026-02-10',
+        nama_member: 'Siti Nurhaliza',
+        produk: 'Produk B Standard',
+        jumlah: 1,
+        harga: 100000,
+        total: 100000,
+        status: 'completed',
+    },
+    {
+        id: 3,
+        tanggal: '2026-02-09',
+        nama_member: 'Ahmad Wijaya',
+        produk: 'Paket Bundle',
+        jumlah: 3,
+        harga: 250000,
+        total: 750000,
+        status: 'completed',
+    },
+    {
+        id: 4,
+        tanggal: '2026-02-09',
+        nama_member: 'Rini Kusuma',
+        produk: 'Produk C Limited',
+        jumlah: 1,
+        harga: 500000,
+        total: 500000,
+        status: 'pending',
     },
 ];
 
 export default function LaporanPenjualan() {
-    const [search, setSearch] = useState<string>('');
-
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
+    const [search, setSearch] = useState('');
+    const [filteredData, setFilteredData] = useState(dummySalesData);
 
     const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
+        setSearch(value);
+        const filtered = dummySalesData.filter(
+            (item) =>
+                item.nama_member.toLowerCase().includes(value.toLowerCase()) ||
+                item.produk.toLowerCase().includes(value.toLowerCase())
         );
+        setFilteredData(filtered);
     };
 
-    const handleDelete = () => {
-        alert('mencoba menghapus data');
-        // return false
+    const handleRefresh = () => {
+        router.get('/admin/reports/LaporanPenjualan', {}, { preserveState: true });
     };
+
+    const handleExport = () => {
+        alert('Export PDF/Excel akan segera diimplementasikan');
+    };
+
+    const totalSales = filteredData.reduce((sum, item) => sum + item.total, 0);
+    const totalTransactions = filteredData.length;
+    const completedCount = filteredData.filter((item) => item.status === 'completed').length;
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'completed':
+                return 'text-green-600 bg-green-50';
+            case 'pending':
+                return 'text-yellow-600 bg-yellow-50';
+            case 'failed':
+                return 'text-red-600 bg-red-50';
+            default:
+                return 'text-gray-600 bg-gray-50';
+        }
+    };
+
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'completed':
+                return 'Selesai';
+            case 'pending':
+                return 'Menunggu';
+            case 'failed':
+                return 'Gagal';
+            default:
+                return status;
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Laporan komisi" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Laporan Penjualan
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
+            <Head title="Laporan Penjualan" />
+            <div className="flex flex-col gap-6 p-6">
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <Card className="p-6">
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-600">Total Penjualan</p>
+                            <p className="text-3xl font-bold">Rp {totalSales.toLocaleString('id-ID')}</p>
+                            <p className="text-xs text-gray-500">Periode: Bulan Ini</p>
                         </div>
-                        <div className="w-1/4">
+                    </Card>
+                    <Card className="p-6">
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-600">Total Transaksi</p>
+                            <p className="text-3xl font-bold">{totalTransactions}</p>
+                            <p className="text-xs text-gray-500">Semua Status</p>
+                        </div>
+                    </Card>
+                    <Card className="p-6">
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-600">Transaksi Selesai</p>
+                            <p className="text-3xl font-bold text-green-600">{completedCount}</p>
+                            <p className="text-xs text-gray-500">Status Completed</p>
+                        </div>
+                    </Card>
+                </div>
+
+                {/* Filter & Actions */}
+                <Card className="p-6">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <div className="flex-1">
                             <SearchInput
                                 onSearchChange={handleSearch}
                                 value={search}
                             />
                         </div>
-                    </div>
-
-                    <div className="flex w-full justify-between">
-                        <p className="w-1/3">Hadiah</p>
-                        <div className="flex w-fit flex-col-reverse items-end gap-2 md:flex-row md:items-center">
-                            <div className="w-40">
-                                <PaginationCombobox
-                                    onChange={handlePerPageChange}
-                                    value={perPage}
-                                />
-                            </div>
-                            <DialogCreateProduct>
-                                <Button>
-                                    <PlusCircleIcon /> Buat Affiliator
-                                </Button>
-                            </DialogCreateProduct>
+                        <div className="flex gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleRefresh}
+                                className="gap-2"
+                            >
+                                <RefreshCw className="h-4 w-4" />
+                                Refresh
+                            </Button>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleExport}
+                                className="gap-2"
+                            >
+                                <DownloadIcon className="h-4 w-4" />
+                                Export
+                            </Button>
                         </div>
                     </div>
+                </Card>
 
+                {/* Table */}
+                <Card className="overflow-hidden">
                     <Table>
-                        <TableCaption>
-                            Ini adalah data hadiah terbaru
+                        <TableCaption className="p-4">
+                            Menampilkan {filteredData.length} dari {dummySalesData.length} transaksi penjualan
                         </TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>No</TableHead>
-                                <TableHead>Nama Affiliate</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Total Referal</TableHead>
-                                <TableHead>Total Transaksi Referal</TableHead>
-                                <TableHead>Total Komisi</TableHead>
-                                <TableHead>Sudah Dibayar</TableHead>
-                                <TableHead>Belum Dibayar</TableHead>
-                                <TableHead>Tanggal Pembayaran Terakhir</TableHead>
-                                <TableHead>Akun Bank</TableHead>
-                                <TableHead>Aksi</TableHead>
+                                <TableHead>Tanggal</TableHead>
+                                <TableHead>Nama Member</TableHead>
+                                <TableHead>Produk</TableHead>
+                                <TableHead className="text-right">Jumlah</TableHead>
+                                <TableHead className="text-right">Harga</TableHead>
+                                <TableHead className="text-right">Total</TableHead>
+                                <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {rewards.map((reward, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-
-                                    <TableCell>{reward.poin}</TableCell>
-
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-
-                                    <TableCell>{reward.hadiah}</TableCell>
-
-                                    <TableCell className="flex h-fit w-fit items-center gap-2">
-                                        <DialogEditProduct>
-                                            <Button
-                                                size={'sm'}
-                                                variant={'default'}
+                            {filteredData.length > 0 ? (
+                                filteredData.map((item) => (
+                                    <TableRow key={item.id}>
+                                        <TableCell className="font-medium">
+                                            {new Date(item.tanggal).toLocaleDateString('id-ID')}
+                                        </TableCell>
+                                        <TableCell>{item.nama_member}</TableCell>
+                                        <TableCell>{item.produk}</TableCell>
+                                        <TableCell className="text-right">{item.jumlah}</TableCell>
+                                        <TableCell className="text-right">
+                                            Rp {item.harga.toLocaleString('id-ID')}
+                                        </TableCell>
+                                        <TableCell className="text-right font-semibold">
+                                            Rp {item.total.toLocaleString('id-ID')}
+                                        </TableCell>
+                                        <TableCell>
+                                            <span
+                                                className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                                                    item.status
+                                                )}`}
                                             >
-                                                <Edit /> Edit
-                                            </Button>
-                                        </DialogEditProduct>
-                                        <Button
-                                            onClick={handleDelete}
-                                            size={'sm'}
-                                            variant={'destructive'}
-                                        >
-                                            <Trash2 /> Hapus
-                                        </Button>
+                                                {getStatusLabel(item.status)}
+                                            </span>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                                        Tidak ada data yang cocok dengan pencarian
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
-                </div>
+                </Card>
             </div>
         </AppLayout>
     );

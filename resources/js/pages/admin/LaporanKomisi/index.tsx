@@ -1,202 +1,92 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import DialogCreateProduct from '@/components/fragments/dialog-contents/create-product';
-import DialogEditProduct from '@/components/fragments/dialog-contents/edit-product';
 import SearchInput from '@/components/fragments/search-input';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import { dashboardUrl } from '@/routes';
+
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Edit, PlusCircleIcon, Trash2 } from 'lucide-react';
+import { DownloadIcon, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-
-const rewards = [
-    {
-        no: 1,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '12 | 12',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 250.000',
-        status: 'PENDING',
-    },
-    {
-        no: 2,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '100 | 100',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 1.000.000',
-        status: 'PENDING',
-    },
-    {
-        no: 3,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '500 | 500',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 3.750.000',
-        status: 'PENDING',
-    },
-    {
-        no: 4,
-        poin: '0 | 0',
-        level: 'Diamond',
-        syarat: '4 | 4',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 100.000.000',
-        status: 'PENDING',
-    },
-];
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard Register',
-        href: dashboard().url,
+        title: 'Admin',
+        href: '/admin/dashboard',
+    },
+    {
+        title: 'Laporan Komisi',
+        href: '/admin/LaporanKomisi',
     },
 ];
 
+interface CommissionData {
+    id: number;
+    tanggal: string;
+    member_name: string;
+    method: 'Sponsor' | 'Level' | 'Matching';
+    poin: number;
+    persentase: number;
+    amount: number;
+    status: 'paid' | 'pending' | 'on_hold';
+}
+
+const dummyData: CommissionData[] = [
+    { id: 1, tanggal: '2026-02-10', member_name: 'Budi Santoso', method: 'Sponsor', poin: 200, persentase: 5, amount: 10000, status: 'paid' },
+    { id: 2, tanggal: '2026-02-10', member_name: 'Siti Nurhaliza', method: 'Level', poin: 150, persentase: 8, amount: 12000, status: 'pending' },
+    { id: 3, tanggal: '2026-02-09', member_name: 'Ahmad Wijaya', method: 'Matching', poin: 300, persentase: 3, amount: 9000, status: 'paid' },
+];
+
 export default function LaporanKomisi() {
-    const [search, setSearch] = useState<string>('');
-
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
+    const [search, setSearch] = useState('');
+    const [filtered, setFiltered] = useState(dummyData);
 
     const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
+        setSearch(value);
+        setFiltered(dummyData.filter(item => item.member_name.toLowerCase().includes(value.toLowerCase())));
     };
 
-    const handleDelete = () => {
-        alert('mencoba menghapus data');
-        // return false
-    };
+    const totalComm = filtered.reduce((sum, item) => sum + item.amount, 0);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Laporan komisi" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Laporan Komisi
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex w-full justify-between">
-                        <p className="w-1/3">Hadiah</p>
-                        <div className="flex w-fit flex-col-reverse items-end gap-2 md:flex-row md:items-center">
-                            <div className="w-40">
-                                <PaginationCombobox
-                                    onChange={handlePerPageChange}
-                                    value={perPage}
-                                />
-                            </div>
-                            <DialogCreateProduct>
-                                <Button>
-                                    <PlusCircleIcon /> Buat Affiliator
-                                </Button>
-                            </DialogCreateProduct>
-                        </div>
-                    </div>
-
+            <Head title="Laporan Komisi" />
+            <div className="flex flex-col gap-6 p-6">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Komisi</p><p className="text-3xl font-bold">Rp {totalComm.toLocaleString('id-ID')}</p><p className="text-xs text-gray-500">Bulan Ini</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Transaksi</p><p className="text-3xl font-bold">{filtered.length}</p><p className="text-xs text-gray-500">Entri Komisi</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Sudah Dibayar</p><p className="text-3xl font-bold text-green-600">Rp {filtered.filter(d => d.status === 'paid').reduce((sum, item) => sum + item.amount, 0).toLocaleString('id-ID')}</p><p className="text-xs text-gray-500">Status Paid</p></div></Card>
+                </div>
+                <Card className="p-6"><SearchInput onSearchChange={handleSearch} value={search} /></Card>
+                <Card className="overflow-hidden">
                     <Table>
-                        <TableCaption>
-                            Ini adalah data hadiah terbaru
-                        </TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>No</TableHead>
-                                <TableHead>Tanggal Komisi</TableHead>
-                                <TableHead>Username Affiliate</TableHead>
-                                <TableHead>Level Jaringan</TableHead>
-                                <TableHead>Jumlah Komisi</TableHead>
-                                <TableHead>Status Komisi</TableHead>
-                                <TableHead>Tanggal Diterima/Pembayaran</TableHead>
-                                <TableHead>Metode Komisi</TableHead>
-                                <TableHead>Aturan Komisi</TableHead>
-                                <TableHead>Aksi</TableHead>
+                                <TableHead>Tanggal</TableHead>
+                                <TableHead>Nama Member</TableHead>
+                                <TableHead>Metode</TableHead>
+                                <TableHead className="text-right">Poin</TableHead>
+                                <TableHead className="text-right">%</TableHead>
+                                <TableHead className="text-right">Jumlah</TableHead>
+                                <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {rewards.map((reward, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-
-                                    <TableCell>{reward.poin}</TableCell>
-
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-                                    <TableCell>{reward.pencapaian}</TableCell>
-
-                                    <TableCell>{reward.hadiah}</TableCell>
-
-                                    <TableCell className="flex h-fit w-fit items-center gap-2">
-                                        <DialogEditProduct>
-                                            <Button
-                                                size={'sm'}
-                                                variant={'default'}
-                                            >
-                                                <Edit /> Edit
-                                            </Button>
-                                        </DialogEditProduct>
-                                        <Button
-                                            onClick={handleDelete}
-                                            size={'sm'}
-                                            variant={'destructive'}
-                                        >
-                                            <Trash2 /> Hapus
-                                        </Button>
-                                    </TableCell>
+                            {filtered.map(item => (
+                                <TableRow key={item.id}>
+                                    <TableCell>{new Date(item.tanggal).toLocaleDateString('id-ID')}</TableCell>
+                                    <TableCell className="font-medium">{item.member_name}</TableCell>
+                                    <TableCell><span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">{item.method}</span></TableCell>
+                                    <TableCell className="text-right">{item.poin}</TableCell>
+                                    <TableCell className="text-right">{item.persentase}%</TableCell>
+                                    <TableCell className="text-right font-semibold">Rp {item.amount.toLocaleString('id-ID')}</TableCell>
+                                    <TableCell><span className={`text-xs px-2 py-1 rounded ${item.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{item.status}</span></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
-                </div>
+                </Card>
             </div>
         </AppLayout>
     );

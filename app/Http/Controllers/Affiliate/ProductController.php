@@ -3,17 +3,51 @@
 namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display reward/product listings
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('affiliate/shop/index');
+        // Get products for reward display
+        $query = Product::where('is_active', true)
+            ->orderBy('created_at', 'desc');
+
+        // Search functionality
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+        }
+
+        // Filter by category if has
+        if ($request->has('category') && $request->category) {
+            $query->where('category', $request->category);
+        }
+
+        $perPage = $request->get('perPage', 12);
+        $products = $query->paginate($perPage);
+
+        // Transform product data
+        $products->getCollection()->transform(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'description' => $item->description,
+                'price' => (float)$item->price,
+                'image' => $item->image_url,
+                'category' => $item->category ?? 'General',
+            ];
+        });
+
+        return Inertia::render('affiliate/reward/index', [
+            'products' => $products,
+        ]);
     }
 
     /**

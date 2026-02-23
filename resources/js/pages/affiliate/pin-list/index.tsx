@@ -1,135 +1,162 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import { HistoryModal } from '@/components/fragments/dialog-contents/history';
-import SearchInput from '@/components/fragments/search-input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard Costumer',
-        href: dashboard().url,
+        title: 'Daftar PIN',
+        href: '/affiliate/pin-list',
     },
 ];
 
-export default function PinList() {
-    const [search, setSearch] = useState<string>('');
+interface Pin {
+    id: number;
+    code: string;
+    status: string;
+    product_name: string;
+    usage_remaining: number;
+    created_at: string;
+    used_at: string | null;
+}
 
-    const [perPage, setPerPage] = useState('10');
+interface StatusCounts {
+    available: number;
+    used: number;
+    expired: number;
+}
 
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
+interface Props {
+    pins: {
+        data: Pin[];
+        total: number;
+    };
+    statusCounts: StatusCounts;
+}
 
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
+export default function PinList({ pins, statusCounts }: Props) {
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'available':
+                return 'bg-green-100 text-green-700';
+            case 'used':
+                return 'bg-blue-100 text-blue-700';
+            case 'expired':
+                return 'bg-red-100 text-red-700';
+            default:
+                return 'bg-gray-100 text-gray-700';
+        }
     };
 
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
+    const getStatusLabel = (status: string) => {
+        switch (status) {
+            case 'available':
+                return 'Tersedia';
+            case 'used':
+                return 'Digunakan';
+            case 'expired':
+                return 'Kadaluarsa';
+            default:
+                return status;
+        }
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Daftar Pin
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
+            <Head title="Daftar PIN" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                {/* Status Statistics */}
+                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Tersedia
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-green-600">
+                                {statusCounts.available}
                             </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
-                    <div className="flex w-full justify-between">
-                        <p className="w-1/3">PIN: asdas</p>
-                        <div className="flex w-fit items-center gap-2">
-                            <div className="w-40">
-                                <PaginationCombobox
-                                    onChange={handlePerPageChange}
-                                    value={perPage}
-                                />
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Digunakan
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-blue-600">
+                                {statusCounts.used}
                             </div>
-                        </div>
-                    </div>
+                        </CardContent>
+                    </Card>
 
-                    <Table>
-                        <TableCaption>Ini adalah data pin terbaru</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-25">No</TableHead>
-                                <TableHead>Kode PIN</TableHead>
-                                <TableHead>Harga</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Kadaluwarsa</TableHead>
-                                <TableHead>Nilai</TableHead>
-                                <TableHead>Harga</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell className="font-medium">
-                                        {invoice.invoice}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentStatus}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentMethod}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {invoice.totalAmount}
-                                    </TableCell>
-                                </TableRow>
-                            ))} */}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan={5}>Total</TableCell>
-                                <TableCell className="text-right">
-                                    {/* $2,500.00 */}
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Kadaluarsa
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-red-600">
+                                {statusCounts.expired}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* PIN Table */}
+                <div className="rounded-xl border bg-white overflow-hidden">
+                    <div className="p-4">
+                        <h3 className="font-semibold mb-4">Daftar PIN Saya</h3>
+
+                        {pins && pins.data && pins.data.length > 0 ? (
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>No</TableHead>
+                                        <TableHead>Kode PIN</TableHead>
+                                        <TableHead>Produk</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Sisa Penggunaan</TableHead>
+                                        <TableHead>Tanggal Dibuat</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {pins.data.map((pin, index) => (
+                                        <TableRow key={pin.id}>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell className="font-mono font-semibold">{pin.code}</TableCell>
+                                            <TableCell>{pin.product_name}</TableCell>
+                                            <TableCell>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(pin.status)}`}>
+                                                    {getStatusLabel(pin.status)}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>{pin.usage_remaining}</TableCell>
+                                            <TableCell>
+                                                {new Date(pin.created_at).toLocaleDateString('id-ID')}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500">
+                                Tidak ada PIN tersedia
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </AppLayout>

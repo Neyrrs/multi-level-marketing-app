@@ -1,169 +1,39 @@
-import SearchInput from '@/components/fragments/search-input';
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Hadiah',
-        href: dashboard().url,
-    },
+    { title: 'Produk Reward', href: '/affiliate/reward' },
 ];
 
-const rewards = [
-    {
-        no: 1,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '12 | 12',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 250.000',
-        status: 'PENDING',
-    },
-    {
-        no: 2,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '100 | 100',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 1.000.000',
-        status: 'PENDING',
-    },
-    {
-        no: 3,
-        poin: '0 | 0',
-        level: 'Premium',
-        syarat: '500 | 500',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 3.750.000',
-        status: 'PENDING',
-    },
-    {
-        no: 4,
-        poin: '0 | 0',
-        level: 'Diamond',
-        syarat: '4 | 4',
-        pencapaian: 'Belum Qualified',
-        hadiah: 'Rp 100.000.000',
-        status: 'PENDING',
-    },
-];
+interface Props {
+    products: Array<{ id: number; name: string; price: number; image: string; category: string }>;
+}
 
-export default function Reward() {
-    const [search, setSearch] = useState<string>('');
-
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
+export default function Reward({ products }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Riwayat belanja" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Hadiah
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex w-full justify-between">
-                        <p className="w-1/3">Hadiah</p>
-                        <div className="w-40">
-                            <PaginationCombobox
-                                onChange={handlePerPageChange}
-                                value={perPage}
-                            />
-                        </div>
-                    </div>
-
-                    <Table>
-                        <TableCaption>
-                            Ini adalah data hadiah terbaru
-                        </TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>No</TableHead>
-                                <TableHead>Poin R.O.</TableHead>
-                                <TableHead>Syarat</TableHead>
-                                <TableHead>Pencapaian</TableHead>
-                                <TableHead>Hadiah</TableHead>
-                                <TableHead>Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {rewards.map((reward, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-
-                                    <TableCell>
-                                        <div>{reward.poin}</div>
-                                        <div>{reward.level}</div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div>{reward.syarat}</div>
-                                        <div>{reward.level}</div>
-                                    </TableCell>
-
-                                    <TableCell>{reward.pencapaian}</TableCell>
-
-                                    <TableCell>{reward.hadiah}</TableCell>
-
-                                    <TableCell>
-                                        <span>{reward.status}</span>
-                                    </TableCell>
-                                </TableRow>
+            <Head title="Produk Reward" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                <div className="rounded-xl border bg-white p-4">
+                    <h3 className="font-semibold mb-6">Produk Reward Tersedia</h3>
+                    {products?.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {products.map((product) => (
+                                <Card key={product.id}>
+                                    <CardContent className="pt-6">
+                                        <img src={product.image || 'https://via.placeholder.com/400x300'} alt={product.name} className="w-full h-48 object-cover rounded mb-4" />
+                                        <h4 className="font-semibold">{product.name}</h4>
+                                        <p className="text-sm text-gray-600">{product.category}</p>
+                                        <p className="text-lg font-bold text-primary mt-2">Rp {product.price.toLocaleString('id-ID')}</p>
+                                    </CardContent>
+                                </Card>
                             ))}
-                        </TableBody>
-                    </Table>
+                        </div>
+                    ) : (
+                        <div className="text-center py-12 text-gray-500">No products available</div>
+                    )}
                 </div>
             </div>
         </AppLayout>

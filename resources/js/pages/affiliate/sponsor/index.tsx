@@ -1,169 +1,67 @@
-import { PaginationCombobox } from '@/components/fragments/combo-box/pagination-combobox';
-import { HistoryModal } from '@/components/fragments/dialog-contents/history';
-import SearchInput from '@/components/fragments/search-input';
-import { Button } from '@/components/ui/button';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { Head } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard Costumer',
-        href: dashboard().url,
-    },
+    { title: 'Sponsor', href: '/affiliate/sponsor' },
 ];
 
-export default function Sponsor() {
-    const [search, setSearch] = useState<string>('');
+interface Props {
+    sponsor: { name: string; username: string; level: number; total_downline: number } | null;
+    siblings: Array<any>;
+}
 
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
-    };
-
+export default function Sponsor({ sponsor, siblings }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Sponsor
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
-                            </div>
-                        </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
-                        </div>
-                    </div>
+            <Head title="Sponsor" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                {/* Sponsor Info */}
+                {sponsor && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Informasi Sponsor</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                            <p><span className="font-semibold">Nama:</span> {sponsor.name}</p>
+                            <p><span className="font-semibold">Username:</span> @{sponsor.username}</p>
+                            <p><span className="font-semibold">Level:</span> {sponsor.level}</p>
+                            <p><span className="font-semibold">Total Downline:</span> {sponsor.total_downline}</p>
+                        </CardContent>
+                    </Card>
+                )}
 
-                    <div className="space-y-2 text-sm">
-                        <h3 className="text-base font-semibold text-primary">
-                            Bonus Sponsor
-                        </h3>
-
-                        <div className="space-y-1">
-                            <p className="flex">
-                                <span className="w-40">Poin Pasangan</span>
-                                <span>: </span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Bonus Pasangan</span>
-                                <span>: </span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Akan Di TF</span>
-                                <span>: Rp</span>
-                            </p>
-                            <p className="flex">
-                                <span className="w-40">Sudah Di TF</span>
-                                <span>: Rp</span>
-                            </p>
-                            <p className="flex font-semibold">
-                                <span className="w-40">Total</span>
-                                <span>: Rp</span>
-                            </p>
-                        </div>
-
-                        <div className="border-t-2 pt-4">
-                            <div className="flex items-center gap-3">
-                                <Button size="sm">Lihat History</Button>
-
-                                <div className="flex w-fit items-center gap-2">
-                                    <HistoryModal />
-                                    <div className="ml-auto w-32">
-                                        <PaginationCombobox
-                                            onChange={handlePerPageChange}
-                                            value={perPage}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <Table>
-                        <TableCaption>
-                            Ini adalah data sponsor terbaru
-                        </TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-25">No</TableHead>
-                                <TableHead>Tanggal</TableHead>
-                                <TableHead>Akun</TableHead>
-                                <TableHead>Jenis</TableHead>
-                                <TableHead>Nilai</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell className="font-medium">
-                                        {invoice.invoice}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentStatus}
-                                    </TableCell>
-                                    <TableCell>
-                                        {invoice.paymentMethod}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {invoice.totalAmount}
-                                    </TableCell>
+                {/* Siblings */}
+                <div className="rounded-xl border bg-white p-4">
+                    <h3 className="font-semibold mb-4">Rekan Sejawat (Siblings)</h3>
+                    {siblings?.length > 0 ? (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>No</TableHead>
+                                    <TableHead>Nama</TableHead>
+                                    <TableHead>Username</TableHead>
+                                    <TableHead>Level</TableHead>
+                                    <TableHead>Downline</TableHead>
                                 </TableRow>
-                            ))} */}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TableCell colSpan={5}>Total</TableCell>
-                                <TableCell className="text-right">
-                                    {/* $2,500.00 */}
-                                </TableCell>
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
+                            </TableHeader>
+                            <TableBody>
+                                {siblings.map((sibling, i) => (
+                                    <TableRow key={sibling.id}>
+                                        <TableCell>{i + 1}</TableCell>
+                                        <TableCell>{sibling.name}</TableCell>
+                                        <TableCell>@{sibling.username}</TableCell>
+                                        <TableCell>{sibling.level}</TableCell>
+                                        <TableCell>{sibling.direct_downline}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">No siblings</div>
+                    )}
                 </div>
             </div>
         </AppLayout>

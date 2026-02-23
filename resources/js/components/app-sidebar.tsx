@@ -13,9 +13,6 @@ import {
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import {
-    BarChart3,
-    Boxes,
-    CreditCard,
     Gift,
     Home,
     KeySquareIcon,
@@ -23,10 +20,9 @@ import {
     Network,
     Newspaper,
     Package,
-    RotateCcw,
     ShoppingBasket,
-    ShoppingCart,
     User,
+    DollarSign,
 } from 'lucide-react';
 import { useMemo } from 'react';
 import AppLogo from './app-logo';
@@ -73,31 +69,87 @@ export function AppSidebar() {
         return {
             admin: [
                 {
+                    title: 'Dashboard',
+                    icon: User,
+                    href: getHref(
+                        'admin.dashboard',
+                        '/admin/dashboard',
+                    ),
+                },
+                {
                     title: 'Master Data',
                     icon: LayoutGrid,
                     children: [
                         {
                             title: 'Master Produk',
                             href: getHref(
-                                'manajemen-produk.index',
-                                '/admin/product-management',
+                                'admin.products.index',
+                                '/admin/products',
                             ),
                         },
                         {
-                            title: 'Pengaturan Komisi',
+                            title: 'Metode Komisi',
                             href: getHref(
-                                'pengaturan-komisi.index',
-                                '/admin/commission-setting',
+                                'admin.commission-methods.index',
+                                '/admin/commission-methods',
+                            ),
+                        },
+                        {
+                            title: 'Rule Komisi',
+                            href: getHref(
+                                'admin.commission-rules.index',
+                                '/admin/commission-rules',
                             ),
                         },
                         {
                             title: 'Pengaturan Plan',
                             href: getHref(
-                                'pengaturan-plan.index',
+                                'admin.plan-setting',
                                 '/admin/plan-setting',
                             ),
                         },
                     ],
+                },
+                {
+                    title: 'Manajemen Affiliate',
+                    icon: User,
+                    href: getHref(
+                        'admin.affiliates.index',
+                        '/admin/affiliates',
+                    ),
+                },
+                {
+                    title: 'Struktur Tree MLM',
+                    icon: Network,
+                    href: '/admin/mlm-tree',
+                },
+                {
+                    title: 'Keuangan',
+                    icon: Package,
+                    children: [
+                        {
+                            title: 'Penarikan Dana',
+                            href: getHref(
+                                'admin.withdrawals.index',
+                                '/admin/withdrawals',
+                            ),
+                        },
+                        {
+                            title: 'Laporan Pembayaran',
+                            href: getHref(
+                                'admin.payout-report',
+                                '/admin/payout-report',
+                            ),
+                        },
+                    ],
+                },
+                {
+                    title: 'Notifikasi',
+                    icon: Package,
+                    href: getHref(
+                        'admin.notifications.index',
+                        '/admin/notifications',
+                    ),
                 },
                 {
                     title: 'Pusat Laporan',
@@ -145,7 +197,7 @@ export function AppSidebar() {
                     title: 'Manajemen User',
                     href: getHref(
                         'manajemen-produk.index',
-                        '/admin/product-management',
+                        '/admin/UsersRole',
                     ),
                     icon: User,
                 },
@@ -209,14 +261,6 @@ export function AppSidebar() {
                     icon: LayoutGrid,
                 },
                 {
-                    title: 'Nyoba',
-                    href: getHref(
-                        'nyoba.reports.index',
-                        '/manager/reports/nyoba',
-                    ),
-                    icon: Gift,
-                },
-                {
                     title: 'Laporan',
                     icon: Package,
                     children: [
@@ -264,37 +308,89 @@ export function AppSidebar() {
 
             affiliate: [
                 {
+                    title: 'Dashboard',
+                    href: getHref('affiliate.dashboard', '/affiliate/dashboard'),
+                    icon: LayoutGrid,
+                },
+                {
                     title: 'Belanja',
                     href: getHref('affiliate.shop.index', '/affiliate/shop'),
                     icon: ShoppingBasket,
                 },
                 {
+                    title: 'Riwayat Belanja',
+                    href: getHref('affiliate.shop-history.index', '/affiliate/shop-history'),
+                    icon: ShoppingBasket,
+                },
+                {
                     title: 'Daftar Pin',
-                    href: getHref(
-                        'affiliate.pin-list.index',
-                        '/affiliate/pin-list',
-                    ),
+                    href: getHref('affiliate.pin-list.index', '/affiliate/pin-list'),
                     icon: KeySquareIcon,
                 },
                 {
-                    title: 'Jaringan',
+                    title: 'Riwayat Pin',
+                    href: getHref('affiliate.pin-history.index', '/affiliate/pin-history'),
+                    icon: KeySquareIcon,
+                },
+                {
+                    title: 'Redeem',
+                    href: getHref('affiliate.redeem.index', '/affiliate/redeem'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Reward',
+                    href: getHref('affiliate.reward.index', '/affiliate/reward'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Sponsor',
+                    href: getHref('affiliate.sponsor.index', '/affiliate/sponsor'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Downline',
+                    href: getHref('affiliate.downline.index', '/affiliate/downline'),
                     icon: Network,
-                    children: [
-                        {
-                            title: 'Pohon',
-                            href: getHref(
-                                'affiliate.tree.index',
-                                '/affiliate/tree',
-                            ),
-                        },
-                        {
-                            title: 'Repeat Order',
-                            href: getHref(
-                                'affiliate.repeat-order.index',
-                                '/affiliate/repeat-order',
-                            ),
-                        },
-                    ],
+                },
+                {
+                    title: 'Personal RO',
+                    href: getHref('affiliate.personal-ro.index', '/affiliate/personal-ro'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Generasi RO',
+                    href: getHref('affiliate.generation-ro.index', '/affiliate/generation-ro'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Matching Bonus',
+                    href: getHref('affiliate.matching-bonus.index', '/affiliate/matching-bonus'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Komisi',
+                    href: getHref('affiliate.komisi.index', '/affiliate/komisi'),
+                    icon: Gift,
+                },
+                {
+                    title: 'Kode',
+                    href: getHref('affiliate.kode.index', '/affiliate/kode'),
+                    icon: KeySquareIcon,
+                },
+                {
+                    title: 'Binary',
+                    href: getHref('affiliate.binary.index', '/affiliate/binary'),
+                    icon: Network,
+                },
+                {
+                    title: 'Pengaturan',
+                    href: getHref('affiliate.pengaturan.index', '/affiliate/pengaturan'),
+                    icon: Package,
+                },
+                {
+                    title: 'Tree',
+                    href: getHref('affiliate.tree.index', '/affiliate/tree'),
+                    icon: Network,
                 },
                 // {
                 //     title: 'Affiliate Dashboard',
@@ -384,68 +480,41 @@ export function AppSidebar() {
 
             logistik: [
                 {
+                    title: 'Dashboard',
+                    icon: Home,
+                    href: getHref('logistik.dashboard', '/logistik/dashboard'),
+                },
+                {
                     title: 'Pesanan',
-                    icon: ShoppingCart,
-                    children: [
-                        {
-                            title: 'Manage Orders',
-                            href: getHref(
-                                'logistik.orders.manage-orders',
-                                '/logistik/orders/manage-orders',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                        {
-                            title: 'Shipping Status',
-                            href: getHref(
-                                'logistik.orders.shipping-status',
-                                '/logistik/orders/shipping-status',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                    ],
+                    icon: ShoppingBasket,
+                    href: getHref('logistik.orders.index', '/logistik/orders'),
                 },
                 {
-                    title: 'Stok',
-                    icon: Boxes,
-                    children: [
-                        {
-                            title: 'Managemen Stok Produk',
-                            href: getHref(
-                                'logistik.orders.product-stock-management',
-                                '/logistik/orders/product-stock-management',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                        {
-                            title: 'Mutasi Stock',
-                            href: getHref(
-                                'logistik.orders.stock-movement',
-                                '/logistik/orders/stock-movement',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                    ],
+                    title: 'Pengiriman',
+                    icon: Package,
+                    href: getHref('logistik.shipments.index', '/logistik/shipments'),
                 },
                 {
-                    title: 'Retur',
-                    icon: RotateCcw,
+                    title: 'Inventaris',
+                    icon: LayoutGrid,
+                    href: getHref('logistik.inventory.index', '/logistik/inventory'),
+                },
+                {
+                    title: 'Pengembalian',
+                    icon: Package,
+                    href: getHref('logistik.returns.index', '/logistik/returns'),
+                },
+                {
+                    title: 'Laporan',
+                    icon: Newspaper,
                     children: [
                         {
-                            title: 'Retur Produk',
-                            href: getHref(
-                                'logistik.orders.product-returns',
-                                '/logistik/orders/product-returns',
-                            ),
-                            icon: LayoutGrid,
+                            title: 'Laporan Pengiriman',
+                            href: getHref('logistik.reports.delivery', '/logistik/reports/delivery'),
                         },
                         {
-                            title: 'Riwayat Retur',
-                            href: getHref(
-                                'logistik.orders.return-history',
-                                '/logistik/orders/return-history',
-                            ),
-                            icon: LayoutGrid,
+                            title: 'Statistik Pengiriman',
+                            href: getHref('logistik.reports.shipment', '/logistik/reports/shipment'),
                         },
                     ],
                 },
@@ -453,67 +522,29 @@ export function AppSidebar() {
 
             finance: [
                 {
+                    title: 'Dashboard',
+                    icon: Home,
+                    href: getHref('finance.dashboard', '/finance/dashboard'),
+                },
+                {
                     title: 'Transaksi',
-                    icon: CreditCard,
-                    children: [
-                        {
-                            title: 'Transaction Management',
-                            href: getHref(
-                                'finance.transaction-management',
-                                '/finance/transaction-management',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                        {
-                            title: 'Pengajuan Withdraw',
-                            href: getHref(
-                                'finance.withdraw-request',
-                                '/finance/withdraw-request',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                        {
-                            title: 'Persetujuan Withdraw',
-                            href: getHref(
-                                'finance.withdraw-approval',
-                                '/finance/withdraw-approval',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                    ],
+                    icon: Package,
+                    href: getHref('finance.transactions.index', '/finance/transactions'),
+                },
+                {
+                    title: 'Penarikan Dana',
+                    icon: DollarSign,
+                    href: getHref('finance.withdrawals.index', '/finance/withdrawals'),
                 },
                 {
                     title: 'Laporan',
-                    icon: BarChart3,
-                    children: [
-                        {
-                            title: 'Laporan Keuangan',
-                            href: getHref(
-                                'finance.financial-report',
-                                '/finance/financial-report',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                        {
-                            title: 'Laporan Komisi',
-                            href: getHref(
-                                'finance.commission-report',
-                                '/finance/commission-report',
-                            ),
-                            icon: LayoutGrid,
-                        },
-                    ],
+                    icon: Newspaper,
+                    href: getHref('finance.reports.index', '/finance/reports'),
                 },
                 {
-                    title: 'Affiliate',
+                    title: 'Jaringan Komisi',
                     icon: Network,
-                    children: [
-                        {
-                            title: 'Pohon Mitra',
-                            href: getHref('finance.tree', '/finance/tree'),
-                            icon: LayoutGrid,
-                        },
-                    ],
+                    href: getHref('finance.network', '/finance/network'),
                 },
             ],
 
@@ -556,6 +587,7 @@ export function AppSidebar() {
         });
     }, [roles]);
 
+    // Determine logo link based on roles (priority order)
     const getLogoDashboard = (): string => {
         if (roles.includes('admin'))
             return getHref('admin.dashboard', '/admin/dashboard');
@@ -568,6 +600,11 @@ export function AppSidebar() {
         if (roles.includes('guest')) return getHref('dashboard', '/dashboard');
         return getHref('home', '/');
     };
+
+    // Debug logs (remove in production)
+    // console.log('AppSidebar - rawRoles:', rawRoles);
+    // console.log('AppSidebar - roles:', roles);
+    // console.log('AppSidebar - mainNavItems:', mainNavItems);
 
     return (
         <Sidebar collapsible="icon" variant="inset">
