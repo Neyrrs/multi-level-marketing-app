@@ -141,7 +141,7 @@ class TestMlmWorkflow extends Command
 
         // Generate Activation Codes
         $this->info('📝 Generating Activation Codes...');
-        $codes = $affiliateService->generateActivationCodesFromOrder($order, 2);
+        $codes = $affiliateService->generateActivationCodesFromOrder($order, 1);
         $this->info("✅ Generated " . count($codes) . " activation codes\n");
         foreach ($codes as $code) {
             $this->info("   └─ {$code->code}");

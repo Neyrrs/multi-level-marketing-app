@@ -75,7 +75,7 @@ export default function PengaturanKomisi() {
         setPerPage(value);
 
         router.get(
-            route('users.index'),
+            '/admin/pengaturan-komisi',
             { perPage: value },
             {
                 preserveState: true,
@@ -86,7 +86,7 @@ export default function PengaturanKomisi() {
 
     const handleSearch = (value: string) => {
         router.get(
-            route('users.index'),
+            '/admin/pengaturan-komisi',
             { search: value },
             {
                 preserveState: true,

@@ -75,7 +75,7 @@ export default function PengaturanPlan() {
         setPerPage(value);
 
         router.get(
-            route('users.index'),
+            '/admin/plan-setting',
             { perPage: value },
             {
                 preserveState: true,
@@ -86,7 +86,7 @@ export default function PengaturanPlan() {
 
     const handleSearch = (value: string) => {
         router.get(
-            route('users.index'),
+            '/admin/plan-setting',
             { search: value },
             {
                 preserveState: true,

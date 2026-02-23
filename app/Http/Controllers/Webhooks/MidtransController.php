@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers\Webhooks;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\OrderService;
+use Illuminate\Support\Facades\Log;
+use App\Models\Order;
+
+class MidtransController extends Controller
+{
+    protected OrderService $orderService;
+
+    public function __construct()
+    {
+        $this->orderService = new OrderService();
+    }
+
+    /**
+     * Verify Midtrans webhook signature using OrderService helper.
+     */
+    public function verifySignature(Request $request): bool
+    {
+        try {
+            return $this->orderService->verifyMidtransSignature($request);
+        } catch (\Throwable $e) {
+            Log::error('Midtrans signature verification error: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Production-ready webhook handler for Midtrans.
+     */
+    public function handle(Request $request)
+    {
+        // verify signature first
+        if (!$this->verifySignature($request)) {
+            Log::warning('Midtrans webhook: invalid signature');
+            return response()->json(['error' => 'invalid signature'], 400);
+        }
+
+        $midtransOrderId = $request->input('order_id') ?: $request->input('orderId') ?: $request->input('order_id');
+        if (!$midtransOrderId) {
+            Log::warning('Midtrans webhook: missing order id');
+            return response()->json(['error' => 'no order id'], 400);
+        }
+
+        $order = Order::where('midtrans_order_id', $midtransOrderId)->first();
+        if (!$order) {
+            Log::warning('Midtrans webhook: order not found ' . $midtransOrderId);
+            // return 200 to acknowledge to Midtrans (prevents retries) but log for investigation
+            return response()->json(['ok']);
+        }
+
+        try {
+            $processed = $this->orderService->processPayment($order->id, $request);
+            if ($processed) {
+                return response()->json(['ok']);
+            }
+
+            Log::warning('Midtrans webhook: processing failed for order ' . $order->id);
+            return response()->json(['error' => 'processing failed'], 500);
+        } catch (\Throwable $e) {
+            Log::error('Midtrans webhook exception: ' . $e->getMessage());
+            // Respond 200 to avoid repeated retries, but surface logs
+            return response()->json(['ok']);
+        }
+    }
+}

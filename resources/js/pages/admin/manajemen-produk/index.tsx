@@ -75,7 +75,7 @@ export default function ManajemenProduk() {
         setPerPage(value);
 
         router.get(
-            route('users.index'),
+            '/admin/products',
             { perPage: value },
             {
                 preserveState: true,
@@ -86,7 +86,7 @@ export default function ManajemenProduk() {
 
     const handleSearch = (value: string) => {
         router.get(
-            route('users.index'),
+            '/admin/products',
             { search: value },
             {
                 preserveState: true,

@@ -1,88 +1,216 @@
 import AppLayout from '@/layouts/app-layout'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, router, useForm } from '@inertiajs/react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft, AlertCircle } from 'lucide-react'
+import { type BreadcrumbItem } from '@/types'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
-export default function Edit({ user, roles }: any) {
-    const { data, setData, put, processing, errors } = useForm({
+interface User {
+    id: number
+    name: string
+    email: string
+    roles: Array<{ id: number; name: string }>
+}
+
+interface Role {
+    id: number
+    name: string
+}
+
+interface Props {
+    user: User
+    roles: Role[]
+}
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Admin', href: '/admin/dashboard' },
+    { title: 'Users', href: '/admin/UsersRole' },
+    { title: 'Edit', href: '#' },
+]
+
+export default function Edit({ user, roles = [] }: Props) {
+    const { data, setData, put, errors, processing } = useForm({
         name: user.name,
         email: user.email,
         password: '',
         role: user.roles.length ? user.roles[0].name : '',
     })
 
-    const submit = (e: any) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        put(`/admin/UsersRole/${user.id}`)
+        put(`/admin/UsersRole/${user.id}`, {
+            onSuccess: () => {
+                router.visit('/admin/UsersRole')
+            },
+        })
+    }
+
+    const handleBack = () => {
+        router.get('/admin/UsersRole')
     }
 
     return (
-        <AppLayout>
-            <Head title="Edit User" />
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={`Edit User - ${user.name}`} />
 
-            <div className="max-w-xl rounded border p-4">
-                <h1 className="mb-4 text-lg font-bold">Edit User</h1>
-
-                <form onSubmit={submit} className="space-y-4">
-
-                    {/* NAME */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between">
                     <div>
-                        <label>Nama</label>
-                        <input
-                            className="w-full border p-2"
-                            value={data.name}
-                            onChange={e => setData('name', e.target.value)}
-                        />
-                        {errors.name && <p className="text-red-500">{errors.name}</p>}
+                        <h1 className="text-3xl font-bold">Edit User</h1>
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Edit informasi user: <span className="font-medium">{user.name}</span>
+                        </p>
                     </div>
 
-                    {/* EMAIL */}
-                    <div>
-                        <label>Email</label>
-                        <input
-                            className="w-full border p-2"
-                            value={data.email}
-                            onChange={e => setData('email', e.target.value)}
-                        />
-                        {errors.email && <p className="text-red-500">{errors.email}</p>}
-                    </div>
-
-                    {/* PASSWORD */}
-                    <div>
-                        <label>Password (kosongkan jika tidak diubah)</label>
-                        <input
-                            type="password"
-                            className="w-full border p-2"
-                            value={data.password}
-                            onChange={e => setData('password', e.target.value)}
-                        />
-                        {errors.password && <p className="text-red-500">{errors.password}</p>}
-                    </div>
-
-                    {/* ROLE */}
-                    <div>
-                        <label>Role</label>
-                        <select
-                            className="w-full border p-2"
-                            value={data.role}
-                            onChange={e => setData('role', e.target.value)}
-                        >
-                            <option value="">-- pilih role --</option>
-                            {roles.map((r: any) => (
-                                <option key={r.id} value={r.name}>
-                                    {r.name}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.role && <p className="text-red-500">{errors.role}</p>}
-                    </div>
-
-                    <button
-                        disabled={processing}
-                        className="bg-blue-600 px-4 py-2 text-white"
+                    <Button
+                        variant="outline"
+                        onClick={handleBack}
+                        aria-label="Kembali ke daftar users"
+                        className="gap-2"
                     >
-                        Update
-                    </button>
+                        <ArrowLeft className="h-4 w-4" />
+                        Kembali
+                    </Button>
+                </div>
 
-                </form>
+                <Card className="max-w-2xl">
+                    <CardHeader>
+                        <CardTitle>Informasi User</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* NAME FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Nama Lengkap</Label>
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    placeholder="Masukkan nama lengkap"
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    aria-label="Nama lengkap user"
+                                    aria-invalid={!!errors.name}
+                                    aria-describedby={errors.name ? 'name-error' : undefined}
+                                    required
+                                />
+                                {errors.name && (
+                                    <p id="name-error" className="text-sm text-red-500 flex gap-1 items-center">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {errors.name}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* EMAIL FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="Masukkan email"
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    aria-label="Email user"
+                                    aria-invalid={!!errors.email}
+                                    aria-describedby={errors.email ? 'email-error' : undefined}
+                                    required
+                                />
+                                {errors.email && (
+                                    <p id="email-error" className="text-sm text-red-500 flex gap-1 items-center">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {errors.email}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* PASSWORD FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="password">
+                                    Password
+                                    <span className="text-xs text-muted-foreground font-normal ml-1">
+                                        (Kosongkan jika tidak ingin mengubah)
+                                    </span>
+                                </Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    placeholder="Masukkan password baru (opsional)"
+                                    value={data.password}
+                                    onChange={(e) => setData('password', e.target.value)}
+                                    aria-label="Password user"
+                                    aria-describedby="password-help"
+                                    aria-invalid={!!errors.password}
+                                />
+                                <p id="password-help" className="text-xs text-muted-foreground">
+                                    Hanya diisi jika ingin mengubah password
+                                </p>
+                                {errors.password && (
+                                    <p className="text-sm text-red-500 flex gap-1 items-center">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {errors.password}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* ROLE FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="role">Role</Label>
+                                <Select value={data.role} onValueChange={(value) => setData('role', value)}>
+                                    <SelectTrigger
+                                        id="role"
+                                        aria-label="Pilih role user"
+                                        aria-invalid={!!errors.role}
+                                        aria-describedby={errors.role ? 'role-error' : undefined}
+                                    >
+                                        <SelectValue placeholder="Pilih role" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {roles.map((role) => (
+                                            <SelectItem key={role.id} value={role.name}>
+                                                {role.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                {errors.role && (
+                                    <p id="role-error" className="text-sm text-red-500 flex gap-1 items-center">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {errors.role}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* ACTION BUTTONS */}
+                            <div className="flex gap-3 pt-4">
+                                <Button
+                                    type="submit"
+                                    disabled={processing}
+                                    aria-label="Simpan perubahan user"
+                                >
+                                    {processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={handleBack}
+                                    aria-label="Batal dan kembali ke daftar users"
+                                >
+                                    Batal
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
             </div>
         </AppLayout>
     )

@@ -1,166 +1,107 @@
-import SearchInput from '@/components/fragments/search-input';
 import ProductCard from '@/components/fragments/shop-dashboard-card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard Jawa',
-        href: dashboard().url,
+        title: 'Shop',
+        href: '/affiliate/shop',
     },
 ];
 
-const products = [
-    {
-        id: 1,
-        image: 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5',
-        title: 'Nara Bio Energy Card PROMO',
-        price: 'Rp300.000',
-        point: '300 point',
-        pin: '1 PIN',
-        productInfo: [
-            '10 pcs Scalar Bio Energy Card',
-            'Bonus energi aktif',
-            'Masa aktif 30 hari',
-        ],
-    },
-    {
-        id: 2,
-        image: 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5',
-        title: 'Nara Bio Energy Card REGULER',
-        price: 'Rp350.000',
-        point: '350 point',
-        pin: '1 PIN',
-        productInfo: [
-            '10 pcs Scalar Bio Energy Card',
-            'Energi stabil',
-            'Masa aktif 45 hari',
-        ],
-    },
-    {
-        id: 3,
-        image: 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5',
-        title: 'Nara Bio Energy Card PREMIUM',
-        price: 'Rp500.000',
-        point: '500 point',
-        pin: '2 PIN',
-        productInfo: [
-            '20 pcs Scalar Bio Energy Card',
-            'Energi premium',
-            'Masa aktif 60 hari',
-        ],
-    },
-    {
-        id: 4,
-        image: 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5',
-        title: 'Nara Bio Energy Card KEREN',
-        price: 'Rp300.000',
-        point: '300 point',
-        pin: '1 PIN',
-        productInfo: [
-            '10 pcs Scalar Bio Energy Card',
-            'Bonus energi aktif',
-            'Masa aktif 30 hari',
-        ],
-    },
-    {
-        id: 5,
-        image: 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5',
-        title: 'Nara Bio Energy Card BIG',
-        price: 'Rp350.000',
-        point: '350 point',
-        pin: '1 PIN',
-        productInfo: [
-            '10 pcs Scalar Bio Energy Card',
-            'Energi stabil',
-            'Masa aktif 45 hari',
-        ],
-    },
-    {
-        id: 6,
-        image: 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5',
-        title: 'Nara Bio Energy Card SMALL',
-        price: 'Rp500.000',
-        point: '500 point',
-        pin: '2 PIN',
-        productInfo: [
-            '20 pcs Scalar Bio Energy Card',
-            'Energi premium',
-            'Masa aktif 60 hari',
-        ],
-    },
-];
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+    category: string;
+}
 
-export default function Shop() {
-    const [search, setSearch] = useState<string>('');
+interface CartItem {
+    id: number;
+    product_id: number;
+    quantity: number;
+    product_name: string;
+    product_price: number;
+}
 
-    const [perPage, setPerPage] = useState('10');
-
-    const handlePerPageChange = (value: string) => {
-        setPerPage(value);
-
-        router.get(
-            route('users.index'),
-            { perPage: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
+interface Props {
+    products: {
+        data: Product[];
+        total: number;
     };
+    cart: {
+        items: CartItem[];
+        total_items: number;
+        total_price: number;
+    } | null;
+}
 
-    const handleSearch = (value: string) => {
-        router.get(
-            route('users.index'),
-            { search: value },
-            {
-                preserveState: true,
-                replace: true,
-            },
-        );
+export default function Shop({ products, cart }: Props) {
+    const cartTotal = cart?.total_price ?? 0;
+    const cartItems = cart?.items ?? [];
+
+    const handleAddToCart = (product: Product) => {
+        console.log('Tambah ke cart:', product);
+        // TODO: Implement add to cart functionality
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
-                    <div className="flex w-full items-start border-b-2 pb-4">
-                        <div className="w-3/4">
-                            <div className="flex flex-col">
-                                <p className="text-lg font-bold text-primary md:text-2xl">
-                                    Produk Tersedia
-                                </p>
-                                <span className="text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
-                                </span>
+            <Head title="Shop" />
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+                {/* Cart Summary */}
+                {cart && (
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Keranjang Saya
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                    <span>Item:</span>
+                                    <span className="font-semibold">{cartItems.length}</span>
+                                </div>
+                                <div className="flex justify-between border-t pt-2">
+                                    <span>Total:</span>
+                                    <span className="font-bold">Rp {cartTotal.toLocaleString('id-ID')}</span>
+                                </div>
                             </div>
+                        </CardContent>
+                    </Card>
+                )}
+
+                {/* Products Grid */}
+                <div className="rounded-xl border bg-white p-6">
+                    <h3 className="font-bold text-lg mb-6">Produk Tersedia</h3>
+
+                    {products && products.data && products.data.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {products.data.map((item) => (
+                                <ProductCard
+                                    key={item.id}
+                                    image={item.image || 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5'}
+                                    title={item.name}
+                                    price={`Rp${item.price.toLocaleString('id-ID')}`}
+                                    point={`${(item.price / 1000).toFixed(0)} point`}
+                                    pin="1 PIN"
+                                    productInfo={[
+                                        `Kategori: ${item.category}`,
+                                        `Harga: Rp${item.price.toLocaleString('id-ID')}`,
+                                    ]}
+                                    onAddToCart={() => handleAddToCart(item)}
+                                />
+                            ))}
                         </div>
-                        <div className="w-1/4">
-                            <SearchInput
-                                onSearchChange={handleSearch}
-                                value={search}
-                            />
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">
+                            Tidak ada produk tersedia
                         </div>
-                    </div>
-                    <div className="flex flex-wrap gap-4">
-                        {products.map((item) => (
-                            <ProductCard
-                                key={item.id}
-                                image={item.image}
-                                title={item.title}
-                                price={item.price}
-                                point={item.point}
-                                pin={item.pin}
-                                productInfo={item.productInfo}
-                                onAddToCart={() => console.log('Tambah:', item)}
-                            />
-                        ))}
-                    </div>
+                    )}
                 </div>
             </div>
         </AppLayout>
