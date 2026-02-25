@@ -102,8 +102,6 @@ export default function PengaturanPlan() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="CostumerDashboard" />
-            <div className="flex h-fit w-full flex-col px-5">
-                <div className="flex min-h-screen w-full flex-col gap-4 rounded-xl bg-white px-4 py-8 md:px-5">
                     <div className="flex w-full items-start border-b-2 pb-4">
                         <div className="w-3/4">
                             <div className="flex flex-col">
@@ -199,8 +197,6 @@ export default function PengaturanPlan() {
                             ))}
                         </TableBody>
                     </Table>
-                </div>
-            </div>
         </AppLayout>
     );
 }
