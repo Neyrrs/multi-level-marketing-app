@@ -52,7 +52,9 @@ class ActivationService
     public function generateFromOrder(Order $order, int $count = 1): array
     {
         $codes = [];
-        $sponsorUserId = $order->affiliate?->user_id;
+        $ownerUserId = $order->affiliate?->user_id ?? $order->user_id;
+        $generatedByUserId = $order->affiliate?->user_id ?? $order->user_id;
+        $isPackageOrder = strtolower((string) $order->product_type) === 'package';
 
         for ($i = 0; $i < $count; $i++) {
             do {
@@ -61,11 +63,12 @@ class ActivationService
 
             $ac = ActivationCode::create([
                 'code' => $code,
-                'owner_id' => $sponsorUserId,
-                'generated_by' => $order->affiliate?->user_id,
+                'owner_id' => $ownerUserId,
+                'generated_by' => $generatedByUserId,
                 'generated_from' => 'order',
-                'product_id' => $order->product_id,
-                'package_id' => $order->product_id,
+                // For product checkout use product_id; package_id only for real package order.
+                'product_id' => $isPackageOrder ? null : $order->product_id,
+                'package_id' => $isPackageOrder ? $order->product_id : null,
                 'price' => $order->total_amount,
                 'value' => $order->total_amount,
                 'gives_commission' => true,

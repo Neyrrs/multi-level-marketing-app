@@ -42,13 +42,10 @@ class PinHistoryController extends Controller
             return [
                 'id' => $item->id,
                 'code' => $item->code,
-                'product' => $item->product ? [
-                    'id' => $item->product->id,
-                    'name' => $item->product->name,
-                ] : null,
+                'product_name' => $item->product?->name ?? '-',
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
                 'used_at' => $item->used_at ? $item->used_at->format('Y-m-d H:i') : null,
-                'used_by' => $item->usedBy ? $item->usedBy->name : 'Unknown',
+                'used_by_name' => $item->usedBy ? $item->usedBy->name : 'Unknown',
             ];
         });
 

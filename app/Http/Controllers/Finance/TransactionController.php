@@ -3,63 +3,112 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Models\CommissionLedger;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
     /**
-     * Display a listing of commission transactions.
+     * Display a listing of finance transactions (commission + paid orders).
      */
     public function index(Request $request)
     {
-        $query = CommissionLedger::with(['affiliate.user:id,name', 'order:id,order_number'])
-            ->select([
-                'id', 'affiliate_id', 'order_id',
-                'type', 'amount', 'description', 'created_at', 'reference'
-            ]);
+        $commissionQuery = DB::table('commission_ledgers')
+            ->leftJoin('affiliates', 'commission_ledgers.affiliate_id', '=', 'affiliates.id')
+            ->leftJoin('users', 'affiliates.user_id', '=', 'users.id')
+            ->selectRaw("
+                commission_ledgers.id as id,
+                'commission' as source,
+                COALESCE(commission_ledgers.reference, '-') as reference,
+                COALESCE(users.name, 'Unknown') as affiliate,
+                COALESCE(affiliates.id::text, '-') as affiliate_code,
+                commission_ledgers.type as type,
+                commission_ledgers.amount::numeric as amount_raw,
+                commission_ledgers.description as description,
+                commission_ledgers.created_at as created_at
+            ");
 
-        // Filter by commission type
+        $salesQuery = DB::table('orders')
+            ->leftJoin('affiliates', 'orders.affiliate_id', '=', 'affiliates.id')
+            ->leftJoin('users', 'affiliates.user_id', '=', 'users.id')
+            ->selectRaw("
+                orders.id as id,
+                'order' as source,
+                COALESCE(orders.midtrans_order_id, orders.order_number, '-') as reference,
+                COALESCE(users.name, 'N/A') as affiliate,
+                COALESCE(affiliates.id::text, '-') as affiliate_code,
+                'sale' as type,
+                orders.grand_total::numeric as amount_raw,
+                CONCAT('Pembayaran order ', orders.order_number) as description,
+                COALESCE(orders.paid_at, orders.updated_at, orders.created_at) as created_at
+            ")
+            ->where('orders.payment_status', 'paid');
+
+        // Filter by type (commission type or sale)
         if ($request->filled('type')) {
-            $query->where('type', $request->get('type'));
+            $type = $request->get('type');
+            if ($type === 'sale') {
+                $commissionQuery->whereRaw('1 = 0');
+            } else {
+                $commissionQuery->where('commission_ledgers.type', $type);
+                $salesQuery->whereRaw('1 = 0');
+            }
         }
 
         // Filter by date range
         if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->get('start_date'));
+            $commissionQuery->whereDate('commission_ledgers.created_at', '>=', $request->get('start_date'));
+            $salesQuery->whereDate(DB::raw('COALESCE(orders.paid_at, orders.updated_at, orders.created_at)'), '>=', $request->get('start_date'));
         }
         if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->get('end_date'));
+            $commissionQuery->whereDate('commission_ledgers.created_at', '<=', $request->get('end_date'));
+            $salesQuery->whereDate(DB::raw('COALESCE(orders.paid_at, orders.updated_at, orders.created_at)'), '<=', $request->get('end_date'));
         }
 
         // Search
         if ($request->filled('search')) {
             $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('transaction_number', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+            $commissionQuery->where(function ($q) use ($search) {
+                $q->where('commission_ledgers.reference', 'like', "%{$search}%")
+                    ->orWhere('commission_ledgers.description', 'like', "%{$search}%")
+                    ->orWhere('users.name', 'like', "%{$search}%");
+            });
+            $salesQuery->where(function ($q) use ($search) {
+                $q->where('orders.order_number', 'like', "%{$search}%")
+                    ->orWhere('orders.midtrans_order_id', 'like', "%{$search}%")
+                    ->orWhere('users.name', 'like', "%{$search}%");
             });
         }
 
-        $transactions = $query->orderBy('created_at', 'desc')
-            ->paginate(15);
-        
-        $transactionsData = $transactions->through(fn($transaction) => [
+        $unionQuery = $commissionQuery->unionAll($salesQuery);
+        $transactions = DB::query()
+            ->fromSub($unionQuery, 'transactions')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        $transactionsData = $transactions->through(fn ($transaction) => [
             'id' => $transaction->id,
             'reference' => $transaction->reference ?? 'N/A',
-            'affiliate' => $transaction->affiliate?->user?->name ?? 'Unknown',
-            'affiliate_code' => $transaction->affiliate?->id ?? '-',
+            'affiliate' => $transaction->affiliate ?? 'Unknown',
+            'affiliate_code' => $transaction->affiliate_code ?? '-',
             'type' => $transaction->type,
-            'amount' => $transaction->amount > 0 ? '+Rp ' . number_format($transaction->amount, 2, ',', '.') : '-Rp ' . number_format(abs($transaction->amount), 2, ',', '.'),
+            'amount' => (float) $transaction->amount_raw > 0
+                ? '+Rp ' . number_format((float) $transaction->amount_raw, 2, ',', '.')
+                : '-Rp ' . number_format(abs((float) $transaction->amount_raw), 2, ',', '.'),
             'description' => $transaction->description,
-            'created_at' => $transaction->created_at->format('Y-m-d H:i'),
+            'created_at' => \Carbon\Carbon::parse($transaction->created_at)->format('Y-m-d H:i'),
         ]);
 
-        // Get unique commission types for filter
-        $types = CommissionLedger::distinct('type')
+        // Get unique types + include sales
+        $types = DB::table('commission_ledgers')
             ->where('type', '!=', 'adjustment')
-            ->pluck('type');
+            ->distinct()
+            ->pluck('type')
+            ->push('sale')
+            ->unique()
+            ->values();
 
         return Inertia::render('finance/transactions/index', [
             'transactions' => [

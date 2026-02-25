@@ -74,6 +74,8 @@ declare global {
 }
 
 export default function Shop({ products, cart, has_pending_order = false }: Props) {
+    const fallbackImage =
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-family='sans-serif' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
     const { midtransConfig } = usePage<InertiaPageProps>().props;
     const cartTotal = cart?.total_price ?? 0;
     const cartItems = cart?.items ?? [];
@@ -208,7 +210,7 @@ export default function Shop({ products, cart, has_pending_order = false }: Prop
                                 return (
                                 <ProductCard
                                     key={item.id}
-                                    image={item.image || 'https://images.unsplash.com/photo-1762692496722-de2a899e3af5'}
+                                    image={item.image || fallbackImage}
                                     title={item.name}
                                     price={`Rp${item.price.toLocaleString('id-ID')}`}
                                     stock={remainingStock}

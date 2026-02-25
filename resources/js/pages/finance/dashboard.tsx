@@ -21,6 +21,10 @@ interface DashboardStats {
     monthTransactions: number;
     monthEarned: string;
     monthPaid: string;
+    totalOrders: number;
+    totalSales: string;
+    monthOrders: number;
+    monthSales: string;
 }
 
 interface WithdrawalStats {
@@ -149,11 +153,40 @@ export default function FinanceDashboard({
                         <CardContent className="pt-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Bulan Ini</p>
+                                    <p className="text-gray-600 text-sm">Komisi Bulan Ini</p>
                                     <p className="text-2xl font-bold mt-2">Rp {stats.monthEarned}</p>
                                     <p className="text-xs text-gray-500 mt-1">{stats.monthTransactions} Transaksi</p>
                                 </div>
                                 <Activity className="w-12 h-12 text-purple-500 opacity-20" />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Sales Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-gray-600 text-sm">Total Penjualan</p>
+                                    <p className="text-2xl font-bold mt-2">Rp {stats.totalSales}</p>
+                                    <p className="text-xs text-gray-500 mt-1">{stats.totalOrders} Order Paid</p>
+                                </div>
+                                <TrendingUp className="w-12 h-12 text-emerald-500 opacity-20" />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-gray-600 text-sm">Penjualan Bulan Ini</p>
+                                    <p className="text-2xl font-bold mt-2">Rp {stats.monthSales}</p>
+                                    <p className="text-xs text-gray-500 mt-1">{stats.monthOrders} Order Paid</p>
+                                </div>
+                                <CheckCircle className="w-12 h-12 text-green-500 opacity-20" />
                             </div>
                         </CardContent>
                     </Card>
@@ -294,4 +327,3 @@ export default function FinanceDashboard({
         </AppLayout>
     );
 }
-

@@ -865,7 +865,7 @@ pinHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     pinHistory.form = pinHistoryForm
 /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
 export const shopHistory = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -880,7 +880,7 @@ shopHistory.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
 shopHistory.url = (options?: RouteQueryOptions) => {
@@ -889,7 +889,7 @@ shopHistory.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
 shopHistory.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -898,7 +898,7 @@ shopHistory.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
 shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -908,7 +908,7 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
     const shopHistoryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -918,7 +918,7 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
         shopHistoryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -927,7 +927,7 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Affiliate\ShopHistoryController::shopHistory
- * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:12
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
  * @route '/affiliate/shop-history'
  */
         shopHistoryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -55,7 +55,7 @@ interface Props {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Transaksi Komisi',
+        title: 'Transaksi Keuangan',
         href: '#',
     },
 ];
@@ -85,10 +85,10 @@ export default function TransactionsIndex({ transactions, filters, types }: Prop
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Transaksi Komisi" />
+            <Head title="Transaksi Keuangan" />
 
             <div className="space-y-4">
-                <h1 className="text-3xl font-bold">Transaksi Komisi</h1>
+                <h1 className="text-3xl font-bold">Transaksi Keuangan</h1>
 
                 {/* Filters */}
                 <Card>

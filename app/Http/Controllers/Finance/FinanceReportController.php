@@ -100,7 +100,7 @@ class FinanceReportController extends Controller
             ]);
 
         // Summary totals
-        $summary = DB::table('commission_ledgers')
+        $commissionSummary = DB::table('commission_ledgers')
             ->selectRaw('
                 COUNT(*) as total_transactions,
                 SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END)::numeric as total_earned,
@@ -109,12 +109,23 @@ class FinanceReportController extends Controller
             ->whereBetween('created_at', [$startDate, $endDate])
             ->first();
 
+        $salesSummary = DB::table('orders')
+            ->selectRaw('
+                COUNT(*) as total_orders,
+                SUM(grand_total)::numeric as total_sales
+            ')
+            ->where('payment_status', 'paid')
+            ->whereBetween(DB::raw('COALESCE(paid_at, updated_at, created_at)'), [$startDate, $endDate])
+            ->first();
+
         return Inertia::render('finance/reports/index', [
             'summary' => [
-                'total_transactions' => $summary->total_transactions ?? 0,
-                'total_earned' => number_format($summary->total_earned ?? 0, 2, ',', '.'),
-                'total_paid' => number_format($summary->total_paid ?? 0, 2, ',', '.'),
-                'net_total' => number_format(($summary->total_earned ?? 0) - ($summary->total_paid ?? 0), 2, ',', '.'),
+                'total_transactions' => ($commissionSummary->total_transactions ?? 0) + ($salesSummary->total_orders ?? 0),
+                'total_earned' => number_format($commissionSummary->total_earned ?? 0, 2, ',', '.'),
+                'total_paid' => number_format($commissionSummary->total_paid ?? 0, 2, ',', '.'),
+                'net_total' => number_format(($commissionSummary->total_earned ?? 0) - ($commissionSummary->total_paid ?? 0), 2, ',', '.'),
+                'total_orders' => (int) ($salesSummary->total_orders ?? 0),
+                'total_sales' => number_format($salesSummary->total_sales ?? 0, 2, ',', '.'),
             ],
             'affiliate_commissions' => $affiliateCommissions,
             'commission_breakdown' => $commissionTypeBreakdown,

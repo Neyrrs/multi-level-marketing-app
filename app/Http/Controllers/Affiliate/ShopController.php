@@ -179,7 +179,9 @@ class ShopController extends Controller
                     $lineTotal = (float) $item->harga_akhir * (int) $item->quantity;
                     $grandTotal += $lineTotal;
                     $totalQty += (int) $item->quantity;
-                    $generatesActivationCode = $generatesActivationCode || (bool) $product->generates_activation_code;
+                    $itemGeneratesActivationCode = (bool) $product->generates_activation_code
+                        || strtolower((string) $product->type) === 'package';
+                    $generatesActivationCode = $generatesActivationCode || $itemGeneratesActivationCode;
                 }
 
                 $order = Order::create([
@@ -188,7 +190,7 @@ class ShopController extends Controller
                     'affiliate_id' => $affiliateId,
                     'payment_method' => 'midtrans_snap',
                     'midtrans_order_id' => 'MT-' . uniqid(),
-                    'product_type' => 'single',
+                    'product_type' => strtolower((string) ($firstProduct?->type ?? 'single')),
                     'product_id' => $firstProduct?->id,
                     'product_name' => $firstProduct?->name ?? 'Cart Checkout',
                     'quantity' => $totalQty,
@@ -211,7 +213,8 @@ class ShopController extends Controller
                         'product_id' => $product?->id,
                         'package_id' => null,
                         'quantity' => (int) $item->quantity,
-                        'gives_activation_code' => (bool) ($product?->generates_activation_code ?? false),
+                        'gives_activation_code' => (bool) ($product?->generates_activation_code ?? false)
+                            || strtolower((string) ($product?->type ?? '')) === 'package',
                         'harga_awal' => (float) $item->harga_awal,
                         'diskon' => (float) $item->diskon,
                         'harga_akhir' => (float) $item->harga_akhir,

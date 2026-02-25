@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Models\Order;
 use App\Services\ActivationService;
 use App\Services\AffiliateService;
+use App\Models\OrderActivationCode;
+use Midtrans\Config as MidtransConfig;
+use Midtrans\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -73,18 +76,51 @@ class OrderService
         }
 
         // Mark paid
+        $midtransPayload = $request ? $request->all() : [];
+
         $order->update([
             'payment_status' => 'paid',
             'status' => 'processing',
             'paid_at' => now(),
+            'midtrans_data' => !empty($midtransPayload)
+                ? array_merge((array) ($order->midtrans_data ?? []), $midtransPayload)
+                : $order->midtrans_data,
+            'payment_reference' => $request?->input('transaction_id')
+                ?? $request?->input('approval_code')
+                ?? $request?->input('order_id')
+                ?? $order->payment_reference,
         ]);
 
-        // Attach activation code via ActivationService
-        $this->activationService->generateFromOrder($order, 1);
+        $activationCodeCount = (int) $order->items()
+            ->where('gives_activation_code', true)
+            ->sum('quantity');
+        $shouldGenerateActivationCode = (bool) $order->generates_activation_code || $activationCodeCount > 0;
+
+        if ($shouldGenerateActivationCode) {
+            if ($activationCodeCount <= 0) {
+                $activationCodeCount = 1;
+            }
+
+            $generated = $this->activationService->generateFromOrder($order, $activationCodeCount);
+
+            foreach ($generated as $code) {
+                OrderActivationCode::firstOrCreate([
+                    'order_id' => $order->id,
+                    'activation_code_id' => $code->id,
+                ]);
+            }
+        }
 
         // trigger commission calculation via CommissionService
         $this->commissionService->calculateSponsorCommission($order);
         $this->commissionService->calculateLevelCommission($order);
+
+        if ($shouldGenerateActivationCode) {
+            $order->update([
+                'generates_activation_code' => true,
+                'activation_codes_count' => $activationCodeCount,
+            ]);
+        }
 
         return $order;
     }
@@ -124,6 +160,52 @@ class OrderService
                 'notes' => trim($existingNotes . $noteSuffix),
             ]);
         });
+
+        return $order->fresh();
+    }
+
+    public function syncMidtransStatus(Order $order): ?Order
+    {
+        if (empty($order->midtrans_order_id)) {
+            return $order;
+        }
+
+        if ($order->payment_status === 'paid' || $order->status === 'cancelled') {
+            return $order;
+        }
+
+        $this->configureMidtrans();
+
+        try {
+            $status = (array) Transaction::status($order->midtrans_order_id);
+            $transactionStatus = (string) ($status['transaction_status'] ?? '');
+            $fraudStatus = (string) ($status['fraud_status'] ?? '');
+
+            $order->update([
+                'midtrans_data' => array_merge((array) ($order->midtrans_data ?? []), $status),
+            ]);
+
+            $isPaid = $transactionStatus === 'settlement'
+                || ($transactionStatus === 'capture' && ($fraudStatus === '' || $fraudStatus === 'accept'));
+
+            if ($isPaid) {
+                return $this->processPayment($order->id, null);
+            }
+
+            if (in_array($transactionStatus, ['cancel', 'deny', 'failure'], true)) {
+                return $this->cancelPendingOrder($order->id, 'Midtrans sync status: ' . $transactionStatus, 'failed');
+            }
+
+            if ($transactionStatus === 'expire') {
+                return $this->cancelPendingOrder($order->id, 'Midtrans sync status: expire', 'expired');
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed to sync Midtrans status', [
+                'order_id' => $order->id,
+                'midtrans_order_id' => $order->midtrans_order_id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return $order->fresh();
     }
@@ -180,5 +262,19 @@ class OrderService
         $expected = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
 
         return hash_equals($expected, $signature);
+    }
+
+    private function configureMidtrans(): void
+    {
+        MidtransConfig::$serverKey = config('midtans.server_key')
+            ?: config('services.midtrans.server_key')
+            ?: env('MIDTRANS_SERVER_KEY');
+        MidtransConfig::$isProduction = (bool) (config('midtans.is_production')
+            ?? config('services.midtrans.is_production')
+            ?? env('MIDTRANS_IS_PRODUCTION', false));
+        MidtransConfig::$isSanitized = (bool) (config('midtans.is_sanitized')
+            ?? env('MIDTRANS_IS_SANITIZED', true));
+        MidtransConfig::$is3ds = (bool) (config('midtans.is_3ds')
+            ?? env('MIDTRANS_IS_3DS', true));
     }
 }

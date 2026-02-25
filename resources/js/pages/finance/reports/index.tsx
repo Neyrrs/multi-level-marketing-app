@@ -21,6 +21,8 @@ interface Summary {
     total_earned: string;
     total_paid: string;
     net_total: string;
+    total_orders?: number;
+    total_sales?: string;
 }
 
 interface AffiliateCommission {
@@ -132,7 +134,7 @@ export default function FinanceReports({
                 </Card>
 
                 {/* Summary */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
                     <Card>
                         <CardContent className="pt-6">
                             <p className="text-sm text-gray-600">Total Transaksi</p>
@@ -155,6 +157,18 @@ export default function FinanceReports({
                         <CardContent className="pt-6">
                             <p className="text-sm text-gray-600">Total Bersih</p>
                             <p className="text-2xl font-bold mt-2 text-green-600">Rp {summary.net_total}</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <p className="text-sm text-gray-600">Order Paid</p>
+                            <p className="text-2xl font-bold mt-2">{summary.total_orders ?? 0}</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <p className="text-sm text-gray-600">Total Penjualan</p>
+                            <p className="text-2xl font-bold mt-2">Rp {summary.total_sales ?? '0,00'}</p>
                         </CardContent>
                     </Card>
                 </div>
@@ -302,4 +316,3 @@ export default function FinanceReports({
         </AppLayout>
     );
 }
-

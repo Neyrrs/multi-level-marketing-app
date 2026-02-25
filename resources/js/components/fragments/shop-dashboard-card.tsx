@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Check, Minus, Plus, ShoppingCart } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type ProductCardProps = {
     image: string;
@@ -23,10 +23,16 @@ export default function ProductCard({
     productInfo,
     onAddToCart,
 }: ProductCardProps) {
+    const fallbackImage =
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-family='sans-serif' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
     const [quantity, setQuantity] = useState(1);
-    const [imgSrc, setImgSrc] = useState(image);
+    const [imgSrc, setImgSrc] = useState(image || fallbackImage);
     const isOutOfStock = stock <= 0;
     const maxReached = quantity >= stock && stock > 0;
+
+    useEffect(() => {
+        setImgSrc(image || fallbackImage);
+    }, [image]);
 
     return (
         <div className="group relative w-fit flex overflow-hidden rounded-2xl border bg-white shadow-sm">
@@ -36,7 +42,7 @@ export default function ProductCard({
                         src={imgSrc}
                         alt={title}
                         className="absolute inset-0 h-full w-full object-cover"
-                        onError={() => setImgSrc('https://images.unsplash.com/photo-1762692496722-de2a899e3af5')}
+                        onError={() => setImgSrc(fallbackImage)}
                     />
                     <span className="absolute top-2 left-2 rounded-full bg-primary px-3 py-1 text-[10px] font-semibold text-white shadow">
                         Paket

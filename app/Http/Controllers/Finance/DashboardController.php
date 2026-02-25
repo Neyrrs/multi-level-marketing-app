@@ -23,7 +23,7 @@ class DashboardController extends Controller
         // Get overall financial stats in optimized queries
         $financialStats = DB::table('commission_ledgers')
             ->selectRaw("
-                COUNT(*) as total_transactions,
+                COUNT(CASE WHEN amount > 0 THEN 1 END) as total_transactions,
                 SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END)::numeric as total_earned,
                 SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END)::numeric as total_paid,
                 AVG(CASE WHEN amount > 0 THEN amount END)::numeric as avg_commission
@@ -33,12 +33,31 @@ class DashboardController extends Controller
         // Monthly stats
         $monthlyStats = DB::table('commission_ledgers')
             ->selectRaw("
-                COUNT(*) as month_transactions,
+                COUNT(CASE WHEN amount > 0 THEN 1 END) as month_transactions,
                 SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END)::numeric as month_earned,
                 SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END)::numeric as month_paid
             ")
             ->whereRaw('EXTRACT(MONTH FROM created_at)::int = ?', [$thisMonth])
             ->whereRaw('EXTRACT(YEAR FROM created_at)::int = ?', [$thisYear])
+            ->first();
+
+        // Sales stats from paid orders
+        $salesStats = DB::table('orders')
+            ->selectRaw("
+                COUNT(*) as total_orders,
+                SUM(grand_total)::numeric as total_sales
+            ")
+            ->where('payment_status', 'paid')
+            ->first();
+
+        $monthlySalesStats = DB::table('orders')
+            ->selectRaw("
+                COUNT(*) as month_orders,
+                SUM(grand_total)::numeric as month_sales
+            ")
+            ->where('payment_status', 'paid')
+            ->whereRaw('EXTRACT(MONTH FROM COALESCE(paid_at, updated_at, created_at))::int = ?', [$thisMonth])
+            ->whereRaw('EXTRACT(YEAR FROM COALESCE(paid_at, updated_at, created_at))::int = ?', [$thisYear])
             ->first();
 
         // Withdrawal stats
@@ -129,6 +148,10 @@ class DashboardController extends Controller
                 'monthTransactions' => $monthlyStats->month_transactions ?? 0,
                 'monthEarned' => number_format($monthlyStats->month_earned ?? 0, 2, ',', '.'),
                 'monthPaid' => number_format($monthlyStats->month_paid ?? 0, 2, ',', '.'),
+                'totalOrders' => $salesStats->total_orders ?? 0,
+                'totalSales' => number_format($salesStats->total_sales ?? 0, 2, ',', '.'),
+                'monthOrders' => $monthlySalesStats->month_orders ?? 0,
+                'monthSales' => number_format($monthlySalesStats->month_sales ?? 0, 2, ',', '.'),
             ],
             'withdrawals' => [
                 'totalCount' => $withdrawalStats->total_withdrawals ?? 0,

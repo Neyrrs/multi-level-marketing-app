@@ -38,10 +38,7 @@ class PinListController extends Controller
                 'id' => $item->id,
                 'code' => $item->code,
                 'status' => $item->status,
-                'product' => $item->product ? [
-                    'id' => $item->product->id,
-                    'name' => $item->product->name,
-                ] : null,
+                'product_name' => $item->product?->name ?? '-',
                 'usage_remaining' => $item->usage_count ?? 1,
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
                 'used_at' => $item->used_at ? $item->used_at->format('Y-m-d H:i') : null,
