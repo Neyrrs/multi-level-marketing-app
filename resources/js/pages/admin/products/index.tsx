@@ -11,14 +11,13 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { Edit, PlusCircleIcon, Trash2 } from 'lucide-react';
-import { dashboardUrl } from '@/routes/';
 import { useState } from 'react';
 import SearchInput from '@/components/fragments/search-input';
 
 interface Product {
     id: number;
     name: string;
-    price: number;
+    harga_akhir: number;
     description?: string;
 }
 
@@ -88,7 +87,7 @@ export default function ProductsIndex({ products = [] }: Props) {
                                         <TableCell>{idx + 1}</TableCell>
                                         <TableCell>{product.name}</TableCell>
                                         <TableCell>
-                                            Rp {new Intl.NumberFormat('id-ID').format(product.price)}
+                                            Rp {new Intl.NumberFormat('id-ID').format(product.harga_akhir)}
                                         </TableCell>
                                         <TableCell>{product.description || '-'}</TableCell>
                                         <TableCell className="flex gap-2">

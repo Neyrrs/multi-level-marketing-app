@@ -6,6 +6,7 @@ type ProductCardProps = {
     image: string;
     title: string;
     price: string;
+    stock?: number;
     point?: string;
     pin?: string;
     productInfo: string[];
@@ -16,21 +17,26 @@ export default function ProductCard({
     image,
     title,
     price,
+    stock = 0,
     point,
     pin,
     productInfo,
     onAddToCart,
 }: ProductCardProps) {
     const [quantity, setQuantity] = useState(1);
+    const [imgSrc, setImgSrc] = useState(image);
+    const isOutOfStock = stock <= 0;
+    const maxReached = quantity >= stock && stock > 0;
 
     return (
         <div className="group relative w-fit flex overflow-hidden rounded-2xl border bg-white shadow-sm">
             <div className="relative w-40 shrink-0">
                 <div className="relative h-full overflow-hidden">
                     <img
-                        src={image}
+                        src={imgSrc}
                         alt={title}
                         className="absolute inset-0 h-full w-full object-cover"
+                        onError={() => setImgSrc('https://images.unsplash.com/photo-1762692496722-de2a899e3af5')}
                     />
                     <span className="absolute top-2 left-2 rounded-full bg-primary px-3 py-1 text-[10px] font-semibold text-white shadow">
                         Paket
@@ -80,6 +86,7 @@ export default function ProductCard({
                             onClick={() =>
                                 setQuantity((q) => Math.max(1, q - 1))
                             }
+                            disabled={isOutOfStock}
                         >
                             <Minus size={14} />
                         </button>
@@ -90,7 +97,12 @@ export default function ProductCard({
 
                         <button
                             className="rounded-lg border p-1"
-                            onClick={() => setQuantity((q) => q + 1)}
+                            onClick={() =>
+                                setQuantity((q) =>
+                                    stock > 0 ? Math.min(stock, q + 1) : q,
+                                )
+                            }
+                            disabled={isOutOfStock || maxReached}
                         >
                             <Plus size={14} />
                         </button>
@@ -98,10 +110,13 @@ export default function ProductCard({
                             size="sm"
                             className="gap-2 rounded-xl"
                             onClick={() => onAddToCart?.(quantity)}
+                            disabled={isOutOfStock}
                         >
                             <ShoppingCart size={16} />
                             <span className="hidden sm:inline">
-                                Tambah ke Keranjang
+                                {isOutOfStock
+                                    ? 'Stok Habis'
+                                    : 'Tambah ke Keranjang'}
                             </span>
                         </Button>
                     </div>

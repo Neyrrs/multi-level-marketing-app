@@ -55,13 +55,33 @@ class MidtransController extends Controller
         }
 
         try {
-            $processed = $this->orderService->processPayment($order->id, $request);
-            if ($processed) {
+            $transactionStatus = (string) $request->input('transaction_status');
+            $fraudStatus = (string) $request->input('fraud_status');
+
+            $isPaid = $transactionStatus === 'settlement'
+                || ($transactionStatus === 'capture' && ($fraudStatus === '' || $fraudStatus === 'accept'));
+
+            if ($isPaid) {
+                $processed = $this->orderService->processPayment($order->id, $request);
+                if ($processed) {
+                    return response()->json(['ok']);
+                }
+
+                Log::warning('Midtrans webhook: paid processing failed for order ' . $order->id);
+                return response()->json(['error' => 'processing failed'], 500);
+            }
+
+            if (in_array($transactionStatus, ['cancel', 'deny', 'failure', 'expire'], true)) {
+                $this->orderService->cancelPendingOrder(
+                    $order->id,
+                    'Midtrans status: ' . $transactionStatus,
+                    $transactionStatus === 'expire' ? 'expired' : 'failed'
+                );
                 return response()->json(['ok']);
             }
 
-            Log::warning('Midtrans webhook: processing failed for order ' . $order->id);
-            return response()->json(['error' => 'processing failed'], 500);
+            // keep acknowledged for non-final statuses like pending/challenge
+            return response()->json(['ok']);
         } catch (\Throwable $e) {
             Log::error('Midtrans webhook exception: ' . $e->getMessage());
             // Respond 200 to avoid repeated retries, but surface logs

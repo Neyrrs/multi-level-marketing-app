@@ -7,6 +7,7 @@ use Spatie\Permission\Middleware\RoleMiddleware;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Manager;
 use App\Http\Controllers\Affiliate;
+use App\Http\Controllers\Guest as GuestControllers;
 use App\Http\Controllers\Logistik;
 use App\Http\Controllers\Finance;
 
@@ -31,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware([RoleMiddleware::class . ':guest'])->group(function () {
         Route::get('/dashboard', fn () => Inertia::render('guest/dashboard'))
             ->name('dashboard');
-        Route::get('/shop', fn () => Inertia::render('guest/shop/index'));
+        Route::get('/shop', [GuestControllers\ShopController::class, 'index'])->name('shop.index');
         Route::get('/shop-history', fn () => Inertia::render('guest/shop-history/index'))
             ->name('shop-history');
     });
@@ -196,6 +197,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('shop-history');
 
         Route::resource('tree', Affiliate\TreeController::class, ['names' => 'tree']);
+        Route::post('shop/checkout', [Affiliate\ShopController::class, 'checkout'])->name('shop.checkout');
+        Route::post('shop/cancel', [Affiliate\ShopController::class, 'cancel'])->name('shop.cancel');
         Route::resource('shop', Affiliate\ShopController::class, ['names' => 'shop']);
         Route::resource('pin-list', Affiliate\PinListController::class, ['names' => 'pin-list']);
         Route::resource('personal-ro', Affiliate\PersonalController::class, ['names' => 'personal-ro']);

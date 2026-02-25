@@ -1,7 +1,117 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
+* @see \App\Http\Controllers\Affiliate\ShopController::checkout
+ * @see app/Http/Controllers/Affiliate/ShopController.php:140
+ * @route '/affiliate/shop/checkout'
+ */
+export const checkout = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: checkout.url(options),
+    method: 'post',
+})
+
+checkout.definition = {
+    methods: ["post"],
+    url: '/affiliate/shop/checkout',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopController::checkout
+ * @see app/Http/Controllers/Affiliate/ShopController.php:140
+ * @route '/affiliate/shop/checkout'
+ */
+checkout.url = (options?: RouteQueryOptions) => {
+    return checkout.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopController::checkout
+ * @see app/Http/Controllers/Affiliate/ShopController.php:140
+ * @route '/affiliate/shop/checkout'
+ */
+checkout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: checkout.url(options),
+    method: 'post',
+})
+
+    /**
+* @see \App\Http\Controllers\Affiliate\ShopController::checkout
+ * @see app/Http/Controllers/Affiliate/ShopController.php:140
+ * @route '/affiliate/shop/checkout'
+ */
+    const checkoutForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: checkout.url(options),
+        method: 'post',
+    })
+
+            /**
+* @see \App\Http\Controllers\Affiliate\ShopController::checkout
+ * @see app/Http/Controllers/Affiliate/ShopController.php:140
+ * @route '/affiliate/shop/checkout'
+ */
+        checkoutForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: checkout.url(options),
+            method: 'post',
+        })
+    
+    checkout.form = checkoutForm
+/**
+* @see \App\Http\Controllers\Affiliate\ShopController::cancel
+ * @see app/Http/Controllers/Affiliate/ShopController.php:258
+ * @route '/affiliate/shop/cancel'
+ */
+export const cancel = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: cancel.url(options),
+    method: 'post',
+})
+
+cancel.definition = {
+    methods: ["post"],
+    url: '/affiliate/shop/cancel',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopController::cancel
+ * @see app/Http/Controllers/Affiliate/ShopController.php:258
+ * @route '/affiliate/shop/cancel'
+ */
+cancel.url = (options?: RouteQueryOptions) => {
+    return cancel.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopController::cancel
+ * @see app/Http/Controllers/Affiliate/ShopController.php:258
+ * @route '/affiliate/shop/cancel'
+ */
+cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: cancel.url(options),
+    method: 'post',
+})
+
+    /**
+* @see \App\Http\Controllers\Affiliate\ShopController::cancel
+ * @see app/Http/Controllers/Affiliate/ShopController.php:258
+ * @route '/affiliate/shop/cancel'
+ */
+    const cancelForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: cancel.url(options),
+        method: 'post',
+    })
+
+            /**
+* @see \App\Http\Controllers\Affiliate\ShopController::cancel
+ * @see app/Http/Controllers/Affiliate/ShopController.php:258
+ * @route '/affiliate/shop/cancel'
+ */
+        cancelForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: cancel.url(options),
+            method: 'post',
+        })
+    
+    cancel.form = cancelForm
+/**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +126,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +135,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +144,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +154,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +164,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +173,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Affiliate\ShopController::index
- * @see app/Http/Controllers/Affiliate/ShopController.php:13
+ * @see app/Http/Controllers/Affiliate/ShopController.php:23
  * @route '/affiliate/shop'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +267,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Affiliate\ShopController::store
- * @see app/Http/Controllers/Affiliate/ShopController.php:0
+ * @see app/Http/Controllers/Affiliate/ShopController.php:88
  * @route '/affiliate/shop'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +282,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\ShopController::store
- * @see app/Http/Controllers/Affiliate/ShopController.php:0
+ * @see app/Http/Controllers/Affiliate/ShopController.php:88
  * @route '/affiliate/shop'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +291,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\ShopController::store
- * @see app/Http/Controllers/Affiliate/ShopController.php:0
+ * @see app/Http/Controllers/Affiliate/ShopController.php:88
  * @route '/affiliate/shop'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +301,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\ShopController::store
- * @see app/Http/Controllers/Affiliate/ShopController.php:0
+ * @see app/Http/Controllers/Affiliate/ShopController.php:88
  * @route '/affiliate/shop'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +311,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\ShopController::store
- * @see app/Http/Controllers/Affiliate/ShopController.php:0
+ * @see app/Http/Controllers/Affiliate/ShopController.php:88
  * @route '/affiliate/shop'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -596,7 +706,9 @@ destroy.delete = (args: { shop: string | number } | [shop: string | number ] | s
     
     destroy.form = destroyForm
 const shop = {
-    index: Object.assign(index, index),
+    checkout: Object.assign(checkout, checkout),
+cancel: Object.assign(cancel, cancel),
+index: Object.assign(index, index),
 create: Object.assign(create, create),
 store: Object.assign(store, store),
 show: Object.assign(show, show),

@@ -13,11 +13,11 @@ class CommissionService
 {
     public function calculateSponsorCommission(\App\Models\Order $order): ?Commission
     {
-        $method = CommissionMethod::where('calculation_type', 'sponsor_direct')->first();
+        $method = $this->resolveMethod(['sponsor_direct', 'percentage'], ['sponsor']);
         if (!$method) return null;
 
         // simple lookup of rule priority 1
-        $rule = $method->rules()->where('priority', 1)->first();
+        $rule = $method->rules()->where('is_active', true)->where('priority', 1)->first();
         if (!$rule) return null;
 
         $affiliate = $order->affiliate;
@@ -25,22 +25,27 @@ class CommissionService
 
         $amount = $this->evaluateRule($rule, $order);
 
-        return $this->distributeCommission($affiliate->id, $amount, $method->id, $rule->id, 'sponsor', $order->id);
+        return $this->distributeCommission($affiliate->id, $amount, $method->id, $rule->id, 'direct', $order->id);
     }
 
     public function calculateLevelCommission(\App\Models\Order $order): array
     {
         $results = [];
-        $method = CommissionMethod::where('calculation_type', 'level_based')->first();
+        $method = $this->resolveMethod(['level_based', 'tier_based'], ['level']);
         if (!$method) return $results;
         $level = 1;
         $current = $order->affiliate;
         while ($current && $level <= 5) {
             $parent = Affiliate::where('user_id', $current->upline_id)->first();
             if (!$parent) break;
-            $rule = $method->rules()->where('priority', $level)->first();
+            $rule = $method->rules()->where('is_active', true)->where('priority', $level)->first();
             if (!$rule) break;
             $amount = $this->evaluateRule($rule, $order, $level, $parent);
+            if ($amount <= 0) {
+                $current = $parent;
+                $level++;
+                continue;
+            }
             $results[] = $this->distributeCommission($parent->id, $amount, $method->id, $rule->id, 'level', $order->id, $level);
             $current = $parent;
             $level++;
@@ -61,8 +66,8 @@ class CommissionService
         if ($pairs <= 0) return null;
 
         $amount = $pairs * 5000; // fixed rule per spec
-        $method = CommissionMethod::where('calculation_type', 'matching_binary')->first();
-        $rule = $method?->rules()->first();
+        $method = $this->resolveMethod(['matching_binary', 'percentage'], ['matching']);
+        $rule = $method?->rules()->where('is_active', true)->first();
 
         return $this->distributeCommission($aff->id, $amount, $method->id ?? null, $rule->id ?? null, 'matching', null);
     }
@@ -72,7 +77,7 @@ class CommissionService
      */
     public function calculateMatchingDaily(): void
     {
-        $method = CommissionMethod::where('calculation_type', 'matching_binary')->first();
+        $method = $this->resolveMethod(['matching_binary', 'percentage'], ['matching']);
         if (!$method) return;
 
         $affiliates = Affiliate::where('is_active', true)->get();
@@ -83,7 +88,7 @@ class CommissionService
             if ($pairs <= 0) continue;
 
             $amount = $pairs * 5000;
-            $rule = $method->rules()->first();
+            $rule = $method->rules()->where('is_active', true)->first();
             $this->distributeCommission($aff->id, $amount, $method->id, $rule->id ?? null, 'matching', null);
         }
     }
@@ -184,5 +189,30 @@ class CommissionService
         ]);
 
         return $commission;
+    }
+
+    /**
+     * Resolve commission method by expected calculation_type first, then by name fallback.
+     */
+    private function resolveMethod(array $types, array $names): ?CommissionMethod
+    {
+        $query = CommissionMethod::query()->where('is_active', true);
+
+        if (!empty($types)) {
+            $typed = (clone $query)->whereIn('calculation_type', $types)->first();
+            if ($typed) {
+                return $typed;
+            }
+        }
+
+        if (!empty($names)) {
+            return (clone $query)->where(function ($q) use ($names) {
+                foreach ($names as $name) {
+                    $q->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($name) . '%']);
+                }
+            })->first();
+        }
+
+        return null;
     }
 }

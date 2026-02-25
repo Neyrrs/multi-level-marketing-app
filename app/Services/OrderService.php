@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Services\ActivationService;
 use App\Services\AffiliateService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\CommissionService;
 
@@ -52,6 +53,12 @@ class OrderService
         $order = Order::find($orderId);
         if (!$order) return null;
 
+        // cancelled order should never be marked paid again
+        if ($order->status === 'cancelled') {
+            Log::warning('Payment ignored because order already cancelled: ' . $order->id);
+            return null;
+        }
+
         // idempotent: if already paid, skip re-processing
         if ($order->payment_status === 'paid') {
             return $order;
@@ -80,6 +87,45 @@ class OrderService
         $this->commissionService->calculateLevelCommission($order);
 
         return $order;
+    }
+
+    public function cancelPendingOrder(int $orderId, string $reason = '', string $paymentStatus = 'failed'): ?Order
+    {
+        $order = Order::with('items.product')->find($orderId);
+        if (!$order) {
+            return null;
+        }
+
+        if ($order->payment_status !== 'pending' || $order->status === 'cancelled') {
+            return $order;
+        }
+
+        if (!in_array($paymentStatus, ['failed', 'expired', 'pending', 'paid'], true)) {
+            $paymentStatus = 'failed';
+        }
+
+        if ($paymentStatus === 'pending' || $paymentStatus === 'paid') {
+            $paymentStatus = 'failed';
+        }
+
+        DB::transaction(function () use ($order, $reason, $paymentStatus) {
+            foreach ($order->items as $item) {
+                if ($item->product_id && $item->product) {
+                    $item->product->increment('stock', (int) $item->quantity);
+                }
+            }
+
+            $noteSuffix = $reason !== '' ? " | {$reason}" : '';
+            $existingNotes = $order->notes ?? '';
+
+            $order->update([
+                'payment_status' => $paymentStatus,
+                'status' => 'cancelled',
+                'notes' => trim($existingNotes . $noteSuffix),
+            ]);
+        });
+
+        return $order->fresh();
     }
 
     public function completeOrder(int $orderId): ?Order
@@ -113,7 +159,9 @@ class OrderService
      */
     public function verifyMidtransSignature(Request $request): bool
     {
-        $serverKey = config('services.midtrans.server_key') ?? env('MIDTRANS_SERVER_KEY');
+        $serverKey = config('services.midtrans.server_key')
+            ?? config('midtans.server_key')
+            ?? env('MIDTRANS_SERVER_KEY');
         if (empty($serverKey)) {
             Log::warning('Midtrans server key not configured');
             return false;

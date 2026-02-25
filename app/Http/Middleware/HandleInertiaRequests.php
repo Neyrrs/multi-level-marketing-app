@@ -42,6 +42,15 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'midtrans' => fn () => $request->session()->get('midtrans'),
+            ],
+            'midtransConfig' => [
+                'clientKey' => config('midtans.client_key') ?? config('services.midtrans.client_key'),
+                'isProduction' => (bool) (config('midtans.is_production') ?? config('services.midtrans.is_production')),
+            ],
             'auth' => [
                 'user' => $request->user(),
             ],
