@@ -112,9 +112,9 @@ export default function ShipmentsIndex({ shipments = [], pagination, search = ''
             <Head title="Pengiriman - Logistik" />
 
             <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <Truck className="w-8 h-8" />
+                <div className="md:flex-row flex-col flex justify-between items-start gap-2 md:items-center">
+                    <h1 className="md:text-2xl text-xl font-bold flex items-center gap-2">
+                        <Truck className="w-8 h-8 md:block hidden" />
                         Daftar Pengiriman
                     </h1>
                     <Button onClick={() => router.get('/logistik/shipments/create')} className="gap-2">

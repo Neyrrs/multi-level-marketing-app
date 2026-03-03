@@ -82,84 +82,84 @@ export default function LogistikDashboard({
             <Head title="Dashboard Logistik" />
 
             <div className="space-y-4">
-                <h1 className="text-3xl font-bold">Dashboard Logistik</h1>
+                <h1 className="text-lg md:text-3xl font-bold">Dashboard Logistik</h1>
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {/* Orders Awaiting Shipment */}
-                    <Card>
-                        <CardContent className="pt-6">
+                    <Card className='md:py-4 py-2'>
+                        <CardContent className="md:py-6 py-2">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Pesanan Menunggu Pengiriman</p>
+                                    <p className="text-gray-600 text-sm font-medium md:text-base">Pesanan Menunggu Pengiriman</p>
                                     <p className="text-3xl font-bold mt-2">{stats.ordersAwaitingShipment}</p>
                                 </div>
-                                <AlertCircle className="w-12 h-12 text-yellow-500 opacity-20" />
+                                <AlertCircle className="w-12 h-12 text-yellow-500" />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Active Shipments */}
-                    <Card>
-                        <CardContent className="pt-6">
+                    <Card className='md:py-4 py-2'>
+                        <CardContent className="md:py-6 py-2">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Pengiriman Aktif</p>
+                                    <p className="text-gray-600 text-sm font-medium md:text-base">Pengiriman Aktif</p>
                                     <p className="text-3xl font-bold mt-2">{stats.activeShipments}</p>
                                 </div>
-                                <Truck className="w-12 h-12 text-blue-500 opacity-20" />
+                                <Truck className="w-12 h-12 text-blue-500" />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Delivered This Month */}
-                    <Card>
-                        <CardContent className="pt-6">
+                    <Card className='md:py-4 py-2'>
+                        <CardContent className="md:py-6 py-2">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Terkirim Bulan Ini</p>
+                                    <p className="text-gray-600 text-sm font-medium md:text-base">Terkirim Bulan Ini</p>
                                     <p className="text-3xl font-bold mt-2">{stats.deliveredThisMonth}</p>
                                 </div>
-                                <CheckCircle className="w-12 h-12 text-green-500 opacity-20" />
+                                <CheckCircle className="w-12 h-12 text-green-500" />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Shipments This Month */}
-                    <Card>
-                        <CardContent className="pt-6">
+                    <Card className='md:py-4 py-2'>
+                        <CardContent className="md:py-6 py-2">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Total Pengiriman Bulan Ini</p>
+                                    <p className="text-gray-600 text-sm font-medium md:text-base">Total Pengiriman Bulan Ini</p>
                                     <p className="text-3xl font-bold mt-2">{stats.shipmentsThisMonth}</p>
                                 </div>
-                                <Package className="w-12 h-12 text-purple-500 opacity-20" />
+                                <Package className="w-12 h-12 text-purple-500" />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Delivery Success Rate */}
-                    <Card>
-                        <CardContent className="pt-6">
+                    <Card className='md:py-4 py-2'>
+                        <CardContent className="md:py-6 py-2">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Tingkat Keberhasilan</p>
+                                    <p className="text-gray-600 text-sm font-medium md:text-base">Tingkat Keberhasilan</p>
                                     <p className="text-3xl font-bold mt-2">{stats.deliverySuccessRate}%</p>
                                 </div>
-                                <TrendingUp className="w-12 h-12 text-emerald-500 opacity-20" />
+                                <TrendingUp className="w-12 h-12 text-emerald-500" />
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Pending Returns */}
-                    <Card>
-                        <CardContent className="pt-6">
+                    <Card className='md:py-4 py-2'>
+                        <CardContent className="md:py-6 py-2">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-gray-600 text-sm">Pengembalian Pending</p>
+                                    <p className="text-gray-600 text-sm font-medium md:text-base">Pengembalian Pending</p>
                                     <p className="text-3xl font-bold mt-2">{stats.pendingReturns}</p>
                                 </div>
-                                <RotateCcw className="w-12 h-12 text-red-500 opacity-20" />
+                                <RotateCcw className="w-12 h-12 text-red-500" />
                             </div>
                         </CardContent>
                     </Card>
@@ -170,8 +170,8 @@ export default function LogistikDashboard({
                     <Card className="lg:col-span-2">
                         <CardHeader>
                             <CardTitle className="flex items-center justify-between">
-                                <span className="flex items-center gap-2">
-                                    <Truck className="w-5 h-5" />
+                                <span className="flex items-center text-sm gap-2">
+                                    <Truck className="w-5 h-5 md:block hidden" />
                                     Pengiriman Terbaru
                                 </span>
                                 <Button

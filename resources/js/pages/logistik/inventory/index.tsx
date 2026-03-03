@@ -76,50 +76,50 @@ export default function InventoryIndex() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Inventaris" />
-            <div className="flex flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex flex-1 flex-col gap-4 overflow-x-auto rounded-xl md:p-4">
                 {/* Stats Cards */}
                 <div className="grid gap-4 md:grid-cols-4">
-                    <Card>
+                    <Card className='gap-4'>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Produk</CardTitle>
-                            <Package className="h-4 w-4 text-gray-500" />
+                            <CardTitle className="text-xl font-semibold">Total Produk</CardTitle>
+                            <Package className="h-8 w-8 text-gray-500" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{(stats as Stats).totalProducts}</div>
-                            <p className="text-xs text-gray-500">Produk aktif</p>
+                            <p className="text-sm text-gray-500">Produk aktif</p>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='gap-4'>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Total Stok</CardTitle>
-                            <Package className="h-4 w-4 text-green-600" />
+                            <CardTitle className="text-xl font-semibold">Total Stok</CardTitle>
+                            <Package className="h-8 w-8 text-green-600" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{(stats as Stats).totalStock}</div>
-                            <p className="text-xs text-gray-500">Unit tersedia</p>
+                            <p className="text-sm text-gray-500">Unit tersedia</p>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='gap-4'>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Stok Rendah</CardTitle>
-                            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                            <CardTitle className="text-xl font-semibold">Stok Rendah</CardTitle>
+                            <AlertTriangle className="8-4 w-4 text-yellow-600" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-yellow-600">{(stats as Stats).lowStockCount}</div>
-                            <p className="text-xs text-gray-500">Perlu restok</p>
+                            <p className="text-sm text-gray-500">Perlu restok</p>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='gap-4'>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Habis Terjual</CardTitle>
-                            <Minus className="h-4 w-4 text-red-600" />
+                            <CardTitle className="text-xl font-semibold">Habis Terjual</CardTitle>
+                            <Minus className="h-48w-4 8ext-red-600" />
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-red-600">{(stats as Stats).outOfStockCount}</div>
-                            <p className="text-xs text-gray-500">Tidak tersedia</p>
+                            <p className="text-sm text-gray-500">Tidak tersedia</p>
                         </CardContent>
                     </Card>
                 </div>
