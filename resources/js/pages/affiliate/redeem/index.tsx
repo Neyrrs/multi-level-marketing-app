@@ -16,9 +16,9 @@ export default function Redeem({ availableCodes }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Redeem Kode" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="rounded-xl border bg-white p-6">
-                    <h3 className="font-semibold text-lg mb-6">Kode Aktivasi Tersedia</h3>
+                    <h3 className="font-semibold text-lg mb-6 text-lg">Kode Aktivasi Tersedia</h3>
                     {availableCodes?.length > 0 ? (
                         <div className="grid gap-4">
                             {availableCodes.map((code) => (

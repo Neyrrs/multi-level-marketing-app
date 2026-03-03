@@ -1,8 +1,5 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Table,
     TableBody,
@@ -11,7 +8,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -50,13 +49,17 @@ export default function AffiliateKomisi({ commissions, stats }: Props) {
 
     const handleStatusChange = (newStatus: string) => {
         setStatus(newStatus);
-        router.get('/affiliate/komisi', { status: newStatus }, { preserveState: true });
+        router.get(
+            '/affiliate/komisi',
+            { status: newStatus },
+            { preserveState: true },
+        );
     };
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Komisi Affiliate" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {/* Statistics Cards */}
                 {stats && (
                     <div className="grid auto-rows-min gap-4 md:grid-cols-4">
@@ -115,28 +118,34 @@ export default function AffiliateKomisi({ commissions, stats }: Props) {
                 )}
 
                 {/* Commission Table */}
-                <div className="rounded-xl border bg-white overflow-hidden">
+                <div className="overflow-hidden rounded-xl border bg-white">
                     <div className="p-4">
-                        <h3 className="font-semibold mb-4">Riwayat Komisi</h3>
+                        <h3 className="mb-4 font-semibold">Riwayat Komisi</h3>
 
                         {/* Filter Buttons */}
-                        <div className="flex gap-2 mb-4">
+                        <div className="mb-4 flex gap-2 overflow-scroll">
                             {['all', 'pending', 'approved', 'paid'].map((s) => (
-                                <button
+                                <Button
+                                    size={'sm'}
                                     key={s}
                                     onClick={() => handleStatusChange(s)}
-                                    className={`px-3 py-1 rounded text-sm font-medium transition ${
+                                    className={`${
                                         status === s
                                             ? 'bg-primary text-white'
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                                 >
-                                    {s === 'all' ? 'Semua' : s.charAt(0).toUpperCase() + s.slice(1)}
-                                </button>
+                                    {s === 'all'
+                                        ? 'Semua'
+                                        : s.charAt(0).toUpperCase() +
+                                          s.slice(1)}
+                                </Button>
                             ))}
                         </div>
 
-                        {commissions && commissions.data && commissions.data.length > 0 ? (
+                        {commissions &&
+                        commissions.data &&
+                        commissions.data.length > 0 ? (
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -149,32 +158,51 @@ export default function AffiliateKomisi({ commissions, stats }: Props) {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {commissions.data.map((commission, index) => (
-                                        <TableRow key={commission.id}>
-                                            <TableCell>{index + 1}</TableCell>
-                                            <TableCell className="font-medium">{commission.order_number}</TableCell>
-                                            <TableCell>{commission.type}</TableCell>
-                                            <TableCell className="font-semibold">
-                                                Rp {commission.amount.toLocaleString('id-ID')}
-                                            </TableCell>
-                                            <TableCell>
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                    commission.status === 'paid'
-                                                        ? 'bg-green-100 text-green-700'
-                                                        : commission.status === 'approved'
-                                                          ? 'bg-blue-100 text-blue-700'
-                                                          : 'bg-yellow-100 text-yellow-700'
-                                                }`}>
-                                                    {commission.status.toUpperCase()}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell>{commission.created_at}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {commissions.data.map(
+                                        (commission, index) => (
+                                            <TableRow key={commission.id}>
+                                                <TableCell>
+                                                    {index + 1}
+                                                </TableCell>
+                                                <TableCell className="font-medium">
+                                                    {commission.order_number}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {commission.type}
+                                                </TableCell>
+                                                <TableCell className="font-semibold">
+                                                    Rp{' '}
+                                                    {commission.amount.toLocaleString(
+                                                        'id-ID',
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <span
+                                                        className={`rounded-full px-2 py-1 text-xs font-medium ${
+                                                            commission.status ===
+                                                            'paid'
+                                                                ? 'bg-green-100 text-green-700'
+                                                                : commission.status ===
+                                                                    'approved'
+                                                                  ? 'bg-blue-100 text-blue-700'
+                                                                  : 'bg-yellow-100 text-yellow-700'
+                                                        }`}
+                                                    >
+                                                        {commission.status.toUpperCase()}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {commission.created_at}
+                                                </TableCell>
+                                            </TableRow>
+                                        ),
+                                    )}
                                 </TableBody>
                             </Table>
                         ) : (
-                            <p className="text-center text-muted-foreground py-4">Belum ada komisi</p>
+                            <p className="py-4 text-center text-muted-foreground">
+                                Belum ada komisi
+                            </p>
                         )}
                     </div>
                 </div>

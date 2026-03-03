@@ -72,12 +72,12 @@ export default function PinList({ pins, statusCounts }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Daftar PIN" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {/* Status Statistics */}
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <Card>
+                    <Card className='flex flex-col justify-between py-4'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                            <CardTitle className="text-base font-semibold md:text-lg">
                                 Tersedia
                             </CardTitle>
                         </CardHeader>
@@ -88,9 +88,9 @@ export default function PinList({ pins, statusCounts }: Props) {
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='flex flex-col justify-between py-4'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                            <CardTitle className="text-base font-semibold md:text-lg">
                                 Digunakan
                             </CardTitle>
                         </CardHeader>
@@ -101,9 +101,9 @@ export default function PinList({ pins, statusCounts }: Props) {
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='flex flex-col justify-between py-4'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                            <CardTitle className="text-base font-semibold md:text-lg">
                                 Kadaluarsa
                             </CardTitle>
                         </CardHeader>

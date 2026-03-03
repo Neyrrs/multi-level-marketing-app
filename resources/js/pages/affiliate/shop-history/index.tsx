@@ -62,10 +62,10 @@ export default function ShopHistory({ orders }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Riwayat Pembelian" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="rounded-xl border bg-white overflow-hidden">
                     <div className="p-4">
-                        <h3 className="font-semibold mb-4">Riwayat Pembelian Saya</h3>
+                        <h3 className="font-semibold mb-4 text-lg">Riwayat Pembelian Saya</h3>
 
                         {orders && orders.data && orders.data.length > 0 ? (
                             <>

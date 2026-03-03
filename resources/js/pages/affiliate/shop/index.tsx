@@ -1,6 +1,6 @@
 import ProductCard from '@/components/fragments/shop-dashboard-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -73,7 +73,11 @@ declare global {
     }
 }
 
-export default function Shop({ products, cart, has_pending_order = false }: Props) {
+export default function Shop({
+    products,
+    cart,
+    has_pending_order = false,
+}: Props) {
     const fallbackImage =
         "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='240'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%236b7280' font-family='sans-serif' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
     const { midtransConfig } = usePage<InertiaPageProps>().props;
@@ -116,13 +120,28 @@ export default function Shop({ products, cart, has_pending_order = false }: Prop
         };
     }, [midtransConfig?.clientKey, midtransConfig?.isProduction]);
 
-    const openMidtransPopup = (snapToken?: string | null, redirectUrl?: string | null) => {
+    const openMidtransPopup = (
+        snapToken?: string | null,
+        redirectUrl?: string | null,
+    ) => {
         if (snapToken && window.snap) {
             window.snap.pay(snapToken, {
-                onSuccess: () => router.reload({ only: ['cart', 'products', 'has_pending_order'] }),
-                onPending: () => router.reload({ only: ['cart', 'products', 'has_pending_order'] }),
-                onError: () => router.reload({ only: ['cart', 'products', 'has_pending_order'] }),
-                onClose: () => router.reload({ only: ['cart', 'products', 'has_pending_order'] }),
+                onSuccess: () =>
+                    router.reload({
+                        only: ['cart', 'products', 'has_pending_order'],
+                    }),
+                onPending: () =>
+                    router.reload({
+                        only: ['cart', 'products', 'has_pending_order'],
+                    }),
+                onError: () =>
+                    router.reload({
+                        only: ['cart', 'products', 'has_pending_order'],
+                    }),
+                onClose: () =>
+                    router.reload({
+                        only: ['cart', 'products', 'has_pending_order'],
+                    }),
             });
             return;
         }
@@ -156,12 +175,12 @@ export default function Shop({ products, cart, has_pending_order = false }: Prop
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Shop" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {/* Cart Summary */}
                 {cart && (
                     <Card>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                            <CardTitle className="text-lg font-medium">
                                 Keranjang Saya
                             </CardTitle>
                         </CardHeader>
@@ -169,29 +188,37 @@ export default function Shop({ products, cart, has_pending_order = false }: Prop
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <span>Item:</span>
-                                    <span className="font-semibold">{cartItems.length}</span>
+                                    <span className="font-semibold">
+                                        {cartItems.length}
+                                    </span>
                                 </div>
                                 <div className="flex justify-between border-t pt-2">
                                     <span>Total:</span>
-                                    <span className="font-bold">Rp {cartTotal.toLocaleString('id-ID')}</span>
+                                    <span className="font-bold">
+                                        Rp {cartTotal.toLocaleString('id-ID')}
+                                    </span>
                                 </div>
-                                <div className="flex gap-2 pt-2">
+                                <div className="flex justify-end gap-2 pt-2">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        disabled={!canCancel}
+                                        onClick={() =>
+                                            router.post(
+                                                '/affiliate/shop/cancel',
+                                                {},
+                                                { preserveScroll: true },
+                                            )
+                                        }
+                                    >
+                                        Cancel
+                                    </Button>
                                     <Button
                                         size="sm"
                                         disabled={!canCheckout || isPaying}
                                         onClick={handleCheckout}
                                     >
                                         {isPaying ? 'Memproses...' : 'Bayar'}
-                                    </Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        disabled={!canCancel}
-                                        onClick={() =>
-                                            router.post('/affiliate/shop/cancel', {}, { preserveScroll: true })
-                                        }
-                                    >
-                                        Cancel
                                     </Button>
                                 </div>
                             </div>
@@ -201,35 +228,35 @@ export default function Shop({ products, cart, has_pending_order = false }: Prop
 
                 {/* Products Grid */}
                 <div className="rounded-xl border bg-white p-6">
-                    <h3 className="font-bold text-lg mb-6">Produk Tersedia</h3>
+                    <h3 className="mb-6 text-lg font-semibold">Produk Tersedia</h3>
 
                     {products && products.data && products.data.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {products.data.map((item) => {
                                 const remainingStock = getRemainingStock(item);
                                 return (
-                                <ProductCard
-                                    key={item.id}
-                                    image={item.image || fallbackImage}
-                                    title={item.name}
-                                    price={`Rp${item.price.toLocaleString('id-ID')}`}
-                                    stock={remainingStock}
-                                    point={`${(item.price / 1000).toFixed(0)} point`}
-                                    pin="1 PIN"
-                                    productInfo={[
-                                        `Kategori: ${item.category}`,
-                                        `Harga: Rp${item.price.toLocaleString('id-ID')}`,
-                                        `Stok tersisa: ${remainingStock}`,
-                                    ]}
-                                    onAddToCart={(qty) =>
-                                        handleAddToCart(item, qty)
-                                    }
-                                />
+                                    <ProductCard
+                                        key={item.id}
+                                        image={item.image || fallbackImage}
+                                        title={item.name}
+                                        price={`Rp${item.price.toLocaleString('id-ID')}`}
+                                        stock={remainingStock}
+                                        point={`${(item.price / 1000).toFixed(0)} point`}
+                                        pin="1 PIN"
+                                        productInfo={[
+                                            `Kategori: ${item.category}`,
+                                            `Harga: Rp${item.price.toLocaleString('id-ID')}`,
+                                            `Stok tersisa: ${remainingStock}`,
+                                        ]}
+                                        onAddToCart={(qty) =>
+                                            handleAddToCart(item, qty)
+                                        }
+                                    />
                                 );
                             })}
                         </div>
                     ) : (
-                        <div className="text-center py-8 text-gray-500">
+                        <div className="py-8 text-center text-gray-500">
                             Tidak ada produk tersedia
                         </div>
                     )}

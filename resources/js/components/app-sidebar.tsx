@@ -358,14 +358,14 @@ export function AppSidebar() {
                     ),
                     icon: Gift,
                 },
-                {
-                    title: 'Reward',
-                    href: getHref(
-                        'affiliate.reward.index',
-                        '/affiliate/reward',
-                    ),
-                    icon: Gift,
-                },
+                // {
+                //     title: 'Reward',
+                //     href: getHref(
+                //         'affiliate.reward.index',
+                //         '/affiliate/reward',
+                //     ),
+                //     icon: Gift,
+                // },
                 {
                     title: 'Sponsor',
                     href: getHref(
@@ -390,14 +390,14 @@ export function AppSidebar() {
                     ),
                     icon: Gift,
                 },
-                {
-                    title: 'Generasi RO',
-                    href: getHref(
-                        'affiliate.generation-ro.index',
-                        '/affiliate/generation-ro',
-                    ),
-                    icon: Gift,
-                },
+                // {
+                //     title: 'Generasi RO',
+                //     href: getHref(
+                //         'affiliate.generation-ro.index',
+                //         '/affiliate/generation-ro',
+                //     ),
+                //     icon: Gift,
+                // },
                 {
                     title: 'Matching Bonus',
                     href: getHref(
@@ -426,14 +426,6 @@ export function AppSidebar() {
                         '/affiliate/binary',
                     ),
                     icon: Network,
-                },
-                {
-                    title: 'Pengaturan',
-                    href: getHref(
-                        'affiliate.pengaturan.index',
-                        '/affiliate/pengaturan',
-                    ),
-                    icon: Package,
                 },
                 {
                     title: 'Tree',

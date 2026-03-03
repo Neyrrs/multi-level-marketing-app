@@ -17,7 +17,7 @@ export default function PersonalRO({ personalCommissions, stats }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Komisi Personal" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {stats && (
                     <div className="grid auto-rows-min gap-4 md:grid-cols-2">
                         <Card>
@@ -39,7 +39,7 @@ export default function PersonalRO({ personalCommissions, stats }: Props) {
                     </div>
                 )}
                 <div className="rounded-xl border bg-white p-4">
-                    <h3 className="font-semibold mb-4">Komisi Personal</h3>
+                    <h3 className="font-semibold mb-4 text-lg">Komisi Personal</h3>
                     {personalCommissions?.data?.length > 0 ? (
                         <Table>
                             <TableHeader>

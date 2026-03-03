@@ -15,9 +15,9 @@ export default function PinHistory({ history }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Riwayat PIN" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="rounded-xl border bg-white p-4">
-                    <h3 className="font-semibold mb-4">Riwayat PIN yang Digunakan</h3>
+                    <h3 className="font-semibold mb-4 text-lg">Riwayat PIN yang Digunakan</h3>
                     {history?.data?.length > 0 ? (
                         <Table>
                             <TableHeader>

@@ -16,10 +16,10 @@ export default function Kode({ codes }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Daftar Kode" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm">Total Kode</CardTitle>
+                        <CardTitle className="text-base">Total Kode</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{codes?.data?.length || 0}</div>

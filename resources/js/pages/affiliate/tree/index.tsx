@@ -53,7 +53,7 @@ export default function TreePage({ treeData }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Pohon Jaringan" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="rounded-xl border bg-white p-6 overflow-auto">
                     <h3 className="font-semibold mb-6 text-center">Struktur Jaringan Affiliate</h3>
                     <div className="flex justify-center">

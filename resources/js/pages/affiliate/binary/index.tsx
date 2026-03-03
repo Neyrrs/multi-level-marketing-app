@@ -101,7 +101,7 @@ export default function BinaryComponent({ affiliate, binaryTree, stats }: Props)
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Binary Tree" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {/* Header Card */}
                 <Card>
                     <CardHeader>
