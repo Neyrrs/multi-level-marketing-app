@@ -103,17 +103,42 @@ class AffiliateService
             'activated_at' => now(),
         ]);
 
-        // Create MLM Tree node
+        // Ensure sponsor has MLM tree root node.
         $parentTree = $sponsor->mlmTree;
+        if (!$parentTree) {
+            $parentTree = MlmTree::create([
+                'affiliate_id' => $sponsor->id,
+                'parent_id' => null,
+                'position' => null,
+                'depth' => 0,
+                'left_position' => 1,
+                'right_position' => 2,
+                'path' => (string) $sponsor->id,
+                'lineage' => (string) $sponsor->id,
+            ]);
+        }
+
+        // Create MLM Tree node for new affiliate under sponsor tree.
         MlmTree::create([
             'affiliate_id' => $newAffiliate->id,
             'parent_id' => $parentTree->id,
             'position' => $position,
+            'depth' => max(1, (int) $newAffiliate->level),
+            'left_position' => 0,
+            'right_position' => 0,
+            'path' => trim(($parentTree->path ? $parentTree->path . '/' : '') . $newAffiliate->id, '/'),
+            'lineage' => trim(($parentTree->lineage ? $parentTree->lineage . ' > ' : '') . $newAffiliate->id, ' >'),
         ]);
 
-        // Mark activation code as used
+        $this->updateNestedSet($newAffiliate->id);
+
+        // Consume one usage from activation code.
+        $remainingUsage = (int) ($activationCode->remaining_usage ?? $activationCode->usage_count ?? 1);
+        $remainingUsage = max(0, $remainingUsage - 1);
+
         $activationCode->update([
-            'status' => 'used',
+            'status' => $remainingUsage <= 0 ? 'used' : 'available',
+            'remaining_usage' => $remainingUsage,
             'used_by' => $newUser->id,
             'used_at' => now(),
         ]);

@@ -22,7 +22,9 @@ interface Affiliate {
     user?: User;
     is_active: boolean;
     total_downline: number;
+    downline_count?: number;
     total_volume: number;
+    total_commission?: number;
 }
 
 interface Statistics {
@@ -199,9 +201,9 @@ export default function LaporanAffiliate({
                                         <TableCell className="font-medium">{affiliate.username}</TableCell>
                                         <TableCell>{affiliate.user?.name || '-'}</TableCell>
                                         <TableCell>{affiliate.user?.email || '-'}</TableCell>
-                                        <TableCell className="text-right">{affiliate.total_downline || 0}</TableCell>
+                                        <TableCell className="text-right">{affiliate.downline_count ?? affiliate.total_downline ?? 0}</TableCell>
                                         <TableCell className="text-right">Rp {((affiliate.total_volume || 0) / 1000000).toFixed(1)}M</TableCell>
-                                        <TableCell className="text-right">Rp 0</TableCell>
+                                        <TableCell className="text-right">Rp {((affiliate.total_commission || 0)).toLocaleString('id-ID')}</TableCell>
                                         <TableCell>
                                             <span className={`text-xs px-2 py-1 rounded ${affiliate.is_active ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                                                 {affiliate.is_active ? 'Aktif' : 'Pending'}

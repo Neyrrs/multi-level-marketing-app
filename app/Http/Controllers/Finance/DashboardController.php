@@ -90,7 +90,7 @@ class DashboardController extends Controller
             'id', 'withdrawal_number', 'affiliate_id', 'amount', 'fee', 
             'net_amount', 'status', 'created_at', 'processed_at'
         ])
-            ->with(['affiliate:id,name,code']) // Assuming user relationship or affiliate details
+            ->with(['affiliate.user:id,name'])
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get()
@@ -108,7 +108,8 @@ class DashboardController extends Controller
 
         // Top affiliate earners this month
         $topAffiliates = DB::table('commission_ledgers')
-            ->leftJoin('users', 'commission_ledgers.affiliate_id', '=', 'users.id')
+            ->leftJoin('affiliates', 'commission_ledgers.affiliate_id', '=', 'affiliates.id')
+            ->leftJoin('users', 'affiliates.user_id', '=', 'users.id')
             ->selectRaw('
                 users.id,
                 users.name,

@@ -334,14 +334,20 @@ class Affiliate extends Model
      */
     public function updateDownlineStats(): void
     {
-        $this->direct_downline = $this->directDownlines()->count();
-        $this->left_count = $this->leftDownlines()->count();
-        $this->right_count = $this->rightDownlines()->count();
-        
-        // Update pairing count (min dari left dan right)
-        $this->pair_count = min($this->left_count, $this->right_count);
-        
-        $this->save();
+        $directDownline = $this->directDownlines()->count();
+        $leftCount = $this->leftDownlines()->count();
+        $rightCount = $this->rightDownlines()->count();
+        $pairCount = min($leftCount, $rightCount);
+
+        $this->direct_downline = $directDownline;
+        $this->left_count = $leftCount;
+        $this->right_count = $rightCount;
+        $this->pair_count = $pairCount;
+
+        // Prevent infinite saved-event recursion.
+        if ($this->isDirty(['direct_downline', 'left_count', 'right_count', 'pair_count'])) {
+            $this->saveQuietly();
+        }
     }
 
     /**
@@ -449,7 +455,7 @@ class Affiliate extends Model
         if (!in_array($position, ['left', 'right'])) {
             return null;
         }
-        
+       
         // Cek apakah posisi sudah terisi
         if ($position === 'left' && $this->leftDownlines()->exists()) {
             return null; // Posisi left sudah terisi
@@ -561,7 +567,7 @@ class Affiliate extends Model
             $affiliate->updateDownlineStats();
             
             // Jika upline berubah, update upline chain
-            if ($affiliate->isDirty('upline_id')) {
+            if ($affiliate->wasChanged('upline_id')) {
                 $oldUplineId = $affiliate->getOriginal('upline_id');
                 $newUplineId = $affiliate->upline_id;
                 

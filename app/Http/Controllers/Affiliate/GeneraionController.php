@@ -23,8 +23,10 @@ class GeneraionController extends Controller
 
         // Get generation/level commissions (depth-based)
         $query = Commission::where('affiliate_id', $affiliate->id)
-            ->where('commission_type', 'level')
-            ->orWhere('depth_level', '>', 1) // Level > 1 = Generation
+            ->where(function ($q) {
+                $q->where('commission_type', 'level')
+                    ->orWhere('depth_level', '>', 1); // Level > 1 = Generation
+            })
             ->with(['order', 'method'])
             ->orderBy('depth_level', 'asc')
             ->orderBy('created_at', 'desc');
@@ -37,6 +39,7 @@ class GeneraionController extends Controller
             return [
                 'id' => $item->id,
                 'level' => $item->depth_level ?? 1,
+                'depth_level' => $item->depth_level ?? 1,
                 'amount' => (float)$item->amount,
                 'order_number' => $item->order?->order_number,
                 'status' => $item->status,
@@ -53,12 +56,20 @@ class GeneraionController extends Controller
         }
 
         $totalGeneration = Commission::where('affiliate_id', $affiliate->id)
-            ->where('commission_type', 'level')
-            ->orWhere('depth_level', '>', 1)
+            ->where(function ($q) {
+                $q->where('commission_type', 'level')
+                    ->orWhere('depth_level', '>', 1);
+            })
             ->sum('amount');
+
+        $maxLevel = (int) Commission::where('affiliate_id', $affiliate->id)
+            ->whereNotNull('depth_level')
+            ->max('depth_level');
 
         $stats = [
             'totalGeneration' => (float)$totalGeneration,
+            'grandTotal' => (float)$totalGeneration,
+            'maxLevel' => $maxLevel,
             'byLevel' => $byLevel,
         ];
 

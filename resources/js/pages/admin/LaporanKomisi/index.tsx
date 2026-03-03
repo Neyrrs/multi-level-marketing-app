@@ -1,13 +1,10 @@
 import SearchInput from '@/components/fragments/search-input';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboardUrl } from '@/routes';
 
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { DownloadIcon, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -32,31 +29,32 @@ interface CommissionData {
     status: 'paid' | 'pending' | 'on_hold';
 }
 
-const dummyData: CommissionData[] = [
-    { id: 1, tanggal: '2026-02-10', member_name: 'Budi Santoso', method: 'Sponsor', poin: 200, persentase: 5, amount: 10000, status: 'paid' },
-    { id: 2, tanggal: '2026-02-10', member_name: 'Siti Nurhaliza', method: 'Level', poin: 150, persentase: 8, amount: 12000, status: 'pending' },
-    { id: 3, tanggal: '2026-02-09', member_name: 'Ahmad Wijaya', method: 'Matching', poin: 300, persentase: 3, amount: 9000, status: 'paid' },
-];
+interface Props {
+    commissionData: CommissionData[];
+    filters: { search?: string };
+    summary: {
+        totalComm: number;
+        totalTransactions: number;
+        paidTotal: number;
+    };
+}
 
-export default function LaporanKomisi() {
-    const [search, setSearch] = useState('');
-    const [filtered, setFiltered] = useState(dummyData);
+export default function LaporanKomisi({ commissionData, filters, summary }: Props) {
+    const [search, setSearch] = useState(filters?.search || '');
 
     const handleSearch = (value: string) => {
         setSearch(value);
-        setFiltered(dummyData.filter(item => item.member_name.toLowerCase().includes(value.toLowerCase())));
+        router.get('/admin/reports/LaporanKomisi', { search: value }, { preserveState: true, replace: true });
     };
-
-    const totalComm = filtered.reduce((sum, item) => sum + item.amount, 0);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Laporan Komisi" />
             <div className="flex flex-col gap-6 p-6">
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Komisi</p><p className="text-3xl font-bold">Rp {totalComm.toLocaleString('id-ID')}</p><p className="text-xs text-gray-500">Bulan Ini</p></div></Card>
-                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Transaksi</p><p className="text-3xl font-bold">{filtered.length}</p><p className="text-xs text-gray-500">Entri Komisi</p></div></Card>
-                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Sudah Dibayar</p><p className="text-3xl font-bold text-green-600">Rp {filtered.filter(d => d.status === 'paid').reduce((sum, item) => sum + item.amount, 0).toLocaleString('id-ID')}</p><p className="text-xs text-gray-500">Status Paid</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Komisi</p><p className="text-3xl font-bold">Rp {summary.totalComm.toLocaleString('id-ID')}</p><p className="text-xs text-gray-500">Bulan Ini</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Total Transaksi</p><p className="text-3xl font-bold">{summary.totalTransactions}</p><p className="text-xs text-gray-500">Entri Komisi</p></div></Card>
+                    <Card className="p-6"><div className="space-y-2"><p className="text-sm font-medium text-gray-600">Sudah Dibayar</p><p className="text-3xl font-bold text-green-600">Rp {summary.paidTotal.toLocaleString('id-ID')}</p><p className="text-xs text-gray-500">Status Paid</p></div></Card>
                 </div>
                 <Card className="p-6"><SearchInput onSearchChange={handleSearch} value={search} /></Card>
                 <Card className="overflow-hidden">
@@ -73,7 +71,7 @@ export default function LaporanKomisi() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filtered.map(item => (
+                            {commissionData.map(item => (
                                 <TableRow key={item.id}>
                                     <TableCell>{new Date(item.tanggal).toLocaleDateString('id-ID')}</TableCell>
                                     <TableCell className="font-medium">{item.member_name}</TableCell>

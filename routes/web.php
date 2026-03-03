@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use Spatie\Permission\Middleware\RoleMiddleware;
@@ -33,8 +36,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', fn () => Inertia::render('guest/dashboard'))
             ->name('dashboard');
         Route::get('/shop', [GuestControllers\ShopController::class, 'index'])->name('shop.index');
-        Route::get('/shop-history', fn () => Inertia::render('guest/shop-history/index'))
-            ->name('shop-history');
+        Route::post('/shop', [GuestControllers\ShopController::class, 'store'])->name('shop.store');
+        Route::post('/shop/checkout', [GuestControllers\ShopController::class, 'checkout'])->name('shop.checkout');
+        Route::post('/shop/cancel', [GuestControllers\ShopController::class, 'cancel'])->name('shop.cancel');
+        Route::get('/shop-history', [GuestControllers\ShopHistoryController::class, 'index'])->name('shop-history');
     });
 
     /*
@@ -279,7 +284,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
+    // Auto-assign random affiliate referral for new public session.
+    if (!$request->session()->has('ref_affiliate_id')) {
+        $affiliate = app(\App\Services\AffiliateService::class)->assignRandomSponsor();
+        if ($affiliate) {
+            $request->session()->put('ref_affiliate_id', $affiliate->id);
+            $request->session()->put('ref_affiliate_slug', $affiliate->slug);
+        }
+    }
+
+    $slug = $request->session()->get('ref_affiliate_slug');
+    if (!empty($slug)) {
+        return redirect('/' . $slug);
+    }
+
     return Inertia::render('home');
 })->name('home');
 
@@ -319,6 +338,53 @@ Route::get('/edit-profile', function () {
 Route::get('/dashboard-sementara', function () {
     return Inertia::render('dashboard/dashboard');
 })->name('dashboard.dashboard');
+
+// Public media proxy for local environments where /storage can return 403.
+Route::get('/media/{path}', function (string $path) {
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+
+    return Storage::disk('public')->response($path);
+})->where('path', '.*')->name('media.public');
+
+// Public affiliate referral link.
+Route::get('/a/{slug}', function (Request $request, string $slug) {
+    $affiliate = app(\App\Services\AffiliateService::class)->getAffiliateBySlug($slug);
+
+    if (!$affiliate) {
+        return redirect()->route('home')->with('error', 'Link affiliate tidak ditemukan.');
+    }
+
+    $request->session()->put('ref_affiliate_id', $affiliate->id);
+    $request->session()->put('ref_affiliate_slug', $affiliate->slug);
+
+    return redirect()->route('home')->with('success', "Referral affiliate @{$affiliate->slug} aktif.");
+})->name('affiliate.ref');
+
+// Public affiliate landing by slug: /{slug}
+Route::get('/{slug}', function (Request $request, string $slug) {
+    $affiliate = app(\App\Services\AffiliateService::class)->getAffiliateBySlug($slug);
+    if (!$affiliate) {
+        abort(404);
+    }
+
+    $request->session()->put('ref_affiliate_id', $affiliate->id);
+    $request->session()->put('ref_affiliate_slug', $affiliate->slug);
+
+    return Inertia::render('home');
+})->where('slug', '^(?!login$|register$|logout$|produk$|mitra$|profile$|cart$|edit-profile$|dashboard-sementara$|storage$|media$|webhooks$|admin$|manager$|affiliate$|logistik$|finance$)[A-Za-z0-9_-]+$')
+  ->name('affiliate.landing');
+
+// Force logout route: clear auth + session in one hit
+Route::get('/logout', function (Request $request) {
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    $request->session()->flush();
+
+    return redirect('/login');
+})->name('logout.force');
 
 // Webhooks (no auth required)
 Route::post('/webhooks/midtrans', [\App\Http\Controllers\Webhooks\MidtransController::class, 'handle'])->name('webhooks.midtrans');

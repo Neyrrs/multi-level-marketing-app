@@ -194,7 +194,7 @@ export default function TransactionsIndex({ transactions, filters, types }: Prop
                                                     <Badge variant="outline">{transaction.type}</Badge>
                                                 </TableCell>
                                                 <TableCell className="text-right font-semibold">
-                                                    Rp {transaction.amount}
+                                                    {transaction.amount}
                                                 </TableCell>
                                                 <TableCell className="text-sm text-gray-600">
                                                     {transaction.description}

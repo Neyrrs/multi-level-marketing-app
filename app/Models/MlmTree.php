@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Affiliate;
 
 class MlmTree extends Model
 {
@@ -18,6 +19,10 @@ class MlmTree extends Model
         'parent_id',
         'position',
         'depth',
+        'left_position',
+        'right_position',
+        'path',
+        'lineage',
     ];
 
     protected $casts = [
@@ -31,11 +36,11 @@ class MlmTree extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Affiliate::class, 'parent_id');
+        return $this->belongsTo(MlmTree::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(MlmTree::class, 'parent_id', 'affiliate_id');
+        return $this->hasMany(MlmTree::class, 'parent_id', 'id');
     }
 }

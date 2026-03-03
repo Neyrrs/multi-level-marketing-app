@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 import tree from './tree'
 import shop from './shop'
 import pinList from './pin-list'
@@ -709,7 +709,7 @@ generationRo.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     generationRo.form = generationRoForm
 /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
 export const matchingBonus = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -724,7 +724,7 @@ matchingBonus.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
 matchingBonus.url = (options?: RouteQueryOptions) => {
@@ -733,7 +733,7 @@ matchingBonus.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
 matchingBonus.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -742,7 +742,7 @@ matchingBonus.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
 matchingBonus.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -752,7 +752,7 @@ matchingBonus.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
     /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
     const matchingBonusForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -762,7 +762,7 @@ matchingBonus.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
             /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
         matchingBonusForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -771,7 +771,7 @@ matchingBonus.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
         })
             /**
 * @see \App\Http\Controllers\Affiliate\MatchingController::matchingBonus
- * @see app/Http/Controllers/Affiliate/MatchingController.php:13
+ * @see app/Http/Controllers/Affiliate/MatchingController.php:14
  * @route '/affiliate/matching-bonus'
  */
         matchingBonusForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -941,6 +941,186 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
     
     shopHistory.form = shopHistoryForm
+/**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+export const ref = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: ref.url(args, options),
+    method: 'get',
+})
+
+ref.definition = {
+    methods: ["get","head"],
+    url: '/a/{slug}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+ref.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { slug: args }
+    }
+
+    
+    if (Array.isArray(args)) {
+        args = {
+                    slug: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        slug: args.slug,
+                }
+
+    return ref.definition.url
+            .replace('{slug}', parsedArgs.slug.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+ref.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: ref.url(args, options),
+    method: 'get',
+})
+/**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+ref.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: ref.url(args, options),
+    method: 'head',
+})
+
+    /**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+    const refForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: ref.url(args, options),
+        method: 'get',
+    })
+
+            /**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+        refForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: ref.url(args, options),
+            method: 'get',
+        })
+            /**
+ * @see routes/web.php:352
+ * @route '/a/{slug}'
+ */
+        refForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: ref.url(args, {
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    ref.form = refForm
+/**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+export const landing = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: landing.url(args, options),
+    method: 'get',
+})
+
+landing.definition = {
+    methods: ["get","head"],
+    url: '/{slug}',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+landing.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { slug: args }
+    }
+
+    
+    if (Array.isArray(args)) {
+        args = {
+                    slug: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        slug: args.slug,
+                }
+
+    return landing.definition.url
+            .replace('{slug}', parsedArgs.slug.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+landing.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: landing.url(args, options),
+    method: 'get',
+})
+/**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+landing.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: landing.url(args, options),
+    method: 'head',
+})
+
+    /**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+    const landingForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: landing.url(args, options),
+        method: 'get',
+    })
+
+            /**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+        landingForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: landing.url(args, options),
+            method: 'get',
+        })
+            /**
+ * @see routes/web.php:366
+ * @route '/{slug}'
+ */
+        landingForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: landing.url(args, {
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    landing.form = landingForm
 const affiliate = {
     dashboard: Object.assign(dashboard, dashboard),
 binary: Object.assign(binary, binary),
@@ -960,6 +1140,8 @@ pinList: Object.assign(pinList, pinList),
 personalRo: Object.assign(personalRo, personalRo),
 reward: Object.assign(reward, reward),
 redeem: Object.assign(redeem, redeem),
+ref: Object.assign(ref, ref),
+landing: Object.assign(landing, landing),
 }
 
 export default affiliate

@@ -11,7 +11,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboardUrl } from '@/routes';
 
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
@@ -40,62 +39,22 @@ interface SalesData {
     status: 'completed' | 'pending' | 'failed';
 }
 
-// Dummy data
-const dummySalesData: SalesData[] = [
-    {
-        id: 1,
-        tanggal: '2026-02-10',
-        nama_member: 'Budi Santoso',
-        produk: 'Produk A Premium',
-        jumlah: 2,
-        harga: 150000,
-        total: 300000,
-        status: 'completed',
-    },
-    {
-        id: 2,
-        tanggal: '2026-02-10',
-        nama_member: 'Siti Nurhaliza',
-        produk: 'Produk B Standard',
-        jumlah: 1,
-        harga: 100000,
-        total: 100000,
-        status: 'completed',
-    },
-    {
-        id: 3,
-        tanggal: '2026-02-09',
-        nama_member: 'Ahmad Wijaya',
-        produk: 'Paket Bundle',
-        jumlah: 3,
-        harga: 250000,
-        total: 750000,
-        status: 'completed',
-    },
-    {
-        id: 4,
-        tanggal: '2026-02-09',
-        nama_member: 'Rini Kusuma',
-        produk: 'Produk C Limited',
-        jumlah: 1,
-        harga: 500000,
-        total: 500000,
-        status: 'pending',
-    },
-];
+interface Props {
+    salesData: SalesData[];
+    filters: { search?: string };
+    summary: {
+        totalSales: number;
+        totalTransactions: number;
+        completedCount: number;
+    };
+}
 
-export default function LaporanPenjualan() {
-    const [search, setSearch] = useState('');
-    const [filteredData, setFilteredData] = useState(dummySalesData);
+export default function LaporanPenjualan({ salesData, filters, summary }: Props) {
+    const [search, setSearch] = useState(filters?.search || '');
 
     const handleSearch = (value: string) => {
         setSearch(value);
-        const filtered = dummySalesData.filter(
-            (item) =>
-                item.nama_member.toLowerCase().includes(value.toLowerCase()) ||
-                item.produk.toLowerCase().includes(value.toLowerCase())
-        );
-        setFilteredData(filtered);
+        router.get('/admin/reports/LaporanPenjualan', { search: value }, { preserveState: true, replace: true });
     };
 
     const handleRefresh = () => {
@@ -105,10 +64,6 @@ export default function LaporanPenjualan() {
     const handleExport = () => {
         alert('Export PDF/Excel akan segera diimplementasikan');
     };
-
-    const totalSales = filteredData.reduce((sum, item) => sum + item.total, 0);
-    const totalTransactions = filteredData.length;
-    const completedCount = filteredData.filter((item) => item.status === 'completed').length;
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -145,21 +100,21 @@ export default function LaporanPenjualan() {
                     <Card className="p-6">
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-600">Total Penjualan</p>
-                            <p className="text-3xl font-bold">Rp {totalSales.toLocaleString('id-ID')}</p>
+                            <p className="text-3xl font-bold">Rp {summary.totalSales.toLocaleString('id-ID')}</p>
                             <p className="text-xs text-gray-500">Periode: Bulan Ini</p>
                         </div>
                     </Card>
                     <Card className="p-6">
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-600">Total Transaksi</p>
-                            <p className="text-3xl font-bold">{totalTransactions}</p>
+                            <p className="text-3xl font-bold">{summary.totalTransactions}</p>
                             <p className="text-xs text-gray-500">Semua Status</p>
                         </div>
                     </Card>
                     <Card className="p-6">
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-600">Transaksi Selesai</p>
-                            <p className="text-3xl font-bold text-green-600">{completedCount}</p>
+                            <p className="text-3xl font-bold text-green-600">{summary.completedCount}</p>
                             <p className="text-xs text-gray-500">Status Completed</p>
                         </div>
                     </Card>
@@ -201,7 +156,7 @@ export default function LaporanPenjualan() {
                 <Card className="overflow-hidden">
                     <Table>
                         <TableCaption className="p-4">
-                            Menampilkan {filteredData.length} dari {dummySalesData.length} transaksi penjualan
+                            Menampilkan {salesData.length} transaksi penjualan
                         </TableCaption>
                         <TableHeader>
                             <TableRow>
@@ -215,8 +170,8 @@ export default function LaporanPenjualan() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {filteredData.length > 0 ? (
-                                filteredData.map((item) => (
+                            {salesData.length > 0 ? (
+                                salesData.map((item) => (
                                     <TableRow key={item.id}>
                                         <TableCell className="font-medium">
                                             {new Date(item.tanggal).toLocaleDateString('id-ID')}
