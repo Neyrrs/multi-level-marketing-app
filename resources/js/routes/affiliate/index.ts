@@ -941,6 +941,84 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
     
     shopHistory.form = shopHistoryForm
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+export const methodAffiliate = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: methodAffiliate.url(options),
+    method: 'get',
+})
+
+methodAffiliate.definition = {
+    methods: ["get","head"],
+    url: '/affiliate/method-affiliate',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+methodAffiliate.url = (options?: RouteQueryOptions) => {
+    return methodAffiliate.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+methodAffiliate.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: methodAffiliate.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+methodAffiliate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: methodAffiliate.url(options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+    const methodAffiliateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: methodAffiliate.url(options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+        methodAffiliateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: methodAffiliate.url(options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+        methodAffiliateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: methodAffiliate.url({
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    methodAffiliate.form = methodAffiliateForm
 const affiliate = {
     dashboard: Object.assign(dashboard, dashboard),
 binary: Object.assign(binary, binary),
@@ -954,6 +1032,7 @@ generationRo: Object.assign(generationRo, generationRo),
 matchingBonus: Object.assign(matchingBonus, matchingBonus),
 pinHistory: Object.assign(pinHistory, pinHistory),
 shopHistory: Object.assign(shopHistory, shopHistory),
+methodAffiliate: Object.assign(methodAffiliate, methodAffiliate),
 tree: Object.assign(tree, tree),
 shop: Object.assign(shop, shop),
 pinList: Object.assign(pinList, pinList),

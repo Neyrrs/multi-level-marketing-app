@@ -196,6 +196,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('shop-history', [Affiliate\ShopHistoryController::class, 'index'])
             ->name('shop-history');
 
+            // UBAH NIH CONTROLLERNYA
+        Route::get('method-affiliate', [Affiliate\ShopHistoryController::class, 'index'])
+            ->name('method-affiliate');
+
         Route::resource('tree', Affiliate\TreeController::class, ['names' => 'tree']);
         Route::post('shop/checkout', [Affiliate\ShopController::class, 'checkout'])->name('shop.checkout');
         Route::post('shop/cancel', [Affiliate\ShopController::class, 'cancel'])->name('shop.cancel');
