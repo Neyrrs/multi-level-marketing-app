@@ -1,6 +1,8 @@
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import MainLayout from '@/components/fragments/main-layout';
 import { Button } from '@/components/ui/button';
+import { Trash } from 'lucide-react';
+import { useState } from 'react';
 
 interface CartItem {
     id: number;
@@ -55,10 +57,11 @@ const Cart = () => {
         (total, item) => total + item.price * item.qty,
         0,
     );
+    const [count, setCount] = useState<number>(1);
 
     return (
         <MainLayout>
-            <div className="py-10">
+            <div className="py-10 relative">
                 <ContainerWrapper>
                     <div className="mb-6 flex items-center gap-4">
                         <h1 className="text-2xl font-bold text-primary">
@@ -88,9 +91,14 @@ const Cart = () => {
                                             <p className="line-clamp-2 text-xs text-gray-500">
                                                 {item.description}
                                             </p>
-                                            <button className="w-fit text-xs text-red-500">
+                                            <Button
+                                                variant={'link'}
+                                                size={'icon'}
+                                                className="w-fit text-red-500 hover:text-red-500/80"
+                                            >
+                                                <Trash className="h-4 w-4 bg-transparent" />{' '}
                                                 Hapus
-                                            </button>
+                                            </Button>
                                         </div>
 
                                         <div className="flex flex-col items-end gap-2">
@@ -98,15 +106,30 @@ const Cart = () => {
                                                 {formatRupiah(item.price)}
                                             </p>
                                             <div className="flex items-center gap-2">
-                                                <button className="flex h-6 w-6 items-center justify-center rounded bg-primary text-white">
+                                                <Button
+                                                    variant={'default'}
+                                                    onClick={() =>
+                                                        setCount(count - 1)
+                                                    }
+                                                    disabled={count <= 1}
+                                                    size={'sm'}
+                                                    className="rounded-md bg-primary text-white"
+                                                >
                                                     -
-                                                </button>
+                                                </Button>
                                                 <span className="text-sm">
-                                                    {item.qty}
+                                                    {item.qty + count}
                                                 </span>
-                                                <button className="flex h-6 w-6 items-center justify-center rounded bg-primary text-white">
+                                                <Button
+                                                    variant={'default'}
+                                                    onClick={() =>
+                                                        setCount(count + 1)
+                                                    }
+                                                    size={'sm'}
+                                                    className="rounded-md bg-primary text-white"
+                                                >
                                                     +
-                                                </button>
+                                                </Button>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +138,7 @@ const Cart = () => {
 
                             <div className="hidden w-px bg-black lg:block" />
 
-                            <div className="w-full lg:w-80">
+                            <div className="hidden w-full md:block lg:w-80">
                                 <h2 className="mb-4 text-lg font-semibold">
                                     Details
                                 </h2>
@@ -149,6 +172,33 @@ const Cart = () => {
                         </div>
                     </div>
                 </ContainerWrapper>
+                <div className="fixed bottom-0 max-w-2xl rounded-t-xl bg-white p-4 shadow-2xl md:hidden lg:w-80">
+                    <h2 className="mb-4 text-lg font-semibold">Details</h2>
+
+                    <p className="mb-4 text-sm text-gray-500">
+                        ut nunc. Vivamus nisl mauris, eleifend vel mauris quis,
+                        cursus ultricies diam.
+                    </p>
+
+                    <div className="flex flex-col gap-3 text-sm">
+                        <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>{formatRupiah(subtotal)}</span>
+                        </div>
+
+                        <div className="flex justify-between">
+                            <span>Fee</span>
+                            <span>Free</span>
+                        </div>
+
+                        <div className="mt-3 flex justify-between border-t pt-3 font-semibold">
+                            <span>Total</span>
+                            <span>{formatRupiah(subtotal)}</span>
+                        </div>
+                    </div>
+
+                    <Button className="mt-6 w-full">Pesan Sekarang</Button>
+                </div>
             </div>
         </MainLayout>
     );

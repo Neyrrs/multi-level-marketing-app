@@ -1,13 +1,33 @@
-import { cart, dashboard, home, login, mitra, product } from '@/routes';
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+import {
+    cart,
+    dashboard,
+    home,
+    login,
+    logout,
+    mitra,
+    product,
+    profile,
+} from '@/routes';
 import { SharedData } from '@/types';
 import type { RouteDefinition } from '@/wayfinder';
-import { Link, usePage } from '@inertiajs/react';
-import { Menu, ShoppingCart, X } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import {
+    LayoutDashboard,
+    LogOut,
+    Menu,
+    ShoppingCart,
+    User,
+    X,
+} from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import ContainerWrapper from './fragments/container-wrapper';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Separator } from './ui/separator';
+import { UserInfo } from './user-info';
 
 type UserRole = 'user' | 'admin';
 
@@ -26,14 +46,19 @@ interface NavigationItem {
 
 const NavigationBar = () => {
     const { auth } = usePage<SharedData>().props;
+    const cleanup = useMobileNavigation();
     const [open, setOpen] = useState(false);
 
     const links: LinkTypes[] = [
         { path: home(), name: 'Home', protected: false },
         { path: mitra(), name: 'Mitra', protected: false },
         { path: product(), name: 'Produk', protected: false },
-        { path: dashboard(), name: 'Dasbor', protected: true },
     ];
+
+    const handleLogout = () => {
+        cleanup();
+        router.flushAll();
+    };
 
     return (
         <nav className="fixed z-20 h-15 w-full border-b bg-card">
@@ -65,26 +90,88 @@ const NavigationBar = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Button
-                            className="relative bg-transparent text-primary shadow-none hover:bg-transparent"
-                            asChild
-                        >
-                            <Link href={cart()}>
-                                <ShoppingCart className="size-6" />
-                                <Badge className="absolute -top-1 -right-2 bg-red-500 text-[10px]">
-                                    10
-                                </Badge>
-                            </Link>
-                        </Button>
-
-                        {auth.user === null && (
-                            <Button
-                                className="hidden h-8 rounded-sm px-6 text-xs font-bold md:inline-flex"
-                                asChild
-                            >
-                                <Link href={login()}>Login</Link>
-                            </Button>
+                        {auth.user && (
+                            <>
+                                <Button
+                                    className="relative bg-transparent text-primary shadow-none hover:bg-transparent"
+                                    asChild
+                                >
+                                    <Link href={cart()}>
+                                        <ShoppingCart className="size-6" />
+                                        <Badge className="absolute -top-1 -right-2 bg-red-500 text-[10px]">
+                                            10
+                                        </Badge>
+                                    </Link>
+                                </Button>
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <Button
+                                            variant={'ghost'}
+                                            className="p-0 px-2"
+                                        >
+                                            <UserInfo user={auth.user} />
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="flex w-50 flex-col gap-4">
+                                        <Button
+                                            variant={'ghost'}
+                                            className="p-0 hover:bg-transparent"
+                                        >
+                                            <UserInfo
+                                                showEmail
+                                                user={auth.user}
+                                            />
+                                        </Button>
+                                            <Separator />
+                                        <div>
+                                            <Link href={profile()}>
+                                                <Button
+                                                    variant={'ghost'}
+                                                    className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"
+                                                >
+                                                    <User />
+                                                    <span>Profil</span>
+                                                </Button>
+                                            </Link>
+                                            <Link href={dashboard()}>
+                                                <Button
+                                                    variant={'ghost'}
+                                                    className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"
+                                                >
+                                                    <LayoutDashboard />
+                                                    <span>Dasbor</span>
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                        <Button
+                                            variant={'destructive'}
+                                            className="flex w-full justify-start gap-4 opacity-90"
+                                            asChild
+                                        >
+                                            <Link
+                                                href={logout()}
+                                                as="button"
+                                                onClick={handleLogout}
+                                            >
+                                                <LogOut />
+                                                Keluar
+                                            </Link>
+                                        </Button>
+                                    </PopoverContent>
+                                </Popover>
+                            </>
                         )}
+                        {auth.user === null && (
+                            <>
+                                <Button
+                                    className="hidden h-8 rounded-sm px-6 text-xs font-bold md:inline-flex"
+                                    asChild
+                                >
+                                    <Link href={login()}>Login</Link>
+                                </Button>
+                            </>
+                        )}
+
                         <Button
                             size={'icon'}
                             variant={'ghost'}
@@ -156,7 +243,7 @@ const NavigationBar = () => {
                                     }}
                                 >
                                     <Button
-                                        className="mt-2 w-full md:h-9 text-sm font-bold"
+                                        className="mt-2 w-full text-sm font-bold md:h-9"
                                         asChild
                                     >
                                         <Link href={login()}>Login</Link>
