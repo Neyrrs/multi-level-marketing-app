@@ -16,7 +16,7 @@ import Orders from './Orders'
 import Transaksi from './Transaksi'
 import reports from './reports'
 /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -30,7 +30,7 @@ dashboard.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -38,7 +38,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -46,7 +46,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -55,7 +55,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
     const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -64,7 +64,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
         dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -72,7 +72,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
- * @see routes/web.php:50
+ * @see routes/web.php:56
  * @route '/admin/dashboard'
  */
         dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -165,7 +165,7 @@ payoutReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     payoutReport.form = payoutReportForm
 /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
 export const productManagement = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -179,7 +179,7 @@ productManagement.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
 productManagement.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ productManagement.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
 productManagement.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -195,7 +195,7 @@ productManagement.get = (options?: RouteQueryOptions): RouteDefinition<'get'> =>
     method: 'get',
 })
 /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
 productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -204,7 +204,7 @@ productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 })
 
     /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
     const productManagementForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -213,7 +213,7 @@ productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     })
 
             /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
         productManagementForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -221,7 +221,7 @@ productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
             method: 'get',
         })
             /**
- * @see routes/web.php:95
+ * @see routes/web.php:101
  * @route '/admin/product-management'
  */
         productManagementForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ affiliateManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'
     
     affiliateManagement.form = affiliateManagementForm
 /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
 export const commissionSetting = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -328,7 +328,7 @@ commissionSetting.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
 commissionSetting.url = (options?: RouteQueryOptions) => {
@@ -336,7 +336,7 @@ commissionSetting.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
 commissionSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -344,7 +344,7 @@ commissionSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> =>
     method: 'get',
 })
 /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
 commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -353,7 +353,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 })
 
     /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
     const commissionSettingForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -362,7 +362,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     })
 
             /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
         commissionSettingForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -370,7 +370,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
             method: 'get',
         })
             /**
- * @see routes/web.php:99
+ * @see routes/web.php:105
  * @route '/admin/commission-setting'
  */
         commissionSettingForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -385,7 +385,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     
     commissionSetting.form = commissionSettingForm
 /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
 export const planSetting = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -399,7 +399,7 @@ planSetting.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
 planSetting.url = (options?: RouteQueryOptions) => {
@@ -407,7 +407,7 @@ planSetting.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
 planSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -415,7 +415,7 @@ planSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
 planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -424,7 +424,7 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
     const planSettingForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -433,7 +433,7 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
         planSettingForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -441,7 +441,7 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
- * @see routes/web.php:101
+ * @see routes/web.php:107
  * @route '/admin/plan-setting'
  */
         planSettingForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -36,6 +36,7 @@ export interface User {
     avatar?: string;
     roles: role[];
     phone?: string;
+    alamat?: string;
     email_verified_at: string | null;
     two_factor_enabled?: boolean;
     created_at: string;

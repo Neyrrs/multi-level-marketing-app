@@ -126,8 +126,7 @@ const Profile = () => {
                                     Alamat
                                 </Label>
                                 <p className="wrap-break-words max-w-xs text-sm leading-relaxed whitespace-normal opacity-80">
-                                    Suspendisse pharetra accumsan venenatis. Sed
-                                    consectetur non libero in
+                                    {user.alamat || '-'}
                                 </p>
                             </div>
                         </div>

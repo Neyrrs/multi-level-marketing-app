@@ -10,6 +10,7 @@ use App\Http\Controllers\Affiliate;
 use App\Http\Controllers\Guest as GuestControllers;
 use App\Http\Controllers\Logistik;
 use App\Http\Controllers\Finance;
+use App\Http\Controllers\Settings\ProfileController;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -24,6 +25,11 @@ use App\Http\Controllers\Finance;
 // });
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
     /*
     |--------------------------------------------------------------------------
     | GUEST
@@ -320,9 +326,10 @@ Route::get('/cart', function () {
 Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
-Route::get('/dashboard-sementara', function () {
-    return Inertia::render('dashboard/dashboard');
-})->name('dashboard.dashboard');
+
+// Route::get('/dashboard-sementara', function () {
+//     return Inertia::render('dashboard/dashboard');
+// })->name('dashboard.dashboard');
 
 // Webhooks (no auth required)
 Route::post('/webhooks/midtrans', [\App\Http\Controllers\Webhooks\MidtransController::class, 'handle'])->name('webhooks.midtrans');

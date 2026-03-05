@@ -17,7 +17,7 @@ const Login = () => {
     return (
         <MainLayout showFooter={false} showNavbar={false}>
             <div className="flex h-screen w-screen items-center justify-center">
-                <div className="flex h-fit w-fit shadow-md">
+                <div className="flex h-fit w-fit shadow-md rounded-3xl">
                     {/* LEFT IMAGE */}
                     <div className="md:h-[65vh] h-fit md:block hidden w-md">
                         <img
@@ -31,7 +31,7 @@ const Login = () => {
                     <Form
                         {...store.form()}
                         resetOnSuccess={['password']}
-                        className="flex h-fit md:py-0 py-10 md:h-[65vh] md:w-md flex-col justify-center gap-6 rounded-3xl md:rounded-r-3xl bg-white p-10"
+                        className="flex h-fit md:py-0 py-10 md:h-[65vh] rounded-r-3xl md:rounded-r-3xl md:w-md flex-col justify-center gap-6 bg-white p-10"
                     >
                         {({ processing, errors }) => (
                             <>
