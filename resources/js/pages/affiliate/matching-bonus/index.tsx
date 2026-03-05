@@ -18,35 +18,35 @@ export default function MatchingBonus({ matchingHistory, stats }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Bonus Matching" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-4">
-                    <Card>
+                    <Card className='flex flex-col justify-between'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">Total Matching</CardTitle>
+                            <CardTitle className="text-base">Total Matching</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">Rp {stats?.totalMatching?.toLocaleString('id-ID')}</div>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className='flex flex-col justify-between'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">Bulan Ini</CardTitle>
+                            <CardTitle className="text-base">Bulan Ini</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-blue-600">Rp {stats?.thisMonth?.toLocaleString('id-ID')}</div>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className='flex flex-col justify-between'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">Total Kiri</CardTitle>
+                            <CardTitle className="text-base">Total Kiri</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{stats?.leftCount}</div>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className='flex flex-col justify-between'>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">Total Kanan</CardTitle>
+                            <CardTitle className="text-base">Total Kanan</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{stats?.rightCount}</div>

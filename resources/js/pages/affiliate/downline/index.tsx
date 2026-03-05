@@ -69,11 +69,11 @@ export default function DownlineComponent({ downlines, total }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Downline" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {/* Statistics Card */}
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
+                        <CardTitle className="text-base font-semibold">
                             Total Downline
                         </CardTitle>
                     </CardHeader>
@@ -87,7 +87,7 @@ export default function DownlineComponent({ downlines, total }: Props) {
                 {/* Downline Table */}
                 <div className="rounded-xl border bg-white overflow-hidden">
                     <div className="p-4">
-                        <h3 className="font-semibold mb-4">Daftar Downline</h3>
+                        <h3 className="font-semibold mb-4 text-lg">Daftar Downline</h3>
 
                         {downlines && downlines.data && downlines.data.length > 0 ? (
                             <Table>

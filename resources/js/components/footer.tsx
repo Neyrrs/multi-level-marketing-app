@@ -22,13 +22,11 @@ const Footer = () => {
                             <Link href={home()} className="hover:opacity-80">
                                 Home
                             </Link>
-
-                            <Link href={product()} className="hover:opacity-80">
-                                Produk
-                            </Link>
-
                             <Link href={mitra()} className="hover:opacity-80">
                                 Mitra
+                            </Link>
+                            <Link href={product()} className="hover:opacity-80">
+                                Produk
                             </Link>
                         </div>
                     </div>

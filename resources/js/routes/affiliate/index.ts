@@ -942,7 +942,85 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     shopHistory.form = shopHistoryForm
 /**
- * @see routes/web.php:357
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+export const methodAffiliate = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: methodAffiliate.url(options),
+    method: 'get',
+})
+
+methodAffiliate.definition = {
+    methods: ["get","head"],
+    url: '/affiliate/method-affiliate',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+methodAffiliate.url = (options?: RouteQueryOptions) => {
+    return methodAffiliate.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+methodAffiliate.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: methodAffiliate.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+methodAffiliate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: methodAffiliate.url(options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+    const methodAffiliateForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: methodAffiliate.url(options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+        methodAffiliateForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: methodAffiliate.url(options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\Affiliate\ShopHistoryController::methodAffiliate
+ * @see app/Http/Controllers/Affiliate/ShopHistoryController.php:17
+ * @route '/affiliate/method-affiliate'
+ */
+        methodAffiliateForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: methodAffiliate.url({
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    methodAffiliate.form = methodAffiliateForm
+/**
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
 export const ref = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -956,7 +1034,7 @@ ref.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:357
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
 ref.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -983,7 +1061,7 @@ ref.url = (args: { slug: string | number } | [slug: string | number ] | string |
 }
 
 /**
- * @see routes/web.php:357
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
 ref.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -991,7 +1069,7 @@ ref.get = (args: { slug: string | number } | [slug: string | number ] | string |
     method: 'get',
 })
 /**
- * @see routes/web.php:357
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
 ref.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1000,7 +1078,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
 })
 
     /**
- * @see routes/web.php:357
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
     const refForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1009,7 +1087,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     })
 
             /**
- * @see routes/web.php:357
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
         refForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1017,7 +1095,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
             method: 'get',
         })
             /**
- * @see routes/web.php:357
+ * @see routes/web.php:368
  * @route '/a/{slug}'
  */
         refForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1032,7 +1110,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     
     ref.form = refForm
 /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
 export const landing = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1046,7 +1124,7 @@ landing.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
 landing.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -1073,7 +1151,7 @@ landing.url = (args: { slug: string | number } | [slug: string | number ] | stri
 }
 
 /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
 landing.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1081,7 +1159,7 @@ landing.get = (args: { slug: string | number } | [slug: string | number ] | stri
     method: 'get',
 })
 /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
 landing.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1090,7 +1168,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
 })
 
     /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
     const landingForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1099,7 +1177,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
     })
 
             /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
         landingForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1107,7 +1185,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
             method: 'get',
         })
             /**
- * @see routes/web.php:371
+ * @see routes/web.php:382
  * @route '/{slug}'
  */
         landingForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1134,6 +1212,7 @@ generationRo: Object.assign(generationRo, generationRo),
 matchingBonus: Object.assign(matchingBonus, matchingBonus),
 pinHistory: Object.assign(pinHistory, pinHistory),
 shopHistory: Object.assign(shopHistory, shopHistory),
+methodAffiliate: Object.assign(methodAffiliate, methodAffiliate),
 tree: Object.assign(tree, tree),
 shop: Object.assign(shop, shop),
 pinList: Object.assign(pinList, pinList),

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
             $table->string('phone')->unique()->nullable();
+            $table->string('alamat')->default('-');
             // $table->enum('kyc_status', ['pending', 'verified', 'rejected'])->default('pending');
             $table->rememberToken();
             $table->timestamps();

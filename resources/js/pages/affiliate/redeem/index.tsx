@@ -37,9 +37,9 @@ export default function Redeem({ availableCodes }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Redeem Kode" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 <div className="rounded-xl border bg-white p-6">
-                    <h3 className="mb-6 text-lg font-semibold">Redeem Kode + Daftarkan Affiliate Baru</h3>
+                    <h3 className="font-semibold text-lg mb-6 text-lg">Kode Aktivasi Tersedia</h3>
                     {availableCodes?.length > 0 ? (
                         <form onSubmit={submit} className="space-y-4">
                             <div className="grid gap-2">
@@ -59,7 +59,7 @@ export default function Redeem({ availableCodes }: Props) {
                                     ))}
                                 </select>
                                 {errors.code_id && <p className="text-sm text-red-600">{errors.code_id}</p>}
-                                {errors.code && <p className="text-sm text-red-600">{errors.code}</p>}
+                              
                             </div>
 
                             <div className="grid gap-2">
@@ -122,7 +122,7 @@ export default function Redeem({ availableCodes }: Props) {
                                     <option value="right">Kanan</option>
                                 </select>
                                 {errors.position && <p className="text-sm text-red-600">{errors.position}</p>}
-                                {errors.sponsor && <p className="text-sm text-red-600">{errors.sponsor}</p>}
+                              
                             </div>
 
                             <Button type="submit" disabled={processing}>

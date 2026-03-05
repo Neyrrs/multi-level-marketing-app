@@ -15,22 +15,36 @@ import {
     editProfileSchema,
     EditProfileSchema,
 } from '@/schemas/edit-profil-validation';
+import { SharedData } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { useForm } from 'react-hook-form';
 
 const EditProfile = () => {
+    const { auth } = usePage<SharedData>().props;
+    const user = auth.user;
+    console.log(user);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm<EditProfileSchema>({
         resolver: zodResolver(editProfileSchema),
+        defaultValues: {
+            name: user.name || '',
+            email: user.email || '',
+            phone: user.phone || '-',
+            alamat: user.alamat || '-',
+        },
     });
 
     const handleEditProfile = (data: EditProfileSchema) => {
-        console.log(data);
+        router.put('/profile', data, {
+            preserveScroll: true,
+        });
     };
+
     return (
         <MainLayout>
             <form
@@ -73,7 +87,7 @@ const EditProfile = () => {
                             <div className="flex flex-col items-center gap-4">
                                 <div className="h-40 w-40 overflow-hidden rounded-full border-4 border-primary">
                                     <img
-                                        src=""
+                                        src={''}
                                         alt="Foto Profil"
                                         className="h-full w-full object-cover"
                                     />
@@ -85,82 +99,30 @@ const EditProfile = () => {
                         </div>
 
                         <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-8">
-                            <div className="mb-6">
-                                <h2 className="text-lg font-semibold text-primary">
-                                    Informasi Personal
-                                </h2>
-                                <div className="mt-2 h-px w-full bg-black" />
-                            </div>
+                            <div className="flex flex-col gap-2">
+                                <div className="flex justify-between">
+                                    <div>
+                                        <Label>Username</Label>
+                                        <Input {...register('name')} />
+                                        {errors.name && (
+                                            <p className="text-xs text-red-500">
+                                                {errors.name.message}
+                                            </p>
+                                        )}
+                                    </div>
 
-                            <div className="grid grid-cols-1 gap-y-8 md:grid-cols-4 md:gap-x-12">
-                                <div>
-                                    <Label>Nama Lengkap</Label>
                                     <div>
-                                        <Input
-                                            {...register('nama_lengkap')}
-                                            defaultValue="John Doe Ronaldodinho"
-                                        />
-                                        {errors.nama_lengkap && (
+                                        <Label>Nomor Telepon</Label>
+                                        <Input {...register('phone')} />
+                                        {errors.phone && (
                                             <p className="text-xs text-red-500">
-                                                {errors.nama_lengkap.message}
+                                                {errors.phone.message}
                                             </p>
                                         )}
                                     </div>
-                                </div>
-                                <div>
-                                    <Label>Username</Label>
                                     <div>
-                                        <Input
-                                            placeholder="Username"
-                                            {...register('username')}
-                                            defaultValue="John Doe"
-                                        />
-                                        {errors.username && (
-                                            <p className="text-xs text-red-500">
-                                                {errors.username.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <Label>Nomor Telepon</Label>
-                                    <div>
-                                        <Input
-                                            inputMode='numeric'
-                                            placeholder="Nomor telepon"
-                                            {...register('nomor_telepon')}
-                                            defaultValue="(+62) 8987360972"
-                                        />
-                                        {errors.nomor_telepon && (
-                                            <p className="text-xs text-red-500">
-                                                {errors.nomor_telepon.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <Label>Jenis Kelamin</Label>
-                                    <div>
-                                        <Input
-                                            placeholder="Jenis kelamain"
-                                            {...register('jenis_kelamin')}
-                                            defaultValue="Pria"
-                                        />
-                                        {errors.jenis_kelamin && (
-                                            <p className="text-xs text-red-500">
-                                                {errors.jenis_kelamin.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <Label>Email</Label>
-                                    <div>
-                                        <Input
-                                            placeholder="Email"
-                                            {...register('email')}
-                                            defaultValue="example@gmail.com"
-                                        />
+                                        <Label>Email</Label>
+                                        <Input {...register('email')} />
                                         {errors.email && (
                                             <p className="text-xs text-red-500">
                                                 {errors.email.message}
@@ -168,52 +130,17 @@ const EditProfile = () => {
                                         )}
                                     </div>
                                 </div>
-                                <div>
-                                    <Label>Kartu Rekening</Label>
-                                    <div>
-                                        <Input
-                                            placeholder="Kartu rekening"
-                                            {...register('rekening')}
-                                            defaultValue="BCA"
-                                        />
-                                        {errors.rekening && (
-                                            <p className="text-xs text-red-500">
-                                                {errors.rekening.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <Label>No. Rekening</Label>
-                                    <div>
-                                        <Input
-                                            inputMode='numeric'
-                                            placeholder="Nomor rekening"
-                                            {...register('nomor_rekening')}
-                                            defaultValue={89878987987}
-                                        />
-                                        {errors.nomor_rekening && (
-                                            <p className="text-xs text-red-500">
-                                                {errors.nomor_rekening.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="md:col-span-4">
+                                <div className="md:w-full">
                                     <Label>Alamat</Label>
-                                    <div>
-                                        <textarea
-                                            placeholder="Alamat lengkap"
-                                            {...register('alamat')}
-                                            className="mt-1 min-h-40 w-full resize-none rounded-md border-3 border-primary px-3 py-3 text-sm focus:ring-2 focus:ring-primary/30 focus:outline-none"
-                                            defaultValue="Donec imperdiet euismod finibus. Sed eu nibh aliquet, ultrices erat a, fermentum leo. Duis purus turpis, scelerisque id nisl eget, aliquet porta ipsum. Vestibulum tortor enim, interdum ac cursus ut, egestas eget velit. Sed leo odio, viverra ac nibh quis, auctor egestas lacus. Vivamus vitae orci luctus, maximus nisi et, volutpat elit. Donec id fringilla lectus"
-                                        />
-                                        {errors.alamat && (
-                                            <p className="text-xs text-red-500">
-                                                {errors.alamat.message}
-                                            </p>
-                                        )}
-                                    </div>
+                                    <textarea
+                                        {...register('alamat')}
+                                        className="mt-1 min-h-40 w-full resize-none rounded-md border-3 border-primary px-3 py-3 text-sm focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                                    />
+                                    {errors.alamat && (
+                                        <p className="text-xs text-red-500">
+                                            {errors.alamat.message}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -227,6 +154,7 @@ const EditProfile = () => {
                         >
                             Reset
                         </Button>
+
                         <Button
                             type="submit"
                             className="bg-green-600 font-bold hover:bg-green-700"

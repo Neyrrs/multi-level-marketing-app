@@ -13,6 +13,7 @@ use App\Http\Controllers\Affiliate;
 use App\Http\Controllers\Guest as GuestControllers;
 use App\Http\Controllers\Logistik;
 use App\Http\Controllers\Finance;
+use App\Http\Controllers\Settings\ProfileController;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -27,6 +28,11 @@ use App\Http\Controllers\Finance;
 // });
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
     /*
     |--------------------------------------------------------------------------
     | GUEST
@@ -206,6 +212,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('shop-history', [Affiliate\ShopHistoryController::class, 'index'])
             ->name('shop-history');
 
+            // UBAH NIH CONTROLLERNYA
+        Route::get('method-affiliate', [Affiliate\ShopHistoryController::class, 'index'])
+            ->name('method-affiliate');
+
         Route::resource('tree', Affiliate\TreeController::class, ['names' => 'tree']);
         Route::post('shop/checkout', [Affiliate\ShopController::class, 'checkout'])->name('shop.checkout');
         Route::post('shop/cancel', [Affiliate\ShopController::class, 'cancel'])->name('shop.cancel');
@@ -340,9 +350,10 @@ Route::get('/cart', function () {
 Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
-Route::get('/dashboard-sementara', function () {
-    return Inertia::render('dashboard/dashboard');
-})->name('dashboard.dashboard');
+
+// Route::get('/dashboard-sementara', function () {
+//     return Inertia::render('dashboard/dashboard');
+// })->name('dashboard.dashboard');
 
 // Public media proxy for local environments where /storage can return 403.
 Route::get('/media/{path}', function (string $path) {

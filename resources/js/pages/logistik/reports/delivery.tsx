@@ -89,13 +89,13 @@ export default function DeliveryReport({
 
             <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                    <BarChart3 className="w-8 h-8" />
-                    <h1 className="text-3xl font-bold">Laporan Pengiriman</h1>
+                    <BarChart3 className="w-8 h-8 md:block hidden" />
+                    <h1 className="text-xl md:text-2xl font-bold">Laporan Pengiriman</h1>
                 </div>
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <Card>
+                    <Card className='pt-0'>
                         <CardContent className="pt-6">
                             <div>
                                 <p className="text-gray-600 text-sm">Total Pengiriman</p>
@@ -104,7 +104,7 @@ export default function DeliveryReport({
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='pt-0'>
                         <CardContent className="pt-6">
                             <div>
                                 <p className="text-gray-600 text-sm">Berhasil Dikirim</p>
@@ -113,7 +113,7 @@ export default function DeliveryReport({
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='pt-0'>
                         <CardContent className="pt-6">
                             <div>
                                 <p className="text-gray-600 text-sm">Dalam Pengiriman</p>
@@ -122,7 +122,7 @@ export default function DeliveryReport({
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className='pt-0'>
                         <CardContent className="pt-6">
                             <div className="flex items-center gap-2">
                                 <TrendingUp className="w-8 h-8 text-emerald-600" />

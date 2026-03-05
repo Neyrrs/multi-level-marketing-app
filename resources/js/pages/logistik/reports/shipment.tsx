@@ -60,16 +60,16 @@ export default function ShipmentReport({
 
             <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                    <BarChart3 className="w-8 h-8" />
-                    <h1 className="text-3xl font-bold">Laporan Pengiriman - Statistik</h1>
+                    <BarChart3 className="w-8 h-8 md:block hidden" />
+                    <h1 className="text-xl md:text-3xl font-bold">Laporan Pengiriman - Statistik</h1>
                 </div>
 
                 {/* Average Delivery Time */}
-                <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
+                <Card className="bg-linear-to-br from-blue-50 to-blue-100 pt-0">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-gray-600 text-sm">Rata-rata Waktu Pengiriman</p>
+                                <p className="text-gray-600 font-semibold text-sm">Rata-rata Waktu Pengiriman</p>
                                 <p className="text-4xl font-bold text-blue-600 mt-2">{avgDeliveryTime} hari</p>
                             </div>
                             <TrendingUp className="w-16 h-16 text-blue-200" />
@@ -81,7 +81,7 @@ export default function ShipmentReport({
                     {/* Shipments by Status */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">Pengiriman Berdasarkan Status</CardTitle>
+                            <CardTitle className="md:text-lg text-base">Pengiriman Berdasarkan Status</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
@@ -104,7 +104,7 @@ export default function ShipmentReport({
                     {/* Shipments by Courier */}
                     <Card>
                         <CardHeader>
-                            <CardTitle className="text-lg">Pengiriman Berdasarkan Kurir</CardTitle>
+                            <CardTitle className="md:text-lg text-base">Pengiriman Berdasarkan Kurir</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-3">
@@ -128,7 +128,7 @@ export default function ShipmentReport({
                 {/* Top Performing Couriers */}
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-lg">Kurir Terbaik (Berdasarkan Tingkat Sukses)</CardTitle>
+                        <CardTitle className="text-base md:text-lg">Kurir Terbaik (Berdasarkan Tingkat Sukses)</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
