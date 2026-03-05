@@ -103,7 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('affiliate-management');
         Route::get('commission-setting', fn () => Inertia::render('admin/pengaturan-komisi/index'))
             ->name('commission-setting');
-        Route::get('plan-setting', fn () => Inertia::render('admin/pengaturan-plan/index'))
+        Route::get('plan-setting', [Admin\PlanController::class, 'index'])
             ->name('plan-setting');
 
         // API Resources (with 'api' prefix in route names to avoid conflicts)
@@ -148,6 +148,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('dashboard', fn () => Inertia::render('manager/dashboard'))
             ->name('dashboard');
+
+        Route::get('affiliate-management', [Manager\AffiliateManagementController::class, 'index'])
+            ->name('affiliate-management.index');
+        Route::post('affiliate-management/{affiliate}/approve', [Manager\AffiliateManagementController::class, 'approve'])
+            ->name('affiliate-management.approve');
 
         Route::get('reports/sold-record', [Manager\Report\SalesReportController::class, 'index'])
             ->name('reports.sold-record');

@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import affiliateManagement from './affiliate-management'
 import reports from './reports'
 /**
  * @see routes/web.php:149
@@ -73,6 +74,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     dashboard.form = dashboardForm
 const manager = {
     dashboard: Object.assign(dashboard, dashboard),
+affiliateManagement: Object.assign(affiliateManagement, affiliateManagement),
 reports: Object.assign(reports, reports),
 }
 

@@ -27,9 +27,9 @@ class UserRole extends Controller
         $roles = Role::select('id', 'name')->get();
 
     return Inertia::render('admin/UsersRole/create', [
-        'roles' => $roles
+        'roles' => $roles   
     ]);
-    }
+    }   
 
     public function store(Request $request)
     {
@@ -37,6 +37,8 @@ class UserRole extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'phone'    => 'nullable|string|max:30',
+            'address'  => 'nullable|string|max:500',
             'role'     => 'required',
         ]);
 
@@ -44,7 +46,16 @@ class UserRole extends Controller
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'phone'    => $request->phone,
         ]);
+
+        $addressText = trim((string) $request->address);
+        if ($addressText !== '') {
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                ['address' => ['full_address' => $addressText]]
+            );
+        }
 
         $user->assignRole($request->role);
 
@@ -63,11 +74,15 @@ class UserRole extends Controller
 
     public function edit($id)
     {
-        $user  = User::with('roles')->findOrFail($id);
+        $user  = User::with(['roles', 'profile'])->findOrFail($id);
        $roles = Role::select('id', 'name')->get();
 
     return Inertia::render('admin/UsersRole/edit', [
-        'user'  => $user,
+        'user'  => [
+            ...$user->toArray(),
+            'phone' => $user->phone,
+            'address' => $this->resolveAddressText($user),
+        ],
         'roles' => $roles
     ]);
     }
@@ -80,16 +95,27 @@ class UserRole extends Controller
         'name'  => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
         'password' => 'nullable|min:6',
+        'phone' => 'nullable|string|max:30',
+        'address' => 'nullable|string|max:500',
         'role' => 'required|exists:roles,name',
     ]);
 
     $user->update([
         'name' => $request->name,
         'email' => $request->email,
+        'phone' => $request->phone,
         'password' => $request->filled('password')
             ? Hash::make($request->password)
             : $user->password,
     ]);
+
+    $addressText = trim((string) $request->address);
+    if ($addressText !== '') {
+        $user->profile()->updateOrCreate(
+            ['user_id' => $user->id],
+            ['address' => ['full_address' => $addressText]]
+        );
+    }
 
     $user->syncRoles([$request->role]);
 
@@ -103,5 +129,32 @@ class UserRole extends Controller
 
         return redirect()->route('admin.UsersRole.index')
             ->with('success', 'User berhasil dihapus');
+    }
+
+    private function resolveAddressText(User $user): ?string
+    {
+        $address = $user->profile?->address;
+        if (is_string($address) && $address !== '') {
+            return $address;
+        }
+
+        if (!is_array($address)) {
+            return null;
+        }
+
+        if (!empty($address['full_address'])) {
+            return (string) $address['full_address'];
+        }
+
+        $parts = array_filter([
+            $address['street'] ?? null,
+            $address['subdistrict'] ?? null,
+            $address['district'] ?? null,
+            $address['city'] ?? null,
+            $address['province'] ?? null,
+            $address['postal_code'] ?? null,
+        ]);
+
+        return !empty($parts) ? implode(', ', $parts) : null;
     }
 }

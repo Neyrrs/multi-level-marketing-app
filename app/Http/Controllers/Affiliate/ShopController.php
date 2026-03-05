@@ -204,6 +204,11 @@ class ShopController extends Controller
                     'affiliate_id' => $affiliateId,
                     'payment_method' => 'midtrans_snap',
                     'midtrans_order_id' => 'MT-' . uniqid(),
+                    'shipping_data' => [
+                        'recipient_name' => $user->name,
+                        'recipient_phone' => $user->phone,
+                        'address' => $this->resolveUserAddress($user),
+                    ],
                     'product_type' => strtolower((string) ($firstProduct?->type ?? 'single')),
                     'product_id' => $firstProduct?->id,
                     'product_name' => $firstProduct?->name ?? 'Cart Checkout',
@@ -402,5 +407,32 @@ class ShopController extends Controller
         ]);
 
         return $transaction->redirect_url;
+    }
+
+    private function resolveUserAddress($user): ?string
+    {
+        $address = $user->profile?->address;
+        if (is_string($address) && trim($address) !== '') {
+            return trim($address);
+        }
+
+        if (!is_array($address)) {
+            return null;
+        }
+
+        if (!empty($address['full_address'])) {
+            return (string) $address['full_address'];
+        }
+
+        $parts = array_filter([
+            $address['street'] ?? null,
+            $address['subdistrict'] ?? null,
+            $address['district'] ?? null,
+            $address['city'] ?? null,
+            $address['province'] ?? null,
+            $address['postal_code'] ?? null,
+        ]);
+
+        return !empty($parts) ? implode(', ', $parts) : null;
     }
 }

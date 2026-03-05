@@ -447,16 +447,26 @@ class AffiliateService
     /**
      * Create a pending affiliate record (awaiting user confirmation).
      */
-    public function registerPendingAffiliate(User $user, Affiliate $sponsor): Affiliate
+    public function registerPendingAffiliate(
+        User $user,
+        Affiliate $sponsor,
+        ?ActivationCode $activationCode = null,
+        string $requestedPosition = 'left'
+    ): Affiliate
     {
+        $requestedPosition = in_array($requestedPosition, ['left', 'right'], true)
+            ? $requestedPosition
+            : 'left';
+
         // don't create mlm tree node yet; wait for confirmation
         $affiliate = Affiliate::create([
             'user_id' => $user->id,
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
+            'activation_code_id' => $activationCode?->id,
             'username' => $this->generateUniqueUsername($user->name),
             'slug' => Str::slug($user->name) . '-' . uniqid(),
-            'position' => 'none',
+            'position' => $requestedPosition,
             'level' => $sponsor->level + 1,
             'is_active' => false,
         ]);
@@ -480,6 +490,9 @@ class AffiliateService
             'is_active' => true,
             'activated_at' => now(),
         ]);
+
+        // Promote user role to affiliate only after approval.
+        $affiliate->user?->syncRoles(['affiliate']);
 
         // create mlm tree node under sponsor's tree
         $sponsor = Affiliate::where('user_id', $affiliate->sponsor_id)->first();

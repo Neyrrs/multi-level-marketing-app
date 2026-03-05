@@ -6,7 +6,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { cn } from "@/lib/utils"
 
 type ComboBoxProps = {
-  value: string
+  value: string 
   onChange: (value: string) => void
 }
 

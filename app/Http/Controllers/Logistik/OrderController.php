@@ -22,7 +22,8 @@ class OrderController extends Controller
         // ✅ OPTIMIZED: Selective eager loading + withCount to avoid N+1
         $query = Order::select(['id', 'order_number', 'user_id', 'affiliate_id', 'status', 'payment_status', 'quantity', 'total_amount', 'created_at'])
             ->with([
-                'user:id,name,email',              // Only needed columns
+                'user:id,name,email,phone',              // Only needed columns
+                'user.profile:id,user_id,address',
                 'affiliate:id,user_id'
             ])
             ->withCount('shipments')  // Use withCount instead of relationship count queries
@@ -55,6 +56,8 @@ class OrderController extends Controller
                 'order_number' => $order->order_number,
                 'user_name' => $order->user->name,
                 'user_email' => $order->user->email,
+                'user_phone' => $order->user->phone,
+                'user_address' => $this->resolveOrderAddress($order),
                 'affiliate_name' => $order->affiliate?->user->name ?? '-',
                 'total_amount' => (float) $order->total_amount,
                 'status' => $order->status,
@@ -117,8 +120,8 @@ class OrderController extends Controller
                     'id' => $order->user->id,
                     'name' => $order->user->name,
                     'email' => $order->user->email,
-                    'phone' => $order->user->userProfile?->phone,
-                    'address' => $order->user->userProfile?->address,
+                    'phone' => $order->user->phone,
+                    'address' => $this->resolveOrderAddress($order),
                 ],
                 'affiliate' => $order->affiliate ? [
                     'username' => $order->affiliate->username,
@@ -177,5 +180,37 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function resolveOrderAddress(Order $order): ?string
+    {
+        $shipping = $order->shipping_data;
+        if (is_array($shipping) && !empty($shipping['address'])) {
+            return (string) $shipping['address'];
+        }
+
+        $address = $order->user?->profile?->address;
+        if (is_string($address) && trim($address) !== '') {
+            return trim($address);
+        }
+
+        if (!is_array($address)) {
+            return null;
+        }
+
+        if (!empty($address['full_address'])) {
+            return (string) $address['full_address'];
+        }
+
+        $parts = array_filter([
+            $address['street'] ?? null,
+            $address['subdistrict'] ?? null,
+            $address['district'] ?? null,
+            $address['city'] ?? null,
+            $address['province'] ?? null,
+            $address['postal_code'] ?? null,
+        ]);
+
+        return !empty($parts) ? implode(', ', $parts) : null;
     }
 }

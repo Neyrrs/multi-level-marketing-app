@@ -27,6 +27,8 @@ interface Order {
     order_number: string;
     user_name: string;
     user_email: string;
+    user_phone?: string | null;
+    user_address?: string | null;
     affiliate_name?: string;
     total_amount: number;
     status: string;
@@ -130,6 +132,8 @@ export default function OrdersIndex({ orders = [], pagination, search = '', stat
                             <TableRow>
                                 <TableHead>No Pesanan</TableHead>
                                 <TableHead>Nama Customer</TableHead>
+                                <TableHead>No. Telepon</TableHead>
+                                <TableHead>Alamat</TableHead>
                                 <TableHead>Jumlah</TableHead>
                                 <TableHead>Total</TableHead>
                                 <TableHead>Status</TableHead>
@@ -148,6 +152,10 @@ export default function OrdersIndex({ orders = [], pagination, search = '', stat
                                                 <span>{order.user_name}</span>
                                                 <span className="text-xs text-gray-500">{order.user_email}</span>
                                             </div>
+                                        </TableCell>
+                                        <TableCell>{order.user_phone || '-'}</TableCell>
+                                        <TableCell className="max-w-[280px] truncate" title={order.user_address || '-'}>
+                                            {order.user_address || '-'}
                                         </TableCell>
                                         <TableCell>{order.quantity} item</TableCell>
                                         <TableCell>
@@ -185,7 +193,7 @@ export default function OrdersIndex({ orders = [], pagination, search = '', stat
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={8} className="text-center py-4">
+                                    <TableCell colSpan={10} className="text-center py-4">
                                         Tidak ada pesanan yang ditemukan
                                     </TableCell>
                                 </TableRow>

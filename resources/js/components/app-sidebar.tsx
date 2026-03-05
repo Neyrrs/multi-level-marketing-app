@@ -267,6 +267,14 @@ export function AppSidebar() {
                     icon: LayoutGrid,
                 },
                 {
+                    title: 'Manajemen Affiliate',
+                    href: getHref(
+                        'manager.affiliate-management.index',
+                        '/manager/affiliate-management',
+                    ),
+                    icon: User,
+                },
+                {
                     title: 'Laporan',
                     icon: Package,
                     children: [

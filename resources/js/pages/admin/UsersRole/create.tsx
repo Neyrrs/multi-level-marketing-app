@@ -34,6 +34,8 @@ export default function Create({ roles = [] }: Props) {
         name: '',
         email: '',
         password: '',
+        phone: '',
+        address: '',
         role: '',
     })
 
@@ -142,6 +144,41 @@ export default function Create({ roles = [] }: Props) {
                                     <p id="password-error" className="text-sm text-red-500">
                                         {errors.password}
                                     </p>
+                                )}
+                            </div>
+
+                            {/* PHONE FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">No. Telepon</Label>
+                                <Input
+                                    id="phone"
+                                    type="text"
+                                    placeholder="Masukkan no. telepon"
+                                    value={data.phone}
+                                    onChange={(e) => setData('phone', e.target.value)}
+                                    aria-label="No telepon user"
+                                    aria-invalid={!!errors.phone}
+                                    aria-describedby={errors.phone ? 'phone-error' : undefined}
+                                />
+                                {errors.phone && (
+                                    <p id="phone-error" className="text-sm text-red-500">
+                                        {errors.phone}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* ADDRESS FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Alamat</Label>
+                                <textarea
+                                    id="address"
+                                    placeholder="Masukkan alamat lengkap"
+                                    value={data.address}
+                                    onChange={(e) => setData('address', e.target.value)}
+                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs"
+                                />
+                                {errors.address && (
+                                    <p className="text-sm text-red-500">{errors.address}</p>
                                 )}
                             </div>
 

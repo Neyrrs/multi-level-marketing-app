@@ -385,7 +385,8 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     
     commissionSetting.form = commissionSettingForm
 /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
 export const planSetting = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -399,7 +400,8 @@ planSetting.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
 planSetting.url = (options?: RouteQueryOptions) => {
@@ -407,7 +409,8 @@ planSetting.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
 planSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -415,7 +418,8 @@ planSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
 planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -424,7 +428,8 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
     const planSettingForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -433,7 +438,8 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
         planSettingForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -441,7 +447,8 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
- * @see routes/web.php:106
+* @see \App\Http\Controllers\Admin\PlanController::planSetting
+ * @see app/Http/Controllers/Admin/PlanController.php:17
  * @route '/admin/plan-setting'
  */
         planSettingForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

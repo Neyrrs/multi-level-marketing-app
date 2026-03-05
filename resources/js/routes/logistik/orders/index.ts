@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::create
- * @see app/Http/Controllers/Logistik/OrderController.php:82
+ * @see app/Http/Controllers/Logistik/OrderController.php:85
  * @route '/logistik/orders/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::store
- * @see app/Http/Controllers/Logistik/OrderController.php:90
+ * @see app/Http/Controllers/Logistik/OrderController.php:93
  * @route '/logistik/orders'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::store
- * @see app/Http/Controllers/Logistik/OrderController.php:90
+ * @see app/Http/Controllers/Logistik/OrderController.php:93
  * @route '/logistik/orders'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::store
- * @see app/Http/Controllers/Logistik/OrderController.php:90
+ * @see app/Http/Controllers/Logistik/OrderController.php:93
  * @route '/logistik/orders'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Logistik\OrderController::store
- * @see app/Http/Controllers/Logistik/OrderController.php:90
+ * @see app/Http/Controllers/Logistik/OrderController.php:93
  * @route '/logistik/orders'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::store
- * @see app/Http/Controllers/Logistik/OrderController.php:90
+ * @see app/Http/Controllers/Logistik/OrderController.php:93
  * @route '/logistik/orders'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
 export const show = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
 show.url = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -260,7 +260,7 @@ show.url = (args: { order: number | { id: number } } | [order: number | { id: nu
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
 show.get = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,7 +269,7 @@ show.get = (args: { order: number | { id: number } } | [order: number | { id: nu
 })
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
 show.head = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -279,7 +279,7 @@ show.head = (args: { order: number | { id: number } } | [order: number | { id: n
 
     /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
     const showForm = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -289,7 +289,7 @@ show.head = (args: { order: number | { id: number } } | [order: number | { id: n
 
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
         showForm.get = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ show.head = (args: { order: number | { id: number } } | [order: number | { id: n
         })
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::show
- * @see app/Http/Controllers/Logistik/OrderController.php:98
+ * @see app/Http/Controllers/Logistik/OrderController.php:101
  * @route '/logistik/orders/{order}'
  */
         showForm.head = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ show.head = (args: { order: number | { id: number } } | [order: number | { id: n
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
 export const edit = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -329,7 +329,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
 edit.url = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -357,7 +357,7 @@ edit.url = (args: { order: string | number } | [order: string | number ] | strin
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
 edit.get = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -366,7 +366,7 @@ edit.get = (args: { order: string | number } | [order: string | number ] | strin
 })
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
 edit.head = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -376,7 +376,7 @@ edit.head = (args: { order: string | number } | [order: string | number ] | stri
 
     /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
     const editForm = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -386,7 +386,7 @@ edit.head = (args: { order: string | number } | [order: string | number ] | stri
 
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
         editForm.get = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -395,7 +395,7 @@ edit.head = (args: { order: string | number } | [order: string | number ] | stri
         })
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::edit
- * @see app/Http/Controllers/Logistik/OrderController.php:151
+ * @see app/Http/Controllers/Logistik/OrderController.php:154
  * @route '/logistik/orders/{order}/edit'
  */
         editForm.head = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -411,7 +411,7 @@ edit.head = (args: { order: string | number } | [order: string | number ] | stri
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
 export const update = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -426,7 +426,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
 update.url = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -459,7 +459,7 @@ update.url = (args: { order: number | { id: number } } | [order: number | { id: 
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
 update.put = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -468,7 +468,7 @@ update.put = (args: { order: number | { id: number } } | [order: number | { id: 
 })
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
 update.patch = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -478,7 +478,7 @@ update.patch = (args: { order: number | { id: number } } | [order: number | { id
 
     /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
     const updateForm = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -493,7 +493,7 @@ update.patch = (args: { order: number | { id: number } } | [order: number | { id
 
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
         updateForm.put = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -507,7 +507,7 @@ update.patch = (args: { order: number | { id: number } } | [order: number | { id
         })
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::update
- * @see app/Http/Controllers/Logistik/OrderController.php:159
+ * @see app/Http/Controllers/Logistik/OrderController.php:162
  * @route '/logistik/orders/{order}'
  */
         updateForm.patch = (args: { order: number | { id: number } } | [order: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -523,7 +523,7 @@ update.patch = (args: { order: number | { id: number } } | [order: number | { id
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::destroy
- * @see app/Http/Controllers/Logistik/OrderController.php:177
+ * @see app/Http/Controllers/Logistik/OrderController.php:180
  * @route '/logistik/orders/{order}'
  */
 export const destroy = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -538,7 +538,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::destroy
- * @see app/Http/Controllers/Logistik/OrderController.php:177
+ * @see app/Http/Controllers/Logistik/OrderController.php:180
  * @route '/logistik/orders/{order}'
  */
 destroy.url = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -566,7 +566,7 @@ destroy.url = (args: { order: string | number } | [order: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\Logistik\OrderController::destroy
- * @see app/Http/Controllers/Logistik/OrderController.php:177
+ * @see app/Http/Controllers/Logistik/OrderController.php:180
  * @route '/logistik/orders/{order}'
  */
 destroy.delete = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -576,7 +576,7 @@ destroy.delete = (args: { order: string | number } | [order: string | number ] |
 
     /**
 * @see \App\Http\Controllers\Logistik\OrderController::destroy
- * @see app/Http/Controllers/Logistik/OrderController.php:177
+ * @see app/Http/Controllers/Logistik/OrderController.php:180
  * @route '/logistik/orders/{order}'
  */
     const destroyForm = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -591,7 +591,7 @@ destroy.delete = (args: { order: string | number } | [order: string | number ] |
 
             /**
 * @see \App\Http\Controllers\Logistik\OrderController::destroy
- * @see app/Http/Controllers/Logistik/OrderController.php:177
+ * @see app/Http/Controllers/Logistik/OrderController.php:180
  * @route '/logistik/orders/{order}'
  */
         destroyForm.delete = (args: { order: string | number } | [order: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

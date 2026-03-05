@@ -241,7 +241,7 @@ komisi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     komisi.form = komisiForm
 /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
 export const kode = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -256,7 +256,7 @@ kode.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
 kode.url = (options?: RouteQueryOptions) => {
@@ -265,7 +265,7 @@ kode.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
 kode.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -274,7 +274,7 @@ kode.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
 kode.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -284,7 +284,7 @@ kode.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
     const kodeForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -294,7 +294,7 @@ kode.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
         kodeForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -303,7 +303,7 @@ kode.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Affiliate\KodeController::kode
- * @see app/Http/Controllers/Affiliate/KodeController.php:12
+ * @see app/Http/Controllers/Affiliate/KodeController.php:18
  * @route '/affiliate/kode'
  */
         kodeForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -942,7 +942,7 @@ shopHistory.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     shopHistory.form = shopHistoryForm
 /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
 export const ref = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -956,7 +956,7 @@ ref.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
 ref.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -983,7 +983,7 @@ ref.url = (args: { slug: string | number } | [slug: string | number ] | string |
 }
 
 /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
 ref.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -991,7 +991,7 @@ ref.get = (args: { slug: string | number } | [slug: string | number ] | string |
     method: 'get',
 })
 /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
 ref.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1000,7 +1000,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
 })
 
     /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
     const refForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1009,7 +1009,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     })
 
             /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
         refForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1017,7 +1017,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
             method: 'get',
         })
             /**
- * @see routes/web.php:352
+ * @see routes/web.php:357
  * @route '/a/{slug}'
  */
         refForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1032,7 +1032,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     
     ref.form = refForm
 /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
 export const landing = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1046,7 +1046,7 @@ landing.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
 landing.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -1073,7 +1073,7 @@ landing.url = (args: { slug: string | number } | [slug: string | number ] | stri
 }
 
 /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
 landing.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1081,7 +1081,7 @@ landing.get = (args: { slug: string | number } | [slug: string | number ] | stri
     method: 'get',
 })
 /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
 landing.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1090,7 +1090,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
 })
 
     /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
     const landingForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1099,7 +1099,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
     })
 
             /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
         landingForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1107,7 +1107,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
             method: 'get',
         })
             /**
- * @see routes/web.php:366
+ * @see routes/web.php:371
  * @route '/{slug}'
  */
         landingForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
