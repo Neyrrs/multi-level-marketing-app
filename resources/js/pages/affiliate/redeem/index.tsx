@@ -59,7 +59,7 @@ export default function Redeem({ availableCodes }: Props) {
                                     ))}
                                 </select>
                                 {errors.code_id && <p className="text-sm text-red-600">{errors.code_id}</p>}
-                                {errors.code && <p className="text-sm text-red-600">{errors.code}</p>}
+                              
                             </div>
 
                             <div className="grid gap-2">
@@ -122,7 +122,6 @@ export default function Redeem({ availableCodes }: Props) {
                                     <option value="right">Kanan</option>
                                 </select>
                                 {errors.position && <p className="text-sm text-red-600">{errors.position}</p>}
-                                {errors.sponsor && <p className="text-sm text-red-600">{errors.sponsor}</p>}
                             </div>
 
                             <Button type="submit" disabled={processing}>
