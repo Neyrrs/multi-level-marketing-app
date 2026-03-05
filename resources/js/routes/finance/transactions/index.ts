@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Finance\TransactionController::index
- * @see app/Http/Controllers/Finance/TransactionController.php:15
+ * @see app/Http/Controllers/Finance/TransactionController.php:16
  * @route '/finance/transactions'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,10 +79,10 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-export const show = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -94,14 +94,17 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-show.url = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions) => {
+show.url = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { transaction: args }
     }
 
+            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
+            args = { transaction: args.id }
+        }
     
     if (Array.isArray(args)) {
         args = {
@@ -112,7 +115,9 @@ show.url = (args: { transaction: string | number } | [transaction: string | numb
     args = applyUrlDefaults(args)
 
     const parsedArgs = {
-                        transaction: args.transaction,
+                        transaction: typeof args.transaction === 'object'
+                ? args.transaction.id
+                : args.transaction,
                 }
 
     return show.definition.url
@@ -122,48 +127,48 @@ show.url = (args: { transaction: string | number } | [transaction: string | numb
 
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-show.get = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-show.head = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
     /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-    const showForm = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const showForm = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: show.url(args, options),
         method: 'get',
     })
 
             /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-        showForm.get = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        showForm.get = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: show.url(args, options),
             method: 'get',
         })
             /**
 * @see \App\Http\Controllers\Finance\TransactionController::show
- * @see app/Http/Controllers/Finance/TransactionController.php:136
+ * @see app/Http/Controllers/Finance/TransactionController.php:137
  * @route '/finance/transactions/{transaction}'
  */
-        showForm.head = (args: { transaction: string | number } | [transaction: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        showForm.head = (args: { transaction: number | { id: number } } | [transaction: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: show.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',

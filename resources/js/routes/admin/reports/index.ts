@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
 export const LaporanPenjualan = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ LaporanPenjualan.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
 LaporanPenjualan.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ LaporanPenjualan.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
 LaporanPenjualan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ LaporanPenjualan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => 
 })
 /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
 LaporanPenjualan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ LaporanPenjualan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
 
     /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
     const LaporanPenjualanForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ LaporanPenjualan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
 
             /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
         LaporanPenjualanForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ LaporanPenjualan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
         })
             /**
 * @see \App\Http\Controllers\Admin\Report\SalesReportController::LaporanPenjualan
- * @see app/Http/Controllers/Admin/Report/SalesReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/SalesReportController.php:15
  * @route '/admin/reports/LaporanPenjualan'
  */
         LaporanPenjualanForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ LaporanAffiliate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =
     LaporanAffiliate.form = LaporanAffiliateForm
 /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
 export const LaporanKeuangan = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -172,7 +172,7 @@ LaporanKeuangan.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
 LaporanKeuangan.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ LaporanKeuangan.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
 LaporanKeuangan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -190,7 +190,7 @@ LaporanKeuangan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
 })
 /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
 LaporanKeuangan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -200,7 +200,7 @@ LaporanKeuangan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
 
     /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
     const LaporanKeuanganForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -210,7 +210,7 @@ LaporanKeuangan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
 
             /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
         LaporanKeuanganForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -219,7 +219,7 @@ LaporanKeuangan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
         })
             /**
 * @see \App\Http\Controllers\Admin\Report\FinanceReportController::LaporanKeuangan
- * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/FinanceReportController.php:17
  * @route '/admin/reports/LaporanKeuangan'
  */
         LaporanKeuanganForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -235,7 +235,7 @@ LaporanKeuangan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
     LaporanKeuangan.form = LaporanKeuanganForm
 /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
 export const LaporanKomisi = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -250,7 +250,7 @@ LaporanKomisi.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
 LaporanKomisi.url = (options?: RouteQueryOptions) => {
@@ -259,7 +259,7 @@ LaporanKomisi.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
 LaporanKomisi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -268,7 +268,7 @@ LaporanKomisi.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
 LaporanKomisi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -278,7 +278,7 @@ LaporanKomisi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
     /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
     const LaporanKomisiForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -288,7 +288,7 @@ LaporanKomisi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
             /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
         LaporanKomisiForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -297,7 +297,7 @@ LaporanKomisi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
         })
             /**
 * @see \App\Http\Controllers\Admin\Report\KomisiReportController::LaporanKomisi
- * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/KomisiReportController.php:15
  * @route '/admin/reports/LaporanKomisi'
  */
         LaporanKomisiForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -313,7 +313,7 @@ LaporanKomisi.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
     LaporanKomisi.form = LaporanKomisiForm
 /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
 export const LaporanProduk = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -328,7 +328,7 @@ LaporanProduk.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
 LaporanProduk.url = (options?: RouteQueryOptions) => {
@@ -337,7 +337,7 @@ LaporanProduk.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
 LaporanProduk.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -346,7 +346,7 @@ LaporanProduk.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
 LaporanProduk.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -356,7 +356,7 @@ LaporanProduk.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
     /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
     const LaporanProdukForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -366,7 +366,7 @@ LaporanProduk.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
 
             /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
         LaporanProdukForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -375,7 +375,7 @@ LaporanProduk.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
         })
             /**
 * @see \App\Http\Controllers\Admin\Report\ProductReportController::LaporanProduk
- * @see app/Http/Controllers/Admin/Report/ProductReportController.php:14
+ * @see app/Http/Controllers/Admin/Report/ProductReportController.php:16
  * @route '/admin/reports/LaporanProduk'
  */
         LaporanProdukForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

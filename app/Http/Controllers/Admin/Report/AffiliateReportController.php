@@ -18,7 +18,15 @@ class AffiliateReportController extends Controller
         $search = $request->input('search', '');
         $perPage = (int) $request->input('per_page', 15);
 
-        $query = Affiliate::with('user', 'sponsor');
+        $query = Affiliate::with('user', 'sponsor')
+            ->addSelect([
+                'total_commission' => DB::table('commission_ledgers')
+                    ->selectRaw('COALESCE(SUM(amount), 0)')
+                    ->whereColumn('commission_ledgers.affiliate_id', 'affiliates.id'),
+                'direct_downline_count' => DB::table('affiliates as child')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('child.sponsor_id', 'affiliates.user_id'),
+            ]);
         if ($search) {
             $query->where('username', 'like', "%{$search}%")
                 ->orWhereRelation('user', 'name', 'like', "%{$search}%");
@@ -30,12 +38,17 @@ class AffiliateReportController extends Controller
         $totalAffiliates = Affiliate::count();
         $activeAffiliates = Affiliate::where('is_active', true)->count();
         $totalSalesVolume = Affiliate::sum('total_volume');
-        $totalCommission = Affiliate::sum(
-            DB::raw("(SELECT SUM(amount) FROM commission_ledgers WHERE affiliate_id = affiliates.id)")
-        ) ?? 0;
+        $totalCommission = (float) DB::table('commission_ledgers')->sum('amount');
+
+        $affiliateItems = collect($affiliates->items())->map(function ($item) {
+            $storedTotal = (int) ($item->total_downline ?? 0);
+            $directCount = (int) ($item->direct_downline_count ?? 0);
+            $item->downline_count = max($storedTotal, $directCount);
+            return $item;
+        });
 
         return Inertia::render('admin/LaporanAffiliate/index', [
-            'affiliates' => $affiliates->items(),
+            'affiliates' => $affiliateItems->values()->all(),
             'pagination' => [
                 'total' => $affiliates->total(),
                 'currentPage' => $affiliates->currentPage(),

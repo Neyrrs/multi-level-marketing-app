@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MatchingHistory;
 use App\Models\BinaryPayout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
 class MatchingController extends Controller
@@ -53,18 +54,23 @@ class MatchingController extends Controller
             ];
         });
 
-        // Calculate total matching bonus from BinaryPayout
+        // Calculate total matching bonus from BinaryPayout.
+        // Support both schema variants: payout_amount (migration) and amount_total (legacy).
+        $amountColumn = Schema::hasColumn('binary_payouts', 'amount_total')
+            ? 'amount_total'
+            : 'payout_amount';
+
         $totalMatching = BinaryPayout::where('affiliate_id', $affiliate->id)
             ->where('status', 'paid')
-            ->sum('amount_total');
+            ->sum($amountColumn);
         $thisMonth = BinaryPayout::where('affiliate_id', $affiliate->id)
             ->where('status', 'paid')
             ->whereMonth('paid_at', now()->month)
-            ->sum('amount_total');
+            ->sum($amountColumn);
 
         $stats = [
-            'totalMatching' => (float)$totalMatching,
-            'thisMonth' => (float)$thisMonth,
+            'totalMatching' => (float)($totalMatching ?? 0),
+            'thisMonth' => (float)($thisMonth ?? 0),
             'leftCount' => $affiliate->left_count,
             'rightCount' => $affiliate->right_count,
             'pairCount' => $affiliate->pair_count,

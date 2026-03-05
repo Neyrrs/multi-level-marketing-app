@@ -26,7 +26,7 @@ class OrderService
         $this->commissionService = new CommissionService();
     }
 
-    public function createOrder(int $userId, int $packageId, ?int $affiliateId = null): Order
+    public function createOrder(int $userId, int $productId, ?int $affiliateId = null): Order
     {
         $order = Order::create([
             'order_number' => 'ORD-' . uniqid(),
@@ -34,9 +34,9 @@ class OrderService
             'affiliate_id' => $affiliateId,
             'payment_method' => 'midtrans_va',
             'midtrans_order_id' => 'MT-' . uniqid(),
-            'product_type' => 'package',
-            'product_id' => $packageId,
-            'product_name' => 'package_' . $packageId,
+            'product_type' => 'bundle',
+            'product_id' => $productId,
+            'product_name' => 'bundle_' . $productId,
             'quantity' => 1,
             'price' => 0,
             'total_amount' => 0,

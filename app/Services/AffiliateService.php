@@ -103,17 +103,42 @@ class AffiliateService
             'activated_at' => now(),
         ]);
 
-        // Create MLM Tree node
+        // Ensure sponsor has MLM tree root node.
         $parentTree = $sponsor->mlmTree;
+        if (!$parentTree) {
+            $parentTree = MlmTree::create([
+                'affiliate_id' => $sponsor->id,
+                'parent_id' => null,
+                'position' => null,
+                'depth' => 0,
+                'left_position' => 1,
+                'right_position' => 2,
+                'path' => (string) $sponsor->id,
+                'lineage' => (string) $sponsor->id,
+            ]);
+        }
+
+        // Create MLM Tree node for new affiliate under sponsor tree.
         MlmTree::create([
             'affiliate_id' => $newAffiliate->id,
             'parent_id' => $parentTree->id,
             'position' => $position,
+            'depth' => max(1, (int) $newAffiliate->level),
+            'left_position' => 0,
+            'right_position' => 0,
+            'path' => trim(($parentTree->path ? $parentTree->path . '/' : '') . $newAffiliate->id, '/'),
+            'lineage' => trim(($parentTree->lineage ? $parentTree->lineage . ' > ' : '') . $newAffiliate->id, ' >'),
         ]);
 
-        // Mark activation code as used
+        $this->updateNestedSet($newAffiliate->id);
+
+        // Consume one usage from activation code.
+        $remainingUsage = (int) ($activationCode->remaining_usage ?? $activationCode->usage_count ?? 1);
+        $remainingUsage = max(0, $remainingUsage - 1);
+
         $activationCode->update([
-            'status' => 'used',
+            'status' => $remainingUsage <= 0 ? 'used' : 'available',
+            'remaining_usage' => $remainingUsage,
             'used_by' => $newUser->id,
             'used_at' => now(),
         ]);
@@ -422,16 +447,26 @@ class AffiliateService
     /**
      * Create a pending affiliate record (awaiting user confirmation).
      */
-    public function registerPendingAffiliate(User $user, Affiliate $sponsor): Affiliate
+    public function registerPendingAffiliate(
+        User $user,
+        Affiliate $sponsor,
+        ?ActivationCode $activationCode = null,
+        string $requestedPosition = 'left'
+    ): Affiliate
     {
+        $requestedPosition = in_array($requestedPosition, ['left', 'right'], true)
+            ? $requestedPosition
+            : 'left';
+
         // don't create mlm tree node yet; wait for confirmation
         $affiliate = Affiliate::create([
             'user_id' => $user->id,
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
+            'activation_code_id' => $activationCode?->id,
             'username' => $this->generateUniqueUsername($user->name),
             'slug' => Str::slug($user->name) . '-' . uniqid(),
-            'position' => 'none',
+            'position' => $requestedPosition,
             'level' => $sponsor->level + 1,
             'is_active' => false,
         ]);
@@ -455,6 +490,9 @@ class AffiliateService
             'is_active' => true,
             'activated_at' => now(),
         ]);
+
+        // Promote user role to affiliate only after approval.
+        $affiliate->user?->syncRoles(['affiliate']);
 
         // create mlm tree node under sponsor's tree
         $sponsor = Affiliate::where('user_id', $affiliate->sponsor_id)->first();

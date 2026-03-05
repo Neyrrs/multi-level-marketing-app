@@ -35,6 +35,7 @@ class FinanceReportController extends Controller
             ->get()
             ->map(fn($item) => [
                 'name' => $item->name ?? 'Unknown',
+                'code' => (string) ($item->id ?? '-'),
                 'user_id' => $item->id,
                 'transactions' => $item->transaction_count,
                 'earned' => number_format($item->earned ?? 0, 2, ',', '.'),

@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRedemptionRequest;
+use App\Models\Affiliate;
 use App\Models\ActivationCode;
+use App\Models\User;
+use App\Services\AffiliateService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -18,17 +22,16 @@ class ReedemController extends Controller
         $user = $request->user();
 
         // Get available codes that this user can redeem
-        $availableCodes = ActivationCode::where('status', 'available')
+        $availableCodes = ActivationCode::where('owner_id', $user->id)
+            ->where('status', 'available')
             ->with(['product'])
             ->get()
             ->map(function ($item) {
                 return [
                     'id' => $item->id,
                     'code' => $item->code,
-                    'product' => $item->product ? [
-                        'id' => $item->product->id,
-                        'name' => $item->product->name,
-                    ] : null,
+                    'product_name' => $item->product?->name ?? '-',
+                    'remaining_usage' => (int) ($item->remaining_usage ?? $item->usage_count ?? 1),
                 ];
             })
             ->toArray();
@@ -44,23 +47,68 @@ class ReedemController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|string|exists:activation_codes,code',
+            'code_id' => 'required|integer|exists:activation_codes,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'position' => 'required|in:left,right',
         ]);
 
         $user = $request->user();
-        $code = ActivationCode::where('code', $request->code)->first();
+        $sponsorAffiliate = $user->affiliate;
 
-        if (!$code || $code->status !== 'available') {
+        if (!$sponsorAffiliate) {
+            return back()->withErrors(['sponsor' => 'Akun ini belum terdaftar sebagai affiliate aktif.']);
+        }
+
+        $position = $request->string('position')->toString();
+        $positionTaken = Affiliate::where('upline_id', $user->id)
+            ->where('position', $position)
+            ->exists();
+
+        if ($positionTaken) {
+            return back()->withErrors([
+                'position' => "Posisi {$position} sudah terisi. Pilih posisi lain.",
+            ]);
+        }
+
+        $code = ActivationCode::where('id', $request->integer('code_id'))
+            ->where('owner_id', $user->id)
+            ->first();
+
+        $remainingUsage = (int) ($code?->remaining_usage ?? $code?->usage_count ?? 1);
+        if (!$code || $code->status !== 'available' || $remainingUsage <= 0) {
             return back()->withErrors(['code' => 'Kode tidak valid atau sudah digunakan']);
         }
 
-        // Mark code as used
-        $code->update([
-            'status' => 'used',
-            'used_by' => $user->id,
-            'used_at' => now(),
-        ]);
+        DB::transaction(function () use ($request, $sponsorAffiliate, $code, $position) {
+            $newUser = User::create([
+                'name' => $request->string('name')->toString(),
+                'email' => $request->string('email')->toString(),
+                'password' => Hash::make($request->string('password')->toString()),
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ]);
 
-        return back()->with('success', 'Kode berhasil ditebus!');
+            // New user starts as guest; affiliate role is granted after manager approval.
+            $newUser->assignRole('guest');
+
+            app(AffiliateService::class)->registerPendingAffiliate(
+                $newUser,
+                $sponsorAffiliate,
+                $code,
+                $position
+            );
+
+            $remainingUsage = max(0, (int) ($code->remaining_usage ?? $code->usage_count ?? 1) - 1);
+            $code->update([
+                'status' => $remainingUsage <= 0 ? 'used' : 'available',
+                'remaining_usage' => $remainingUsage,
+                'used_by' => $newUser->id,
+                'used_at' => now(),
+            ]);
+        });
+
+        return back()->with('success', 'Redeem berhasil. Affiliate baru masuk antrian persetujuan manager.');
     }
 }

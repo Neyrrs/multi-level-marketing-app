@@ -13,12 +13,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, AlertCircle } from 'lucide-react'
 import { type BreadcrumbItem } from '@/types'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 
 interface User {
     id: number
     name: string
     email: string
+    phone?: string
+    address?: string | null
     roles: Array<{ id: number; name: string }>
 }
 
@@ -43,6 +44,8 @@ export default function Edit({ user, roles = [] }: Props) {
         name: user.name,
         email: user.email,
         password: '',
+        phone: user.phone ?? '',
+        address: user.address ?? '',
         role: user.roles.length ? user.roles[0].name : '',
     })
 
@@ -186,6 +189,44 @@ export default function Edit({ user, roles = [] }: Props) {
                                     <p id="role-error" className="text-sm text-red-500 flex gap-1 items-center">
                                         <AlertCircle className="h-3 w-3" />
                                         {errors.role}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* PHONE FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">No. Telepon</Label>
+                                <Input
+                                    id="phone"
+                                    type="text"
+                                    placeholder="Masukkan no. telepon"
+                                    value={data.phone}
+                                    onChange={(e) => setData('phone', e.target.value)}
+                                    aria-label="No telepon user"
+                                    aria-invalid={!!errors.phone}
+                                />
+                                {errors.phone && (
+                                    <p className="text-sm text-red-500 flex gap-1 items-center">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {errors.phone}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* ADDRESS FIELD */}
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Alamat</Label>
+                                <textarea
+                                    id="address"
+                                    placeholder="Masukkan alamat lengkap"
+                                    value={data.address}
+                                    onChange={(e) => setData('address', e.target.value)}
+                                    className="flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs"
+                                />
+                                {errors.address && (
+                                    <p className="text-sm text-red-500 flex gap-1 items-center">
+                                        <AlertCircle className="h-3 w-3" />
+                                        {errors.address}
                                     </p>
                                 )}
                             </div>

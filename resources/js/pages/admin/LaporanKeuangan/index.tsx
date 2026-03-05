@@ -1,11 +1,9 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboardUrl } from '@/routes';
 
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,17 +23,19 @@ interface FinanceData {
     saldo: number;
 }
 
-const dummyData: FinanceData[] = [
-    { kategori: 'Penjualan Produk', masuk: 10000000, keluar: 0, saldo: 10000000 },
-    { kategori: 'Komisi Member', masuk: 0, keluar: 2000000, saldo: -2000000 },
-    { kategori: 'Withdrawal Request', masuk: 0, keluar: 1500000, saldo: -1500000 },
-    { kategori: 'Fee Bank/Admin', masuk: 0, keluar: 500000, saldo: -500000 },
-];
+interface Props {
+    rows: FinanceData[];
+    summary: {
+        totalMasuk: number;
+        totalKeluar: number;
+        nettFlow: number;
+    };
+}
 
-export default function LaporanKeuangan() {
-    const totalMasuk = dummyData.reduce((sum, item) => sum + item.masuk, 0);
-    const totalKeluar = dummyData.reduce((sum, item) => sum + item.keluar, 0);
-    const nettFlow = totalMasuk - totalKeluar;
+export default function LaporanKeuangan({ rows, summary }: Props) {
+    const totalMasuk = summary.totalMasuk;
+    const totalKeluar = summary.totalKeluar;
+    const nettFlow = summary.nettFlow;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -58,7 +58,7 @@ export default function LaporanKeuangan() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {dummyData.map((item, idx) => (
+                            {rows.map((item, idx) => (
                                 <TableRow key={idx}>
                                     <TableCell className="font-medium">{item.kategori}</TableCell>
                                     <TableCell className="text-right">Rp {item.masuk.toLocaleString('id-ID')}</TableCell>

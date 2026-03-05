@@ -148,7 +148,21 @@ class ShopController extends Controller
             ]);
         }
 
-        $affiliateId = Affiliate::where('user_id', $user->id)->value('id');
+        // Priority: referral affiliate from public link session, fallback to current user's affiliate.
+        $sessionAffiliateId = (int) $request->session()->get('ref_affiliate_id', 0);
+        $affiliateId = null;
+
+        if ($sessionAffiliateId > 0) {
+            $affiliateId = Affiliate::where('id', $sessionAffiliateId)
+                ->where('is_active', true)
+                ->value('id');
+        }
+
+        if (!$affiliateId) {
+            $affiliateId = Affiliate::where('user_id', $user->id)
+                ->where('is_active', true)
+                ->value('id');
+        }
 
         try {
             $order = DB::transaction(function () use ($cart, $user, $affiliateId) {
@@ -180,7 +194,7 @@ class ShopController extends Controller
                     $grandTotal += $lineTotal;
                     $totalQty += (int) $item->quantity;
                     $itemGeneratesActivationCode = (bool) $product->generates_activation_code
-                        || strtolower((string) $product->type) === 'package';
+                        || strtolower((string) $product->type) === 'bundle';
                     $generatesActivationCode = $generatesActivationCode || $itemGeneratesActivationCode;
                 }
 
@@ -190,6 +204,11 @@ class ShopController extends Controller
                     'affiliate_id' => $affiliateId,
                     'payment_method' => 'midtrans_snap',
                     'midtrans_order_id' => 'MT-' . uniqid(),
+                    'shipping_data' => [
+                        'recipient_name' => $user->name,
+                        'recipient_phone' => $user->phone,
+                        'address' => $this->resolveUserAddress($user),
+                    ],
                     'product_type' => strtolower((string) ($firstProduct?->type ?? 'single')),
                     'product_id' => $firstProduct?->id,
                     'product_name' => $firstProduct?->name ?? 'Cart Checkout',
@@ -214,7 +233,7 @@ class ShopController extends Controller
                         'package_id' => null,
                         'quantity' => (int) $item->quantity,
                         'gives_activation_code' => (bool) ($product?->generates_activation_code ?? false)
-                            || strtolower((string) ($product?->type ?? '')) === 'package',
+                            || strtolower((string) ($product?->type ?? '')) === 'bundle',
                         'harga_awal' => (float) $item->harga_awal,
                         'diskon' => (float) $item->diskon,
                         'harga_akhir' => (float) $item->harga_akhir,
@@ -293,9 +312,14 @@ class ShopController extends Controller
             if (json_last_error() === JSON_ERROR_NONE) {
                 $image = $decoded;
             } else {
-                return str_starts_with($image, 'http') || str_starts_with($image, '/')
-                    ? $image
-                    : Storage::url($image);
+                if (str_starts_with($image, 'http')) {
+                    return $image;
+                }
+
+                $normalized = ltrim($image, '/');
+                $normalized = preg_replace('#^storage/#', '', $normalized);
+
+                return route('media.public', ['path' => $normalized]);
             }
         }
 
@@ -305,9 +329,14 @@ class ShopController extends Controller
 
         $first = $image[0];
         if (is_string($first) && $first !== '') {
-            return str_starts_with($first, 'http') || str_starts_with($first, '/')
-                ? $first
-                : Storage::url($first);
+            if (str_starts_with($first, 'http')) {
+                return $first;
+            }
+
+            $normalized = ltrim($first, '/');
+            $normalized = preg_replace('#^storage/#', '', $normalized);
+
+            return route('media.public', ['path' => $normalized]);
         }
 
         if (!is_array($first)) {
@@ -315,11 +344,18 @@ class ShopController extends Controller
         }
 
         if (!empty($first['url'])) {
-            return $first['url'];
+            if (str_starts_with((string) $first['url'], 'http')) {
+                return $first['url'];
+            }
+
+            $normalized = ltrim((string) $first['url'], '/');
+            $normalized = preg_replace('#^storage/#', '', $normalized);
+
+            return route('media.public', ['path' => $normalized]);
         }
 
         if (!empty($first['path'])) {
-            return Storage::url($first['path']);
+            return route('media.public', ['path' => ltrim((string) $first['path'], '/')]);
         }
 
         return null;
@@ -371,5 +407,32 @@ class ShopController extends Controller
         ]);
 
         return $transaction->redirect_url;
+    }
+
+    private function resolveUserAddress($user): ?string
+    {
+        $address = $user->profile?->address;
+        if (is_string($address) && trim($address) !== '') {
+            return trim($address);
+        }
+
+        if (!is_array($address)) {
+            return null;
+        }
+
+        if (!empty($address['full_address'])) {
+            return (string) $address['full_address'];
+        }
+
+        $parts = array_filter([
+            $address['street'] ?? null,
+            $address['subdistrict'] ?? null,
+            $address['district'] ?? null,
+            $address['city'] ?? null,
+            $address['province'] ?? null,
+            $address['postal_code'] ?? null,
+        ]);
+
+        return !empty($parts) ? implode(', ', $parts) : null;
     }
 }

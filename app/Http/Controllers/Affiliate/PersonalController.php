@@ -23,8 +23,10 @@ class PersonalController extends Controller
 
         // Get personal commissions (direct sales)
         $query = Commission::where('affiliate_id', $affiliate->id)
-            ->where('commission_type', 'personal')
-            ->orWhere('depth_level', 1) // Level 1 = Direct
+            ->where(function ($q) {
+                $q->where('commission_type', 'personal')
+                    ->orWhere('depth_level', 1); // Level 1 = Direct
+            })
             ->with(['order', 'method'])
             ->orderBy('created_at', 'desc');
 
@@ -33,8 +35,10 @@ class PersonalController extends Controller
 
         // Calculate stats
         $totalPersonal = Commission::where('affiliate_id', $affiliate->id)
-            ->where('commission_type', 'personal')
-            ->orWhere('depth_level', 1)
+            ->where(function ($q) {
+                $q->where('commission_type', 'personal')
+                    ->orWhere('depth_level', 1);
+            })
             ->sum('amount');
 
         $stats = [

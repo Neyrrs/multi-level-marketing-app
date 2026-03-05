@@ -47,6 +47,10 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
                 'midtrans' => fn () => $request->session()->get('midtrans'),
             ],
+            'referral' => [
+                'affiliate_id' => fn () => $request->session()->get('ref_affiliate_id'),
+                'affiliate_slug' => fn () => $request->session()->get('ref_affiliate_slug'),
+            ],
             'midtransConfig' => [
                 'clientKey' => config('midtans.client_key') ?? config('services.midtrans.client_key'),
                 'isProduction' => (bool) (config('midtans.is_production') ?? config('services.midtrans.is_production')),
