@@ -27,6 +27,15 @@ interface Props {
         priority: number;
         value: number;
     }>;
+    affiliates: Array<{
+        id: number;
+        username: string;
+        user_name: string;
+        user_email: string;
+        assigned_plan_id?: number | null;
+        assigned_plan_name?: string | null;
+        is_active: boolean;
+    }>;
     filters?: {
         search?: string;
     };
@@ -39,7 +48,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function PengaturanPlan({ plans = [], availableRules = [], filters }: Props) {
+export default function PengaturanPlan({ plans = [], availableRules = [], affiliates = [], filters }: Props) {
     const [search, setSearch] = useState<string>(filters?.search ?? '');
     const { data, setData, post, processing, errors, reset } = useForm({
         plan: '',
@@ -47,6 +56,15 @@ export default function PengaturanPlan({ plans = [], availableRules = [], filter
         calculation_type: 'percentage',
         is_active: true,
         selected_rule_ids: [] as number[],
+    });
+    const {
+        data: assignData,
+        setData: setAssignData,
+        post: postAssign,
+        processing: processingAssign,
+    } = useForm({
+        affiliate_id: '',
+        plan_id: '',
     });
 
     const handleSearch = (value: string) => {
@@ -77,6 +95,13 @@ export default function PengaturanPlan({ plans = [], availableRules = [], filter
     const handleDelete = (id: number) => {
         if (!confirm('Hapus plan ini?')) return;
         router.delete(`/admin/PengaturanPlan/${id}`, { preserveScroll: true });
+    };
+
+    const handleAssign = (e: React.FormEvent) => {
+        e.preventDefault();
+        postAssign('/admin/plan-setting/assign', {
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -151,6 +176,47 @@ export default function PengaturanPlan({ plans = [], availableRules = [], filter
                     </div>
                 </form>
 
+                <form onSubmit={handleAssign} className="grid grid-cols-1 gap-2 rounded-lg border p-4 md:grid-cols-4">
+                    <div className="md:col-span-4">
+                        <p className="text-sm font-medium">Assign Plan ke Affiliate</p>
+                    </div>
+                    <select
+                        className="w-full rounded-md border px-3 py-2 text-sm"
+                        value={assignData.affiliate_id}
+                        onChange={(e) => setAssignData('affiliate_id', e.target.value)}
+                        required
+                    >
+                        <option value="">Pilih Affiliate</option>
+                        {affiliates
+                            .filter((a) => a.is_active)
+                            .map((affiliate) => (
+                                <option key={affiliate.id} value={affiliate.id}>
+                                    {affiliate.username} - {affiliate.user_name}
+                                </option>
+                            ))}
+                    </select>
+                    <select
+                        className="w-full rounded-md border px-3 py-2 text-sm"
+                        value={assignData.plan_id}
+                        onChange={(e) => setAssignData('plan_id', e.target.value)}
+                    >
+                        <option value="">Tanpa Plan Khusus (Default System)</option>
+                        {plans
+                            .filter((plan) => plan.is_active)
+                            .map((plan) => (
+                                <option key={plan.id} value={plan.id}>
+                                    {plan.plan}
+                                </option>
+                            ))}
+                    </select>
+                    <Button type="submit" disabled={processingAssign || !assignData.affiliate_id}>
+                        {processingAssign ? 'Menyimpan...' : 'Simpan Assignment'}
+                    </Button>
+                    <div className="text-xs text-gray-500">
+                        Plan yang di-assign akan dipakai saat hitung komisi affiliate tersebut.
+                    </div>
+                </form>
+
                 <div className="rounded-lg border overflow-hidden">
                     <Table>
                         <TableHeader>
@@ -185,6 +251,39 @@ export default function PengaturanPlan({ plans = [], availableRules = [], filter
                                 <TableRow>
                                     <TableCell colSpan={7} className="py-4 text-center text-gray-500">
                                         Belum ada plan.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+
+                <div className="rounded-lg border overflow-hidden">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Affiliate</TableHead>
+                                <TableHead>Nama</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Plan Aktif</TableHead>
+                                <TableHead>Status</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {affiliates.length > 0 ? (
+                                affiliates.map((affiliate) => (
+                                    <TableRow key={affiliate.id}>
+                                        <TableCell className="font-semibold">{affiliate.username}</TableCell>
+                                        <TableCell>{affiliate.user_name}</TableCell>
+                                        <TableCell>{affiliate.user_email}</TableCell>
+                                        <TableCell>{affiliate.assigned_plan_name ?? 'Default System'}</TableCell>
+                                        <TableCell>{affiliate.is_active ? 'Aktif' : 'Pending'}</TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="py-4 text-center text-gray-500">
+                                        Belum ada affiliate.
                                     </TableCell>
                                 </TableRow>
                             )}

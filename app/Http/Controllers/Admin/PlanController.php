@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate;
 use App\Models\CommissionMethod;
 use App\Models\CommissionRule;
 use Illuminate\Http\Request;
@@ -50,9 +51,27 @@ class PlanController extends Controller
             })
             ->values();
 
+        $affiliates = Affiliate::query()
+            ->with(['user:id,name,email', 'commissionMethod:id,name'])
+            ->orderByDesc('id')
+            ->get()
+            ->map(function (Affiliate $affiliate) {
+                return [
+                    'id' => $affiliate->id,
+                    'username' => $affiliate->username,
+                    'user_name' => $affiliate->user?->name ?? '-',
+                    'user_email' => $affiliate->user?->email ?? '-',
+                    'assigned_plan_id' => $affiliate->commission_method_id,
+                    'assigned_plan_name' => $affiliate->commissionMethod?->name,
+                    'is_active' => (bool) $affiliate->is_active,
+                ];
+            })
+            ->values();
+
         return Inertia::render('admin/pengaturan-plan/index', [
             'plans' => $plans,
             'availableRules' => $availableRules,
+            'affiliates' => $affiliates,
             'filters' => [
                 'search' => $search,
             ],
@@ -157,5 +176,20 @@ class PlanController extends Controller
         $method->delete();
 
         return redirect()->route('admin.PengaturanPlan.index')->with('success', 'Plan berhasil dihapus.');
+    }
+
+    public function assignAffiliatePlan(Request $request)
+    {
+        $data = $request->validate([
+            'affiliate_id' => ['required', 'integer', 'exists:affiliates,id'],
+            'plan_id' => ['nullable', 'integer', 'exists:commission_methods,id'],
+        ]);
+
+        $affiliate = Affiliate::findOrFail($data['affiliate_id']);
+        $affiliate->update([
+            'commission_method_id' => $data['plan_id'] ?? null,
+        ]);
+
+        return redirect()->route('admin.plan-setting')->with('success', 'Plan affiliate berhasil diperbarui.');
     }
 }

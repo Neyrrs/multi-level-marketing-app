@@ -24,6 +24,7 @@ class Affiliate extends Model
         'sponsor_id',
         'upline_id',
         'activation_code_id',
+        'commission_method_id',
         'position',
         'level',
         'direct_downline',
@@ -148,6 +149,11 @@ class Affiliate extends Model
     public function activationCode(): BelongsTo
     {
         return $this->belongsTo(ActivationCode::class);
+    }
+
+    public function commissionMethod(): BelongsTo
+    {
+        return $this->belongsTo(CommissionMethod::class, 'commission_method_id');
     }
 
     /**

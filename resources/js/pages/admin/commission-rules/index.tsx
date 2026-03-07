@@ -78,6 +78,7 @@ export default function CommissionRulesIndex({ rules = [] }: Props) {
                                 <TableHead>Metode</TableHead>
                                 <TableHead>Prioritas</TableHead>
                                 <TableHead>Nilai</TableHead>
+                                <TableHead>Depth</TableHead>
                                 <TableHead>Kondisi</TableHead>
                                 <TableHead>Aksi</TableHead>
                             </TableRow>
@@ -90,6 +91,10 @@ export default function CommissionRulesIndex({ rules = [] }: Props) {
                                         <TableCell>{rule.method?.name || `-`}</TableCell>
                                         <TableCell>{rule.priority}</TableCell>
                                         <TableCell>{rule.value || '-'}</TableCell>
+                                        <TableCell>
+                                            {rule.condition?.depth ?? '-'}
+                                            {rule.condition?.max_depth ? ` / ${rule.condition.max_depth}` : ''}
+                                        </TableCell>
                                         <TableCell>
                                             <code className="text-xs bg-gray-100 p-1 rounded">
                                                 {rule.condition
@@ -117,7 +122,7 @@ export default function CommissionRulesIndex({ rules = [] }: Props) {
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-center py-4">
+                                    <TableCell colSpan={7} className="text-center py-4">
                                         Tidak ada data rule komisi
                                     </TableCell>
                                 </TableRow>

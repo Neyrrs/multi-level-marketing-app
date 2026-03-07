@@ -13,15 +13,15 @@ class CommissionService
 {
     public function calculateSponsorCommission(\App\Models\Order $order): ?Commission
     {
-        $method = $this->resolveMethod(['sponsor_direct', 'percentage'], ['sponsor']);
+        $affiliate = $order->affiliate;
+        if (!$affiliate) return null;
+
+        $method = $this->resolveMethodForAffiliate($affiliate, ['sponsor_direct', 'percentage'], ['sponsor']);
         if (!$method) return null;
 
         // simple lookup of rule priority 1
         $rule = $method->rules()->where('is_active', true)->where('priority', 1)->first();
         if (!$rule) return null;
-
-        $affiliate = $order->affiliate;
-        if (!$affiliate) return null;
 
         $amount = $this->evaluateRule($rule, $order);
 
@@ -31,13 +31,17 @@ class CommissionService
     public function calculateLevelCommission(\App\Models\Order $order): array
     {
         $results = [];
-        $method = $this->resolveMethod(['level_based', 'tier_based'], ['level']);
-        if (!$method) return $results;
         $level = 1;
         $current = $order->affiliate;
         while ($current && $level <= 5) {
             $parent = Affiliate::where('user_id', $current->upline_id)->first();
             if (!$parent) break;
+            $method = $this->resolveMethodForAffiliate($parent, ['level_based', 'tier_based'], ['level']);
+            if (!$method) {
+                $current = $parent;
+                $level++;
+                continue;
+            }
             $rule = $method->rules()->where('is_active', true)->where('priority', $level)->first();
             if (!$rule) break;
             $amount = $this->evaluateRule($rule, $order, $level, $parent);
@@ -66,7 +70,7 @@ class CommissionService
         if ($pairs <= 0) return null;
 
         $amount = $pairs * 5000; // fixed rule per spec
-        $method = $this->resolveMethod(['matching_binary', 'percentage'], ['matching']);
+        $method = $this->resolveMethodForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']);
         $rule = $method?->rules()->where('is_active', true)->first();
 
         return $this->distributeCommission($aff->id, $amount, $method->id ?? null, $rule->id ?? null, 'matching', null);
@@ -88,8 +92,9 @@ class CommissionService
             if ($pairs <= 0) continue;
 
             $amount = $pairs * 5000;
-            $rule = $method->rules()->where('is_active', true)->first();
-            $this->distributeCommission($aff->id, $amount, $method->id, $rule->id ?? null, 'matching', null);
+            $resolvedMethod = $this->resolveMethodForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']) ?? $method;
+            $rule = $resolvedMethod->rules()->where('is_active', true)->first();
+            $this->distributeCommission($aff->id, $amount, $resolvedMethod->id, $rule->id ?? null, 'matching', null);
         }
     }
 
@@ -214,5 +219,24 @@ class CommissionService
         }
 
         return null;
+    }
+
+    /**
+     * Resolve method with affiliate-specific override first.
+     */
+    private function resolveMethodForAffiliate(?Affiliate $affiliate, array $types, array $names): ?CommissionMethod
+    {
+        if ($affiliate && $affiliate->commission_method_id) {
+            $assigned = CommissionMethod::query()
+                ->whereKey($affiliate->commission_method_id)
+                ->where('is_active', true)
+                ->first();
+
+            if ($assigned) {
+                return $assigned;
+            }
+        }
+
+        return $this->resolveMethod($types, $names);
     }
 }

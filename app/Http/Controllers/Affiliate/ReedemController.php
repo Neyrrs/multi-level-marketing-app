@@ -90,25 +90,16 @@ class ReedemController extends Controller
                 'email_verified_at' => now(),
             ]);
 
-            // New user starts as guest; affiliate role is granted after manager approval.
-            $newUser->assignRole('guest');
+            $newUser->assignRole('affiliate');
 
-            app(AffiliateService::class)->registerPendingAffiliate(
+            app(AffiliateService::class)->registerNewAffiliate(
                 $newUser,
                 $sponsorAffiliate,
-                $code,
-                $position
+                $position,
+                $code
             );
-
-            $remainingUsage = max(0, (int) ($code->remaining_usage ?? $code->usage_count ?? 1) - 1);
-            $code->update([
-                'status' => $remainingUsage <= 0 ? 'used' : 'available',
-                'remaining_usage' => $remainingUsage,
-                'used_by' => $newUser->id,
-                'used_at' => now(),
-            ]);
         });
 
-        return back()->with('success', 'Redeem berhasil. Affiliate baru masuk antrian persetujuan manager.');
+        return back()->with('success', 'Redeem berhasil, akun affiliate baru sudah dibuat.');
     }
 }

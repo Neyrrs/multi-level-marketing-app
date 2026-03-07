@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\PlanController::index
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/PengaturanPlan'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\PlanController::create
- * @see app/Http/Controllers/Admin/PlanController.php:65
+ * @see app/Http/Controllers/Admin/PlanController.php:84
  * @route '/admin/PengaturanPlan/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::store
- * @see app/Http/Controllers/Admin/PlanController.php:73
+ * @see app/Http/Controllers/Admin/PlanController.php:92
  * @route '/admin/PengaturanPlan'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::store
- * @see app/Http/Controllers/Admin/PlanController.php:73
+ * @see app/Http/Controllers/Admin/PlanController.php:92
  * @route '/admin/PengaturanPlan'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::store
- * @see app/Http/Controllers/Admin/PlanController.php:73
+ * @see app/Http/Controllers/Admin/PlanController.php:92
  * @route '/admin/PengaturanPlan'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::store
- * @see app/Http/Controllers/Admin/PlanController.php:73
+ * @see app/Http/Controllers/Admin/PlanController.php:92
  * @route '/admin/PengaturanPlan'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::store
- * @see app/Http/Controllers/Admin/PlanController.php:73
+ * @see app/Http/Controllers/Admin/PlanController.php:92
  * @route '/admin/PengaturanPlan'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 export const show = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 show.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -255,7 +255,7 @@ show.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string 
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 show.get = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -264,7 +264,7 @@ show.get = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string 
 })
 /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 show.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -274,7 +274,7 @@ show.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
     const showForm = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -284,7 +284,7 @@ show.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
         showForm.get = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -293,7 +293,7 @@ show.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
         })
             /**
 * @see \App\Http\Controllers\Admin\PlanController::show
- * @see app/Http/Controllers/Admin/PlanController.php:115
+ * @see app/Http/Controllers/Admin/PlanController.php:134
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
         showForm.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -309,7 +309,7 @@ show.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
 export const edit = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -324,7 +324,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
 edit.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -352,7 +352,7 @@ edit.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string 
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
 edit.get = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -361,7 +361,7 @@ edit.get = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string 
 })
 /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
 edit.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -371,7 +371,7 @@ edit.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
     const editForm = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -381,7 +381,7 @@ edit.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
         editForm.get = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -390,7 +390,7 @@ edit.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
         })
             /**
 * @see \App\Http\Controllers\Admin\PlanController::edit
- * @see app/Http/Controllers/Admin/PlanController.php:123
+ * @see app/Http/Controllers/Admin/PlanController.php:142
  * @route '/admin/PengaturanPlan/{PengaturanPlan}/edit'
  */
         editForm.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -406,7 +406,7 @@ edit.head = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 export const update = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -421,7 +421,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 update.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -449,7 +449,7 @@ update.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: strin
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 update.put = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -458,7 +458,7 @@ update.put = (args: { PengaturanPlan: string | number } | [PengaturanPlan: strin
 })
 /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 update.patch = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -468,7 +468,7 @@ update.patch = (args: { PengaturanPlan: string | number } | [PengaturanPlan: str
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
     const updateForm = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -483,7 +483,7 @@ update.patch = (args: { PengaturanPlan: string | number } | [PengaturanPlan: str
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
         updateForm.put = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -497,7 +497,7 @@ update.patch = (args: { PengaturanPlan: string | number } | [PengaturanPlan: str
         })
             /**
 * @see \App\Http\Controllers\Admin\PlanController::update
- * @see app/Http/Controllers/Admin/PlanController.php:131
+ * @see app/Http/Controllers/Admin/PlanController.php:150
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
         updateForm.patch = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -513,7 +513,7 @@ update.patch = (args: { PengaturanPlan: string | number } | [PengaturanPlan: str
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::destroy
- * @see app/Http/Controllers/Admin/PlanController.php:154
+ * @see app/Http/Controllers/Admin/PlanController.php:173
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 export const destroy = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -528,7 +528,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::destroy
- * @see app/Http/Controllers/Admin/PlanController.php:154
+ * @see app/Http/Controllers/Admin/PlanController.php:173
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 destroy.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -556,7 +556,7 @@ destroy.url = (args: { PengaturanPlan: string | number } | [PengaturanPlan: stri
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::destroy
- * @see app/Http/Controllers/Admin/PlanController.php:154
+ * @see app/Http/Controllers/Admin/PlanController.php:173
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
 destroy.delete = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -566,7 +566,7 @@ destroy.delete = (args: { PengaturanPlan: string | number } | [PengaturanPlan: s
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::destroy
- * @see app/Http/Controllers/Admin/PlanController.php:154
+ * @see app/Http/Controllers/Admin/PlanController.php:173
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
     const destroyForm = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -581,7 +581,7 @@ destroy.delete = (args: { PengaturanPlan: string | number } | [PengaturanPlan: s
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::destroy
- * @see app/Http/Controllers/Admin/PlanController.php:154
+ * @see app/Http/Controllers/Admin/PlanController.php:173
  * @route '/admin/PengaturanPlan/{PengaturanPlan}'
  */
         destroyForm.delete = (args: { PengaturanPlan: string | number } | [PengaturanPlan: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

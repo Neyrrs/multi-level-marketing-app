@@ -6,6 +6,7 @@ import affiliates from './affiliates'
 import mlmTree from './mlm-tree'
 import withdrawals from './withdrawals'
 import notifications from './notifications'
+import planSetting4b0ec6 from './plan-setting'
 import api from './api'
 import UsersRole from './UsersRole'
 import MasterProduk from './MasterProduk'
@@ -386,7 +387,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     commissionSetting.form = commissionSettingForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
 export const planSetting = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -401,7 +402,7 @@ planSetting.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
 planSetting.url = (options?: RouteQueryOptions) => {
@@ -410,7 +411,7 @@ planSetting.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
 planSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -419,7 +420,7 @@ planSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
 planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -429,7 +430,7 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
     const planSettingForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -439,7 +440,7 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
         planSettingForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -448,7 +449,7 @@ planSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\PlanController::planSetting
- * @see app/Http/Controllers/Admin/PlanController.php:17
+ * @see app/Http/Controllers/Admin/PlanController.php:18
  * @route '/admin/plan-setting'
  */
         planSettingForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -475,7 +476,7 @@ notifications: Object.assign(notifications, notifications),
 productManagement: Object.assign(productManagement, productManagement),
 affiliateManagement: Object.assign(affiliateManagement, affiliateManagement),
 commissionSetting: Object.assign(commissionSetting, commissionSetting),
-planSetting: Object.assign(planSetting, planSetting),
+planSetting: Object.assign(planSetting, planSetting4b0ec6),
 api: Object.assign(api, api),
 UsersRole: Object.assign(UsersRole, UsersRole),
 MasterProduk: Object.assign(MasterProduk, MasterProduk),

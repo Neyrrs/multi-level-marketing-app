@@ -111,6 +111,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('commission-setting');
         Route::get('plan-setting', [Admin\PlanController::class, 'index'])
             ->name('plan-setting');
+        Route::post('plan-setting/assign', [Admin\PlanController::class, 'assignAffiliatePlan'])
+            ->name('plan-setting.assign');
 
         // API Resources (with 'api' prefix in route names to avoid conflicts)
         Route::apiResource('api/products', \App\Http\Controllers\ProductsController::class, ['names' => 'api.products']);
