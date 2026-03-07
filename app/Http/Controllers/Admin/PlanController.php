@@ -32,6 +32,7 @@ class PlanController extends Controller
                 'calculation_type' => $method->calculation_type,
                 'rules_count' => (int) ($method->rules_count ?? 0),
                 'is_active' => (bool) $method->is_active,
+                'is_default' => (bool) $method->is_default,
             ];
         })->values();
 
@@ -96,16 +97,23 @@ class PlanController extends Controller
             'description' => 'nullable|string',
             'calculation_type' => 'required|string|max:50',
             'is_active' => 'nullable|boolean',
+            'is_default' => 'nullable|boolean',
             'selected_rule_ids' => 'nullable|array',
             'selected_rule_ids.*' => 'integer|exists:commission_rules,id',
         ]);
 
         DB::transaction(function () use ($data) {
+            $isDefault = (bool) ($data['is_default'] ?? false);
+            if ($isDefault) {
+                CommissionMethod::query()->update(['is_default' => false]);
+            }
+
             $method = CommissionMethod::create([
                 'name' => $data['plan'],
                 'description' => $data['description'] ?? null,
                 'calculation_type' => $data['calculation_type'],
                 'is_active' => (bool) ($data['is_active'] ?? true),
+                'is_default' => $isDefault,
             ]);
 
             $ruleIds = collect($data['selected_rule_ids'] ?? [])->filter()->values();
@@ -155,14 +163,25 @@ class PlanController extends Controller
             'description' => 'nullable|string',
             'calculation_type' => 'required|string|max:50',
             'is_active' => 'nullable|boolean',
+            'is_default' => 'nullable|boolean',
         ]);
 
-        $method->update([
-            'name' => $data['plan'],
-            'description' => $data['description'] ?? null,
-            'calculation_type' => $data['calculation_type'],
-            'is_active' => (bool) ($data['is_active'] ?? true),
-        ]);
+        DB::transaction(function () use ($method, $data) {
+            $isDefault = (bool) ($data['is_default'] ?? false);
+            if ($isDefault) {
+                CommissionMethod::query()
+                    ->whereKeyNot($method->id)
+                    ->update(['is_default' => false]);
+            }
+
+            $method->update([
+                'name' => $data['plan'],
+                'description' => $data['description'] ?? null,
+                'calculation_type' => $data['calculation_type'],
+                'is_active' => (bool) ($data['is_active'] ?? true),
+                'is_default' => $isDefault,
+            ]);
+        });
 
         return redirect()->route('admin.PengaturanPlan.index')->with('success', 'Plan berhasil diperbarui.');
     }
@@ -191,5 +210,17 @@ class PlanController extends Controller
         ]);
 
         return redirect()->route('admin.plan-setting')->with('success', 'Plan affiliate berhasil diperbarui.');
+    }
+
+    public function setDefault(string $id)
+    {
+        $method = CommissionMethod::findOrFail($id);
+
+        DB::transaction(function () use ($method) {
+            CommissionMethod::query()->update(['is_default' => false]);
+            $method->update(['is_default' => true, 'is_active' => true]);
+        });
+
+        return redirect()->route('admin.plan-setting')->with('success', 'Default plan berhasil diperbarui.');
     }
 }

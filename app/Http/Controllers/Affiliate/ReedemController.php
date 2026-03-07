@@ -21,17 +21,35 @@ class ReedemController extends Controller
     {
         $user = $request->user();
 
-        // Get available codes that this user can redeem
-        $availableCodes = ActivationCode::where('owner_id', $user->id)
+        $codes = ActivationCode::where('owner_id', $user->id)
             ->where('status', 'available')
             ->with(['product'])
+            ->get();
+
+        $pendingByCode = Affiliate::query()
+            ->where('sponsor_id', $user->id)
+            ->where('is_active', false)
+            ->whereNotNull('activation_code_id')
+            ->whereIn('activation_code_id', $codes->pluck('id'))
+            ->with('user:id,name,email')
             ->get()
-            ->map(function ($item) {
+            ->keyBy('activation_code_id');
+
+        // Get available codes that this user can redeem
+        $availableCodes = $codes
+            ->map(function ($item) use ($pendingByCode) {
+                $pending = $pendingByCode->get($item->id);
+
                 return [
                     'id' => $item->id,
                     'code' => $item->code,
                     'product_name' => $item->product?->name ?? '-',
                     'remaining_usage' => (int) ($item->remaining_usage ?? $item->usage_count ?? 1),
+                    'request_user' => $pending && $pending->user ? [
+                        'id' => $pending->user->id,
+                        'name' => $pending->user->name,
+                        'email' => $pending->user->email,
+                    ] : null,
                 ];
             })
             ->toArray();
@@ -48,9 +66,10 @@ class ReedemController extends Controller
     {
         $request->validate([
             'code_id' => 'required|integer|exists:activation_codes,id',
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'request_user_id' => 'nullable|integer|exists:users,id',
+            'name' => 'nullable|string|max:255',
+            'email' => 'nullable|string|email|max:255',
+            'password' => 'nullable|string|min:8|confirmed',
             'position' => 'required|in:left,right',
         ]);
 
@@ -81,23 +100,46 @@ class ReedemController extends Controller
             return back()->withErrors(['code' => 'Kode tidak valid atau sudah digunakan']);
         }
 
-        DB::transaction(function () use ($request, $sponsorAffiliate, $code, $position) {
+        $requestUserId = $request->integer('request_user_id');
+
+        DB::transaction(function () use ($request, $sponsorAffiliate, $code, $position, $requestUserId) {
+            if ($requestUserId > 0) {
+                $pendingAffiliate = Affiliate::query()
+                    ->where('user_id', $requestUserId)
+                    ->where('sponsor_id', $sponsorAffiliate->user_id)
+                    ->where('activation_code_id', $code->id)
+                    ->where('is_active', false)
+                    ->first();
+
+                if ($pendingAffiliate) {
+                    app(AffiliateService::class)->confirmAffiliate($pendingAffiliate->id, $position);
+                    return;
+                }
+            }
+
+            $name = trim((string) $request->input('name', ''));
+            $email = trim((string) $request->input('email', ''));
+            $password = (string) $request->input('password', '');
+
+            if ($name === '' || $email === '' || $password === '') {
+                throw new \InvalidArgumentException('Data user baru belum lengkap.');
+            }
+
+            if (User::where('email', $email)->exists()) {
+                throw new \InvalidArgumentException('Email user sudah terdaftar.');
+            }
+
             $newUser = User::create([
-                'name' => $request->string('name')->toString(),
-                'email' => $request->string('email')->toString(),
-                'password' => Hash::make($request->string('password')->toString()),
+                'name' => $name,
+                'email' => $email,
+                'password' => Hash::make($password),
                 'status' => 'active',
                 'email_verified_at' => now(),
             ]);
 
             $newUser->assignRole('affiliate');
 
-            app(AffiliateService::class)->registerNewAffiliate(
-                $newUser,
-                $sponsorAffiliate,
-                $position,
-                $code
-            );
+            app(AffiliateService::class)->registerNewAffiliate($newUser, $sponsorAffiliate, $position, $code);
         });
 
         return back()->with('success', 'Redeem berhasil, akun affiliate baru sudah dibuat.');

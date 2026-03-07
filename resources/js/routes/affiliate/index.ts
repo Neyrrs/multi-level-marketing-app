@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import request from './request'
 import tree from './tree'
 import shop from './shop'
 import pinList from './pin-list'
@@ -1020,7 +1021,7 @@ methodAffiliate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
     
     methodAffiliate.form = methodAffiliateForm
 /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
 export const ref = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1034,7 +1035,7 @@ ref.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
 ref.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -1061,7 +1062,7 @@ ref.url = (args: { slug: string | number } | [slug: string | number ] | string |
 }
 
 /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
 ref.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1069,7 +1070,7 @@ ref.get = (args: { slug: string | number } | [slug: string | number ] | string |
     method: 'get',
 })
 /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
 ref.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1078,7 +1079,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
 })
 
     /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
     const refForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1087,7 +1088,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     })
 
             /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
         refForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1095,7 +1096,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
             method: 'get',
         })
             /**
- * @see routes/web.php:370
+ * @see routes/web.php:374
  * @route '/a/{slug}'
  */
         refForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1110,7 +1111,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     
     ref.form = refForm
 /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
 export const landing = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1124,7 +1125,7 @@ landing.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
 landing.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -1151,7 +1152,7 @@ landing.url = (args: { slug: string | number } | [slug: string | number ] | stri
 }
 
 /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
 landing.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1159,7 +1160,7 @@ landing.get = (args: { slug: string | number } | [slug: string | number ] | stri
     method: 'get',
 })
 /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
 landing.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1168,7 +1169,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
 })
 
     /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
     const landingForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1177,7 +1178,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
     })
 
             /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
         landingForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1185,7 +1186,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
             method: 'get',
         })
             /**
- * @see routes/web.php:384
+ * @see routes/web.php:388
  * @route '/{slug}'
  */
         landingForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1212,6 +1213,7 @@ generationRo: Object.assign(generationRo, generationRo),
 matchingBonus: Object.assign(matchingBonus, matchingBonus),
 pinHistory: Object.assign(pinHistory, pinHistory),
 shopHistory: Object.assign(shopHistory, shopHistory),
+request: Object.assign(request, request),
 methodAffiliate: Object.assign(methodAffiliate, methodAffiliate),
 tree: Object.assign(tree, tree),
 shop: Object.assign(shop, shop),

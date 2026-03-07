@@ -17,10 +17,12 @@ class CommissionMethod extends Model
         'description',
         'calculation_type',
         'is_active',
+        'is_default',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_default' => 'boolean',
     ];
 
     // ===== HAS MANY =====

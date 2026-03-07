@@ -81,11 +81,13 @@ class AffiliateService
         $slug = Str::slug($username);
 
         // Create affiliate record
+        $defaultPlanId = $this->resolveDefaultPlanId();
         $newAffiliate = Affiliate::create([
             'user_id' => $newUser->id,
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
             'activation_code_id' => $activationCode->id,
+            'commission_method_id' => $defaultPlanId,
             'username' => $username,
             'slug' => $slug,
             'position' => $position,
@@ -464,6 +466,7 @@ class AffiliateService
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
             'activation_code_id' => $activationCode?->id,
+            'commission_method_id' => $this->resolveDefaultPlanId(),
             'username' => $this->generateUniqueUsername($user->name),
             'slug' => Str::slug($user->name) . '-' . uniqid(),
             'position' => $requestedPosition,
@@ -485,10 +488,12 @@ class AffiliateService
         }
 
         // set position and active
+        $defaultPlanId = $this->resolveDefaultPlanId();
         $affiliate->update([
             'position' => in_array($position, ['left','right']) ? $position : 'none',
             'is_active' => true,
             'activated_at' => now(),
+            'commission_method_id' => $affiliate->commission_method_id ?: $defaultPlanId,
         ]);
 
         // Promote user role to affiliate only after approval.
@@ -538,5 +543,15 @@ class AffiliateService
         foreach ($roots as $root) {
             $recurse($root);
         }
+    }
+
+    private function resolveDefaultPlanId(): ?int
+    {
+        $defaultMethod = CommissionMethod::query()
+            ->where('is_default', true)
+            ->where('is_active', true)
+            ->first();
+
+        return $defaultMethod?->id;
     }
 }

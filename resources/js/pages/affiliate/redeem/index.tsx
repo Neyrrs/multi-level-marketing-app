@@ -5,24 +5,42 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
+import { useMemo } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Redeem Kode', href: '/affiliate/redeem' },
 ];
 
 interface Props {
-    availableCodes: Array<{ id: number; code: string; product_name: string; remaining_usage: number }>;
+    availableCodes: Array<{
+        id: number;
+        code: string;
+        product_name: string;
+        remaining_usage: number;
+        request_user?: {
+            id: number;
+            name: string;
+            email: string;
+        } | null;
+    }>;
 }
 
 export default function Redeem({ availableCodes }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         code_id: '',
+        request_user_id: '',
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
         position: 'left',
     });
+
+    const selectedCode = useMemo(
+        () => availableCodes.find((code) => String(code.id) === data.code_id),
+        [availableCodes, data.code_id],
+    );
+    const hasRequestUser = !!selectedCode?.request_user;
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -47,7 +65,21 @@ export default function Redeem({ availableCodes }: Props) {
                                 <select
                                     id="code_id"
                                     value={data.code_id}
-                                    onChange={(e) => setData('code_id', e.target.value)}
+                                    onChange={(e) => {
+                                        const codeId = e.target.value;
+                                        const selected = availableCodes.find((code) => String(code.id) === codeId);
+                                        setData('code_id', codeId);
+                                        setData(
+                                            'request_user_id',
+                                            selected?.request_user?.id
+                                                ? String(selected.request_user.id)
+                                                : '',
+                                        );
+                                        if (selected?.request_user) {
+                                            setData('name', selected.request_user.name);
+                                            setData('email', selected.request_user.email);
+                                        }
+                                    }}
                                     className="w-full rounded-md border bg-white px-3 py-2 text-sm"
                                     required
                                 >
@@ -59,7 +91,11 @@ export default function Redeem({ availableCodes }: Props) {
                                     ))}
                                 </select>
                                 {errors.code_id && <p className="text-sm text-red-600">{errors.code_id}</p>}
-                              
+                                {selectedCode?.request_user && (
+                                    <p className="text-xs text-emerald-600">
+                                        Request terdeteksi: {selectedCode.request_user.name} ({selectedCode.request_user.email})
+                                    </p>
+                                )}
                             </div>
 
                             <div className="grid gap-2">
@@ -93,7 +129,7 @@ export default function Redeem({ availableCodes }: Props) {
                                         type="password"
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
-                                        required
+                                        required={!hasRequestUser}
                                     />
                                     {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
                                 </div>
@@ -104,7 +140,7 @@ export default function Redeem({ availableCodes }: Props) {
                                         type="password"
                                         value={data.password_confirmation}
                                         onChange={(e) => setData('password_confirmation', e.target.value)}
-                                        required
+                                        required={!hasRequestUser}
                                     />
                                 </div>
                             </div>

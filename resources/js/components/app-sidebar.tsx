@@ -106,6 +106,13 @@ export function AppSidebar() {
                                 '/admin/commission-rules',
                             ),
                         },
+                        {
+                            title: 'Metode Komisi',
+                            href: getHref(
+                                'admin.commission-methods.index',
+                                '/admin/commission-methods',
+                            ),
+                        },
                     ],
                 },
                 {
@@ -304,11 +311,11 @@ export function AppSidebar() {
                     ],
                 },
                 {
-                    title: 'Method Affiliate',
+                    title: 'Request',
                     icon: Wrench,
                     href: getHref(
-                        'affiliate.method-affiliate.index',
-                        '/affiliate/method-affiliate',
+                        'affiliate.request.index',
+                        '/affiliate/request',
                     ),
                 },
             ],

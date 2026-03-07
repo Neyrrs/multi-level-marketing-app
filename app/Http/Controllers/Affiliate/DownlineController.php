@@ -55,7 +55,7 @@ class DownlineController extends Controller
 
         return Inertia::render('affiliate/downline/index', [
             'downlines' => $downlines,
-            'total' => $affiliate->total_downline,
+            'total' => $downlines->total(),
         ]);
     }
 }

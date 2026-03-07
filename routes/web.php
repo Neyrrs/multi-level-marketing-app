@@ -113,6 +113,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('plan-setting');
         Route::post('plan-setting/assign', [Admin\PlanController::class, 'assignAffiliatePlan'])
             ->name('plan-setting.assign');
+        Route::post('plan-setting/{id}/set-default', [Admin\PlanController::class, 'setDefault'])
+            ->name('plan-setting.set-default');
 
         // API Resources (with 'api' prefix in route names to avoid conflicts)
         Route::apiResource('api/products', \App\Http\Controllers\ProductsController::class, ['names' => 'api.products']);
@@ -213,6 +215,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('pin-history');
         Route::get('shop-history', [Affiliate\ShopHistoryController::class, 'index'])
             ->name('shop-history');
+        Route::get('request', [Affiliate\AffiliateRequestController::class, 'index'])
+            ->name('request.index');
 
             // UBAH NIH CONTROLLERNYA
         Route::get('method-affiliate', [Affiliate\ShopHistoryController::class, 'index'])

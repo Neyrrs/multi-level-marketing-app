@@ -16,6 +16,7 @@ interface Plan {
     calculation_type: string;
     rules_count: number;
     is_active: boolean;
+    is_default: boolean;
 }
 
 interface Props {
@@ -55,6 +56,7 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
         description: '',
         calculation_type: 'percentage',
         is_active: true,
+        is_default: false,
         selected_rule_ids: [] as number[],
     });
     const {
@@ -95,6 +97,10 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
     const handleDelete = (id: number) => {
         if (!confirm('Hapus plan ini?')) return;
         router.delete(`/admin/PengaturanPlan/${id}`, { preserveScroll: true });
+    };
+
+    const handleSetDefault = (id: number) => {
+        router.post(`/admin/plan-setting/${id}/set-default`, {}, { preserveScroll: true });
     };
 
     const handleAssign = (e: React.FormEvent) => {
@@ -143,6 +149,14 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                             onChange={(e) => setData('is_active', e.target.checked)}
                         />
                         Aktif
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                        <input
+                            type="checkbox"
+                            checked={data.is_default}
+                            onChange={(e) => setData('is_default', e.target.checked)}
+                        />
+                        Default Plan
                     </label>
                     <Button type="submit" disabled={processing}>
                         Buat Plan
@@ -225,6 +239,7 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                                 <TableHead>Plan</TableHead>
                                 <TableHead>Tipe</TableHead>
                                 <TableHead>Jumlah Rule</TableHead>
+                                <TableHead>Default</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Deskripsi</TableHead>
                                 <TableHead>Aksi</TableHead>
@@ -238,18 +253,26 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                                         <TableCell className="font-semibold">{item.plan}</TableCell>
                                         <TableCell>{item.calculation_type}</TableCell>
                                         <TableCell>{item.rules_count}</TableCell>
+                                        <TableCell>{item.is_default ? 'Ya' : '-'}</TableCell>
                                         <TableCell>{item.is_active ? 'Aktif' : 'Nonaktif'}</TableCell>
                                         <TableCell>{item.description || '-'}</TableCell>
                                         <TableCell>
-                                            <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)}>
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
+                                            <div className="flex items-center gap-2">
+                                                {!item.is_default && (
+                                                    <Button size="sm" variant="outline" onClick={() => handleSetDefault(item.id)}>
+                                                        Jadikan Default
+                                                    </Button>
+                                                )}
+                                                <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)}>
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={7} className="py-4 text-center text-gray-500">
+                                    <TableCell colSpan={8} className="py-4 text-center text-gray-500">
                                         Belum ada plan.
                                     </TableCell>
                                 </TableRow>

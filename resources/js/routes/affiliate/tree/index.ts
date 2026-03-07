@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Affiliate\TreeController::index
- * @see app/Http/Controllers/Affiliate/TreeController.php:13
+ * @see app/Http/Controllers/Affiliate/TreeController.php:12
  * @route '/affiliate/tree'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
