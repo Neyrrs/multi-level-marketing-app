@@ -2,13 +2,17 @@ import { LayoutDashboard } from "lucide-react";
 
 export default function AppLogo() {
     return (
-        <div className="flex items-center gap-5">
-            <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                <LayoutDashboard className="size-5 fill-current text-white" />
+        <div className="flex items-center gap-3">
+            <div className="flex aspect-square size-10 items-center justify-center rounded-md overflow-hidden bg-white">
+                <img 
+                    src="/assets/logo.png" 
+                    alt="Alus Astech Logo" 
+                    className="size-full object-contain"
+                />
             </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-tight font-semibold">
-                    Astech Alus
+            <div className="ml-1 grid flex-1 text-left">
+                <span className="truncate leading-tight font-bold text-lg tracking-tight">
+                    Alus Astech
                 </span>
             </div>
         </div>

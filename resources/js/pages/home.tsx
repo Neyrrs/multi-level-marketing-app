@@ -29,9 +29,9 @@ export default function Home({ canRegister = true, products = [] }: HomeProps) {
                     <div className="flex flex-col gap-6">
                         <div className="h-80 md:h-160 w-full">
                             <img
-                                src=""
-                                alt="ini-foto"
-                                className="h-full aspect-video w-full rounded-2xl border"
+                                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1600&auto=format&fit=crop"
+                                alt="Modern Office Building"
+                                className="h-full aspect-video w-full rounded-2xl border object-cover shadow-lg"
                             />
                         </div>
                         <ContainerProductCard products={products} />
@@ -39,7 +39,7 @@ export default function Home({ canRegister = true, products = [] }: HomeProps) {
                 </ContainerWrapper>
                 <CheckoutSteps />
                 <HomeAboutUs/>
-                <TopReviews />
+                {/* <TopReviews /> */}
             </div>
         </MainLayout>
     );

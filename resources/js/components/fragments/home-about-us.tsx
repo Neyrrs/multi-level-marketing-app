@@ -6,10 +6,18 @@ const HomeAboutUs = () => {
             <div className="relative flex h-fit md:py-0 py-10 md:h-[90vh] w-full items-center">
                 <div className="flex h-full w-full items-center">
                     <div className="flex flex-col md:flex-row w-full items-center justify-center gap-4 md:gap-40">
-                        <div className="relative md:h-120 md:w-120 w-full h-70 rounded-xl bg-white shadow-xl">
-                            <img src="" alt="" />
-                            <div className="absolute md:block hidden top-1/2 -right-25 h-80 w-80 -translate-y-1/2 rounded-xl bg-white">
-                                <img src="" alt="" />
+                        <div className="relative md:h-120 md:w-120 w-full h-70 overflow-hidden rounded-xl bg-white shadow-xl">
+                            <img 
+                                src="https://images.unsplash.com/photo-1431540015161-0bf868a2d407?q=80&w=1200&auto=format&fit=crop" 
+                                alt="Innovation Center"
+                                className="h-full w-full object-cover"
+                            />
+                            <div className="absolute md:block hidden top-1/2 -right-25 h-80 w-80 -translate-y-1/2 overflow-hidden rounded-xl bg-white shadow-2xl border-4 border-white">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=800&auto=format&fit=crop" 
+                                    alt="Office Architecture"
+                                    className="h-full w-full object-cover"
+                                />
                             </div>
                         </div>
                         <div className="flex md:text-left text-justify h-fit w-fit max-w-130 flex-col gap-4">
@@ -18,18 +26,8 @@ const HomeAboutUs = () => {
                                     Tentang Kami{''}
                                 </h1>
                             </div>
-                            <p className="md:w-3/4 w-full md:text-base text-sm">
-                                Lorem ipsum, dolor sit amet consectetur
-                                adipisicing elit. Dicta earum mollitia ducimus
-                                odit quibusdam optio minus, quasi dolorem
-                                voluptates nisi. Lorem ipsum dolor sit amet
-                                consectetur adipisicing elit. Repellat optio,
-                                quos pariatur repellendus unde voluptas iste,
-                                enim temporibus quaerat rem ipsa vitae
-                                repudiandae, non dolores quo tempora dolorum
-                                accusantium error quis reprehenderit minima.
-                                Tempora provident accusantium accusamus quisquam
-                                aliquid magni!
+                            <p className="md:w-3/4 w-full md:text-base text-sm leading-relaxed">
+                                Alus Astech adalah mitra terpercaya Anda dalam menghadirkan solusi infrastruktur gedung masa depan. Kami percaya bahwa teknologi dan arsitektur harus berjalan selaras untuk menciptakan lingkungan yang inspiratif dan produktif. Dengan fokus pada keunggulan teknis dan detail estetika, kami membantu Anda mewujudkan visi pembangunan yang berkelanjutan dan modern.
                             </p>
                         </div>
                     </div>

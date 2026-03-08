@@ -2,7 +2,7 @@ import ContainerWrapper from './container-wrapper';
 
 const CheckoutSteps = () => {
     return (
-        <div className="flex md:h-[70vh] h-fit py-10 md:py-0 relative w-full bg-gradient-to-r from-secondary to-primary">
+        <div className="flex md:h-[70vh] h-fit py-10 md:py-0 relative w-full bg-linear-to-r from-secondary to-primary">
             <ContainerWrapper>
                 <div className="flex h-full items-center">
                     <div className="flex w-full justify-between">
@@ -16,21 +16,19 @@ const CheckoutSteps = () => {
                                     </span>
                                 </h1>
                                 <p className='opacity-70 md:text-base text-sm'>
-                                    eget pharetra magna aliquet id. Suspendisse
-                                    ac commodo massa
+                                    Proses transaksi yang efisien untuk mendukung produktivitas Anda.
                                 </p>
                             </div>
                             <p className="w-full text-sm text-left md:text-base">
-                                Lorem ipsum, dolor sit amet consectetur
-                                adipisicing elit. Dicta earum mollitia ducimus
-                                odit quibusdam optio minus, quasi dolorem
-                                voluptates nisi.
-
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat optio, quos pariatur repellendus unde voluptas iste, enim temporibus quaerat rem ipsa vitae repudiandae, non dolores quo tempora dolorum accusantium error quis reprehenderit minima. Tempora provident accusantium accusamus quisquam aliquid magni!
+                                Kami menyediakan sistem pemesanan yang terintegrasi untuk memudahkan Anda dalam mendapatkan layanan infrastruktur gedung berkualitas. Cukup pilih produk, konfirmasi detail pengiriman, dan selesaikan pembayaran dengan aman melalui metode yang tersedia. Tim kami siap memastikan setiap langkah pesanan Anda diproses dengan standar profesionalisme tertinggi.
                             </p>
                         </div>
-                        <div className="h-100 w-120 md:block hidden rounded-xl bg-white shadow-xl">
-                            <img src="" alt="" />
+                        <div className="h-100 w-120 md:block hidden overflow-hidden rounded-xl bg-white shadow-xl">
+                            <img 
+                                src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop" 
+                                alt="Modern Workspace"
+                                className="h-full w-full object-cover"
+                            />
                         </div>
                     </div>
                 </div>

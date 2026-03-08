@@ -27,7 +27,7 @@ export default function AdminDashboard() {
                         <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20" />
                     </div>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min">
+                <div className="relative min-h-screen flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min">
                     <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20" />
                 </div>
             </div>
