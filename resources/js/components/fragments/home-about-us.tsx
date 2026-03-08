@@ -12,13 +12,6 @@ const HomeAboutUs = () => {
                                 alt="Innovation Center"
                                 className="h-full w-full object-cover"
                             />
-                            <div className="absolute md:block hidden top-1/2 -right-25 h-80 w-80 -translate-y-1/2 overflow-hidden rounded-xl bg-white shadow-2xl border-4 border-white">
-                                <img 
-                                    src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=800&auto=format&fit=crop" 
-                                    alt="Office Architecture"
-                                    className="h-full w-full object-cover"
-                                />
-                            </div>
                         </div>
                         <div className="flex md:text-left text-justify h-fit w-fit max-w-130 flex-col gap-4">
                             <div className="flex flex-col md:gap-1">

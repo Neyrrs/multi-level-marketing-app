@@ -23,11 +23,11 @@ const Register = () => {
             <div className="flex h-screen w-screen items-center justify-center">
                 <div className="flex h-fit w-fit shadow-md">
                     {/* IMAGE */}
-                    <div className="min-h-[65vh] w-md">
+                    <div className="min-h-[65vh] w-md overflow-hidden rounded-l-2xl border-2">
                         <img
-                            src="#"
-                            alt="register image"
-                            className="h-full w-full rounded-l-2xl border-2 object-cover"
+                            src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1200&auto=format&fit=crop"
+                            alt="Register Office View"
+                            className="h-full w-full object-cover"
                         />
                     </div>
 
@@ -130,7 +130,7 @@ const Register = () => {
                                     <p className="text-center text-xs">
                                         Sudah punya akun?{' '}
                                         <Link
-                                            href={login()}
+                                            href={login.url()}
                                             className="font-bold text-primary"
                                         >
                                             Masuk

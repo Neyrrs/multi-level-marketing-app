@@ -12,26 +12,24 @@ const Footer = () => {
                             <div className="mb-3 flex items-center gap-2 text-3xl font-bold">
                                 ALUS
                             </div>
-                            <p className="text-sm leading-relaxed">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Pellentesque blandit velit, sit
-                                amet euismod risus. Fusce ac eros quis.
+                            <p className="text-sm leading-relaxed text-gray-600">
+                                Alus Astech menghadirkan solusi teknologi infrastruktur gedung yang modern, aman, dan efisien. Kami berkomitmen untuk mendukung pertumbuhan bisnis Anda melalui layanan terbaik dan terpercaya.
                             </p>
                         </div>
                         <div className="flex flex-col gap-3 font-poppins text-3xl">
-                            <Link href={home()} className="hover:opacity-80">
+                            <Link href={home.url()} className="hover:opacity-80">
                                 Beranda
                             </Link>
-                            <Link href={mitra()} className="hover:opacity-80">
+                            <Link href={mitra.url()} className="hover:opacity-80">
                                 Mitra
                             </Link>
-                            <Link href={product()} className="hover:opacity-80">
+                            <Link href={product.url()} className="hover:opacity-80">
                                 Produk
                             </Link>
                         </div>
                     </div>
-                    <div className="mt-10 border-t border-black pt-4 text-xs text-gray-500">
-                        Copyright © 2025 Alus. All Right Reserved
+                    <div className="mt-10 border-t border-gray-200 pt-4 text-xs text-gray-400">
+                        Copyright © 2026 Alus Astech. All Rights Reserved
                     </div>
                 </div>
             </ContainerWrapper>

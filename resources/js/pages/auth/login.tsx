@@ -19,11 +19,11 @@ const Login = () => {
             <div className="flex h-screen w-screen items-center justify-center">
                 <div className="flex h-fit w-fit shadow-md rounded-3xl">
                     {/* LEFT IMAGE */}
-                    <div className="md:h-[65vh] h-fit md:block hidden w-md">
+                    <div className="md:h-[65vh] h-fit md:block hidden w-md overflow-hidden rounded-l-3xl border-2">
                         <img
-                            src="#"
-                            alt="login image"
-                            className="h-full w-full rounded-l-3xl border-2 object-cover"
+                            src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop"
+                            alt="Login Office View"
+                            className="h-full w-full object-cover"
                         />
                     </div>
 
@@ -110,7 +110,7 @@ const Login = () => {
                                     <p className="text-center text-xs">
                                         Belum punya akun?{' '}
                                         <Link
-                                            href={register()}
+                                            href={register.url()}
                                             className="font-bold text-primary"
                                         >
                                             Daftar Sekarang

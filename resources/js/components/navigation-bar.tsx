@@ -34,14 +34,14 @@ import { UserInfo } from './user-info';
 type UserRole = 'user' | 'admin';
 
 interface LinkTypes {
-    path: RouteDefinition<'get'>;
+    path: string;
     name: string;
     protected: boolean;
 }
 
 interface NavigationItem {
     name: string;
-    link: RouteDefinition<'get'>;
+    link: string;
     icon: React.ReactNode;
     roles?: UserRole[];
 }
@@ -61,9 +61,9 @@ const NavigationBar = () => {
     }, []);
 
     const links: LinkTypes[] = [
-        { path: home(), name: 'Beranda', protected: false },
-        { path: mitra(), name: 'Mitra', protected: false },
-        { path: product(), name: 'Produk', protected: false },
+        { path: home.url(), name: 'Beranda', protected: false },
+        { path: mitra.url(), name: 'Mitra', protected: false },
+        { path: product.url(), name: 'Produk', protected: false },
     ];
 
     const handleLogout = () => {
@@ -77,7 +77,7 @@ const NavigationBar = () => {
                 <div className="flex h-full w-full items-center justify-between">
                     {/* LOGO */}
                     <Link
-                        href={home()}
+                        href={home.url()}
                         className="flex h-full w-20 items-center text-xl font-bold md:text-2xl"
                     >
                         Alus
@@ -107,7 +107,7 @@ const NavigationBar = () => {
                                     className="relative bg-transparent text-primary shadow-none hover:bg-transparent"
                                     asChild
                                 >
-                                    <Link href={cart()}>
+                                    <Link href={cart.url()}>
                                         <ShoppingCart className="size-6" />
                                         {cartCount > 0 && (
                                             <Badge className="absolute -top-1 -right-2 bg-red-500 text-[10px]">
@@ -137,7 +137,7 @@ const NavigationBar = () => {
                                         </Button>
                                             <Separator />
                                         <div>
-                                            <Link href={profile()}>
+                                            <Link href={profile.url()}>
                                                 <Button
                                                     variant={'ghost'}
                                                     className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"
@@ -146,7 +146,7 @@ const NavigationBar = () => {
                                                     <span>Profil</span>
                                                 </Button>
                                             </Link>
-                                            <Link href={dashboard()}>
+                                            <Link href={dashboard.url()}>
                                                 <Button
                                                     variant={'ghost'}
                                                     className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"
@@ -167,7 +167,7 @@ const NavigationBar = () => {
                                                         label: 'Ya, Keluar',
                                                         onClick: () => {
                                                             handleLogout();
-                                                            window.location.href = logout() as unknown as string;
+                                                            window.location.href = logout.url();
                                                         },
                                                     },
                                                     cancel: {
@@ -190,7 +190,7 @@ const NavigationBar = () => {
                                     className="hidden h-8 rounded-sm px-6 text-xs font-bold md:inline-flex"
                                     asChild
                                 >
-                                    <Link href={login()}>Login</Link>
+                                    <Link href={login.url()}>Login</Link>
                                 </Button>
                             </>
                         )}
@@ -269,7 +269,7 @@ const NavigationBar = () => {
                                         className="mt-2 w-full text-sm font-bold md:h-9"
                                         asChild
                                     >
-                                        <Link href={login()}>Login</Link>
+                                        <Link href={login.url()}>Login</Link>
                                     </Button>
                                 </motion.div>
                             )}
