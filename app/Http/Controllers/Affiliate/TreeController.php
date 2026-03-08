@@ -91,12 +91,12 @@ class TreeController extends Controller
     private function resolvePlanDepth(Affiliate $affiliate): int
     {
         $defaultDepth = 3;
-        $method = $affiliate->commissionMethod()->with('rules')->first();
-        if (!$method) {
+        $plan = $affiliate->commissionPlan()->with('rules')->first();
+        if (!$plan) {
             return $defaultDepth;
         }
 
-        $ruleDepth = collect($method->rules)
+        $ruleDepth = collect($plan->rules)
             ->pluck('condition')
             ->filter(fn ($condition) => is_array($condition) && isset($condition['max_depth']))
             ->map(fn ($condition) => (int) $condition['max_depth'])

@@ -13,7 +13,6 @@ interface Plan {
     id: number;
     plan: string;
     description?: string | null;
-    calculation_type: string;
     rules_count: number;
     is_active: boolean;
     is_default: boolean;
@@ -54,7 +53,6 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
     const { data, setData, post, processing, errors, reset } = useForm({
         plan: '',
         description: '',
-        calculation_type: 'percentage',
         is_active: true,
         is_default: false,
         selected_rule_ids: [] as number[],
@@ -118,7 +116,7 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                     <div className="w-3/4">
                         <div className="flex flex-col">
                             <p className="text-lg font-bold text-primary md:text-2xl">Pengaturan Plan</p>
-                            <span className="text-sm">Data plan mengambil metode komisi dan jumlah rule aktifnya.</span>
+                            <span className="text-sm">Setiap plan berisi kumpulan rule (yang terhubung ke method komisi).</span>
                         </div>
                     </div>
                     <div className="w-1/4">
@@ -137,12 +135,7 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                         value={data.description}
                         onChange={(e) => setData('description', e.target.value)}
                     />
-                    <Input
-                        placeholder="Tipe hitung (percentage/tier_based)"
-                        value={data.calculation_type}
-                        onChange={(e) => setData('calculation_type', e.target.value)}
-                    />
-                    <label className="flex items-center gap-2 text-sm">
+                    <label className="flex items-center gap-2 text-sm md:col-span-1">
                         <input
                             type="checkbox"
                             checked={data.is_active}
@@ -161,9 +154,9 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                     <Button type="submit" disabled={processing}>
                         Buat Plan
                     </Button>
-                    {(errors.plan || errors.calculation_type) && (
+                    {(errors.plan || errors.selected_rule_ids) && (
                         <div className="text-sm text-red-600 md:col-span-5">
-                            {errors.plan || errors.calculation_type}
+                            {errors.plan || errors.selected_rule_ids}
                         </div>
                     )}
 
@@ -237,7 +230,6 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                             <TableRow>
                                 <TableHead>No</TableHead>
                                 <TableHead>Plan</TableHead>
-                                <TableHead>Tipe</TableHead>
                                 <TableHead>Jumlah Rule</TableHead>
                                 <TableHead>Default</TableHead>
                                 <TableHead>Status</TableHead>
@@ -251,7 +243,6 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                                     <TableRow key={item.id}>
                                         <TableCell>{idx + 1}</TableCell>
                                         <TableCell className="font-semibold">{item.plan}</TableCell>
-                                        <TableCell>{item.calculation_type}</TableCell>
                                         <TableCell>{item.rules_count}</TableCell>
                                         <TableCell>{item.is_default ? 'Ya' : '-'}</TableCell>
                                         <TableCell>{item.is_active ? 'Aktif' : 'Nonaktif'}</TableCell>
@@ -272,7 +263,7 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={8} className="py-4 text-center text-gray-500">
+                                    <TableCell colSpan={7} className="py-4 text-center text-gray-500">
                                         Belum ada plan.
                                     </TableCell>
                                 </TableRow>

@@ -19,6 +19,7 @@ class MasterProdukController extends Controller
         $perPage = (int) $request->input('per_page', 10);
 
         $query = Product::query()->latest('id');
+        $query = Product::query()->latest('id');
         if ($search !== '') {
             $query->where('name', 'ilike', "%{$search}%");
         }

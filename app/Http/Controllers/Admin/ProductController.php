@@ -32,6 +32,7 @@ class ProductController extends Controller
                 'harga_awal' => (float) $product->harga_awal,
                 'diskon' => (float) $product->diskon,
                 'harga_akhir' => (float) $product->harga_akhir,
+                'point_value' => (float) $product->point_value,
                 'type' => $product->type,
                 'stock' => (int) $product->stock,
             ]),
@@ -69,6 +70,7 @@ class ProductController extends Controller
             'harga_awal' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
             'harga_akhir' => 'nullable|numeric|min:0',
+            'point_value' => 'nullable|numeric|min:0',
             'type' => 'nullable|in:single,bundle',
             'stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -76,6 +78,7 @@ class ProductController extends Controller
 
         $data['diskon'] = (float) ($data['diskon'] ?? 0);
         $data['stock'] = (int) ($data['stock'] ?? 0);
+        $data['point_value'] = (float) ($data['point_value'] ?? 0);
         $data['type'] = $data['type'] ?? 'single';
         $data['slug'] = $this->generateUniqueSlug($data['name']);
         $data['harga_akhir'] = isset($data['harga_akhir']) && $data['harga_akhir'] !== null
@@ -100,6 +103,7 @@ class ProductController extends Controller
             'harga_awal' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
             'harga_akhir' => 'nullable|numeric|min:0',
+            'point_value' => 'nullable|numeric|min:0',
             'type' => 'nullable|in:single,bundle',
             'stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -107,6 +111,7 @@ class ProductController extends Controller
 
         $data['diskon'] = (float) ($data['diskon'] ?? 0);
         $data['stock'] = (int) ($data['stock'] ?? 0);
+        $data['point_value'] = (float) ($data['point_value'] ?? 0);
         $data['type'] = $data['type'] ?? 'single';
         $data['slug'] = $this->generateUniqueSlug($data['name'], $product->id);
         $data['harga_akhir'] = isset($data['harga_akhir']) && $data['harga_akhir'] !== null

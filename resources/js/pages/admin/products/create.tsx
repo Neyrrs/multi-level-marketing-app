@@ -26,6 +26,7 @@ export default function CreateProduct() {
         harga_awal: '',
         diskon: '',
         harga_akhir: '',
+        point_value: '',
         type: 'single',
         stock: '',
         image: null as File | null,
@@ -70,6 +71,9 @@ export default function CreateProduct() {
 
                     <Input placeholder="Harga Akhir (opsional)" name="harga_akhir" type="number" value={data.harga_akhir} onChange={handleChange} />
                     {errors.harga_akhir && <p className="text-sm text-red-600">{errors.harga_akhir}</p>}
+
+                    <Input placeholder="Poin Produk" name="point_value" type="number" value={data.point_value} onChange={handleChange} />
+                    {errors.point_value && <p className="text-sm text-red-600">{errors.point_value}</p>}
 
                     <Input placeholder="Tipe: single / bundle" name="type" value={data.type} onChange={handleChange} />
                     {errors.type && <p className="text-sm text-red-600">{errors.type}</p>}

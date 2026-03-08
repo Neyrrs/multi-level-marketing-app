@@ -11,6 +11,7 @@ interface Product {
     harga_awal: string;
     diskon?: string;
     harga_akhir?: string;
+    point_value?: string;
     type?: string;
     stock?: string;
     image_url?: string | null;
@@ -42,6 +43,7 @@ export default function EditProduct({ product }: Props) {
         harga_awal: product.harga_awal,
         diskon: product.diskon ?? '',
         harga_akhir: product.harga_akhir ?? '',
+        point_value: product.point_value ?? '',
         type: product.type ?? 'single',
         stock: product.stock ?? '',
         image: null as File | null,
@@ -86,6 +88,9 @@ export default function EditProduct({ product }: Props) {
 
                     <Input placeholder="Harga Akhir (opsional)" name="harga_akhir" type="number" value={data.harga_akhir} onChange={handleChange} />
                     {errors.harga_akhir && <p className="text-sm text-red-600">{errors.harga_akhir}</p>}
+
+                    <Input placeholder="Poin Produk" name="point_value" type="number" value={data.point_value} onChange={handleChange} />
+                    {errors.point_value && <p className="text-sm text-red-600">{errors.point_value}</p>}
 
                     <Input placeholder="Tipe: single / bundle" name="type" value={data.type} onChange={handleChange} />
                     {errors.type && <p className="text-sm text-red-600">{errors.type}</p>}

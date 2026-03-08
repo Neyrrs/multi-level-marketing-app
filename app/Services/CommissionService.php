@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Affiliate;
 use App\Models\Commission;
 use App\Models\CommissionMethod;
+use App\Models\CommissionPlan;
 use App\Models\CommissionLedger;
 use App\Models\CommissionRule;
 use Illuminate\Support\Arr;
@@ -16,16 +17,12 @@ class CommissionService
         $affiliate = $order->affiliate;
         if (!$affiliate) return null;
 
-        $method = $this->resolveMethodForAffiliate($affiliate, ['sponsor_direct', 'percentage'], ['sponsor']);
-        if (!$method) return null;
-
-        // simple lookup of rule priority 1
-        $rule = $method->rules()->where('is_active', true)->where('priority', 1)->first();
+        $rule = $this->resolveRuleForAffiliate($affiliate, ['sponsor_direct', 'percentage'], ['sponsor'], 1);
         if (!$rule) return null;
 
         $amount = $this->evaluateRule($rule, $order);
 
-        return $this->distributeCommission($affiliate->id, $amount, $method->id, $rule->id, 'direct', $order->id);
+        return $this->distributeCommission($affiliate->id, $amount, $rule->method_id, $rule->id, 'direct', $order->id);
     }
 
     public function calculateLevelCommission(\App\Models\Order $order): array
@@ -36,21 +33,19 @@ class CommissionService
         while ($current && $level <= 5) {
             $parent = Affiliate::where('user_id', $current->upline_id)->first();
             if (!$parent) break;
-            $method = $this->resolveMethodForAffiliate($parent, ['level_based', 'tier_based'], ['level']);
-            if (!$method) {
+            $rule = $this->resolveRuleForAffiliate($parent, ['level_based', 'tier_based'], ['level'], $level);
+            if (!$rule) {
                 $current = $parent;
                 $level++;
                 continue;
             }
-            $rule = $method->rules()->where('is_active', true)->where('priority', $level)->first();
-            if (!$rule) break;
             $amount = $this->evaluateRule($rule, $order, $level, $parent);
             if ($amount <= 0) {
                 $current = $parent;
                 $level++;
                 continue;
             }
-            $results[] = $this->distributeCommission($parent->id, $amount, $method->id, $rule->id, 'level', $order->id, $level);
+            $results[] = $this->distributeCommission($parent->id, $amount, $rule->method_id, $rule->id, 'level', $order->id, $level);
             $current = $parent;
             $level++;
         }
@@ -60,7 +55,6 @@ class CommissionService
 
     public function calculateMatching(int $affiliateId): ?Commission
     {
-        // Count left/right direct volumes and calculate pairs
         $aff = Affiliate::find($affiliateId);
         if (!$aff) return null;
 
@@ -69,11 +63,17 @@ class CommissionService
         $pairs = min($left, $right);
         if ($pairs <= 0) return null;
 
-        $amount = $pairs * 5000; // fixed rule per spec
-        $method = $this->resolveMethodForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']);
-        $rule = $method?->rules()->where('is_active', true)->first();
+        $rule = $this->resolveRuleForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']);
+        if (!$rule) {
+            return null;
+        }
 
-        return $this->distributeCommission($aff->id, $amount, $method->id ?? null, $rule->id ?? null, 'matching', null);
+        $amount = $this->evaluateMatchingRule($aff, $rule, $pairs);
+        if ($amount <= 0) {
+            return null;
+        }
+
+        return $this->distributeCommission($aff->id, $amount, $rule->method_id, $rule->id, 'matching', null);
     }
 
     /**
@@ -91,10 +91,17 @@ class CommissionService
             $pairs = min($left, $right);
             if ($pairs <= 0) continue;
 
-            $amount = $pairs * 5000;
-            $resolvedMethod = $this->resolveMethodForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']) ?? $method;
-            $rule = $resolvedMethod->rules()->where('is_active', true)->first();
-            $this->distributeCommission($aff->id, $amount, $resolvedMethod->id, $rule->id ?? null, 'matching', null);
+            $resolvedRule = $this->resolveRuleForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']);
+            if (!$resolvedRule) {
+                continue;
+            }
+
+            $amount = $this->evaluateMatchingRule($aff, $resolvedRule, $pairs);
+            if ($amount <= 0) {
+                continue;
+            }
+
+            $this->distributeCommission($aff->id, $amount, $resolvedRule->method_id ?? $method->id, $resolvedRule->id, 'matching', null);
         }
     }
 
@@ -226,17 +233,95 @@ class CommissionService
      */
     private function resolveMethodForAffiliate(?Affiliate $affiliate, array $types, array $names): ?CommissionMethod
     {
-        if ($affiliate && $affiliate->commission_method_id) {
-            $assigned = CommissionMethod::query()
-                ->whereKey($affiliate->commission_method_id)
-                ->where('is_active', true)
-                ->first();
+        return $this->resolveMethod($types, $names);
+    }
 
-            if ($assigned) {
-                return $assigned;
+    private function resolveRuleForAffiliate(?Affiliate $affiliate, array $types, array $names, ?int $priority = null): ?CommissionRule
+    {
+        if ($affiliate) {
+            $plan = $affiliate->commissionPlan()->where('is_active', true)->first();
+            if (!$plan) {
+                $plan = CommissionPlan::query()
+                    ->where('is_default', true)
+                    ->where('is_active', true)
+                    ->first();
+            }
+
+            if ($plan) {
+                $query = $plan->rules()
+                    ->where('commission_rules.is_active', true)
+                    ->whereHas('method', function ($q) use ($types, $names) {
+                        $q->where('is_active', true)->where(function ($inner) use ($types, $names) {
+                            if (!empty($types)) {
+                                $inner->whereIn('calculation_type', $types);
+                            }
+
+                            if (!empty($names)) {
+                                $inner->orWhere(function ($nq) use ($names) {
+                                    foreach ($names as $name) {
+                                        $nq->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower($name) . '%']);
+                                    }
+                                });
+                            }
+                        });
+                    });
+
+                if ($priority !== null) {
+                    $query->where('commission_rules.priority', $priority);
+                }
+
+                $rule = $query
+                    ->orderBy('commission_rules.priority')
+                    ->first();
+
+                if ($rule) {
+                    return $rule;
+                }
             }
         }
 
-        return $this->resolveMethod($types, $names);
+        $method = $this->resolveMethodForAffiliate($affiliate, $types, $names);
+        if (!$method) {
+            return null;
+        }
+
+        $ruleQuery = $method->rules()->where('is_active', true);
+        if ($priority !== null) {
+            $ruleQuery->where('priority', $priority);
+        }
+
+        return $ruleQuery->orderBy('priority')->first();
+    }
+
+    /**
+     * Matching calculation is rule-driven:
+     * - percentage: value% dari matched volume (min left/right volume)
+     * - fixed: value x pair count
+     * You can override via condition.type = fixed|percentage.
+     */
+    private function evaluateMatchingRule(Affiliate $affiliate, CommissionRule $rule, int $pairs): float
+    {
+        $condition = is_array($rule->condition) ? $rule->condition : [];
+        $minLegPoints = (float) Arr::get($condition, 'min_leg_points', 0);
+
+        $leftVolume = (float) ($affiliate->left_volume ?? 0);
+        $rightVolume = (float) ($affiliate->right_volume ?? 0);
+        $matchedVolume = min($leftVolume, $rightVolume);
+
+        if ($minLegPoints > 0 && ($leftVolume < $minLegPoints || $rightVolume < $minLegPoints)) {
+            return 0;
+        }
+
+        $type = strtolower((string) Arr::get($condition, 'type', ''));
+        if ($type === '') {
+            $methodType = strtolower((string) ($rule->method?->calculation_type ?? ''));
+            $type = $methodType === 'fixed' ? 'fixed' : 'percentage';
+        }
+
+        if ($type === 'fixed') {
+            return round($pairs * (float) $rule->value, 2);
+        }
+
+        return round(($matchedVolume * (float) $rule->value) / 100, 2);
     }
 }

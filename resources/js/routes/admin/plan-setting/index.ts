@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\PlanController::assign
- * @see app/Http/Controllers/Admin/PlanController.php:200
+ * @see app/Http/Controllers/Admin/PlanController.php:192
  * @route '/admin/plan-setting/assign'
  */
 export const assign = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ assign.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::assign
- * @see app/Http/Controllers/Admin/PlanController.php:200
+ * @see app/Http/Controllers/Admin/PlanController.php:192
  * @route '/admin/plan-setting/assign'
  */
 assign.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ assign.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::assign
- * @see app/Http/Controllers/Admin/PlanController.php:200
+ * @see app/Http/Controllers/Admin/PlanController.php:192
  * @route '/admin/plan-setting/assign'
  */
 assign.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ assign.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::assign
- * @see app/Http/Controllers/Admin/PlanController.php:200
+ * @see app/Http/Controllers/Admin/PlanController.php:192
  * @route '/admin/plan-setting/assign'
  */
     const assignForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ assign.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::assign
- * @see app/Http/Controllers/Admin/PlanController.php:200
+ * @see app/Http/Controllers/Admin/PlanController.php:192
  * @route '/admin/plan-setting/assign'
  */
         assignForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -56,7 +56,7 @@ assign.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     assign.form = assignForm
 /**
 * @see \App\Http\Controllers\Admin\PlanController::setDefault
- * @see app/Http/Controllers/Admin/PlanController.php:215
+ * @see app/Http/Controllers/Admin/PlanController.php:207
  * @route '/admin/plan-setting/{id}/set-default'
  */
 export const setDefault = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -71,7 +71,7 @@ setDefault.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::setDefault
- * @see app/Http/Controllers/Admin/PlanController.php:215
+ * @see app/Http/Controllers/Admin/PlanController.php:207
  * @route '/admin/plan-setting/{id}/set-default'
  */
 setDefault.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -99,7 +99,7 @@ setDefault.url = (args: { id: string | number } | [id: string | number ] | strin
 
 /**
 * @see \App\Http\Controllers\Admin\PlanController::setDefault
- * @see app/Http/Controllers/Admin/PlanController.php:215
+ * @see app/Http/Controllers/Admin/PlanController.php:207
  * @route '/admin/plan-setting/{id}/set-default'
  */
 setDefault.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -109,7 +109,7 @@ setDefault.post = (args: { id: string | number } | [id: string | number ] | stri
 
     /**
 * @see \App\Http\Controllers\Admin\PlanController::setDefault
- * @see app/Http/Controllers/Admin/PlanController.php:215
+ * @see app/Http/Controllers/Admin/PlanController.php:207
  * @route '/admin/plan-setting/{id}/set-default'
  */
     const setDefaultForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -119,7 +119,7 @@ setDefault.post = (args: { id: string | number } | [id: string | number ] | stri
 
             /**
 * @see \App\Http\Controllers\Admin\PlanController::setDefault
- * @see app/Http/Controllers/Admin/PlanController.php:215
+ * @see app/Http/Controllers/Admin/PlanController.php:207
  * @route '/admin/plan-setting/{id}/set-default'
  */
         setDefaultForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

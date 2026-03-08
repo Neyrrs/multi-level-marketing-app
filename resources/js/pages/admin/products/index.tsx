@@ -18,6 +18,7 @@ interface Product {
     id: number;
     name: string;
     harga_akhir: number;
+    point_value?: number;
     description?: string;
 }
 
@@ -76,6 +77,7 @@ export default function ProductsIndex({ products = [] }: Props) {
                                 <TableHead>No</TableHead>
                                 <TableHead>Nama Produk</TableHead>
                                 <TableHead>Harga</TableHead>
+                                <TableHead>Poin</TableHead>
                                 <TableHead>Keterangan</TableHead>
                                 <TableHead>Aksi</TableHead>
                             </TableRow>
@@ -89,6 +91,7 @@ export default function ProductsIndex({ products = [] }: Props) {
                                         <TableCell>
                                             Rp {new Intl.NumberFormat('id-ID').format(product.harga_akhir)}
                                         </TableCell>
+                                        <TableCell>{product.point_value ?? 0}</TableCell>
                                         <TableCell>{product.description || '-'}</TableCell>
                                         <TableCell className="flex gap-2">
                                             <Button
@@ -110,7 +113,7 @@ export default function ProductsIndex({ products = [] }: Props) {
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-4">
+                                    <TableCell colSpan={6} className="text-center py-4">
                                         Tidak ada data produk
                                     </TableCell>
                                 </TableRow>

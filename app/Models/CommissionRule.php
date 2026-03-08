@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CommissionRule extends Model
@@ -46,5 +47,11 @@ class CommissionRule extends Model
     public function binaryPayouts(): HasMany
     {
         return $this->hasMany(BinaryPayout::class, 'rule_id');
+    }
+
+    public function plans(): BelongsToMany
+    {
+        return $this->belongsToMany(CommissionPlan::class, 'commission_plan_rule', 'rule_id', 'plan_id')
+            ->withTimestamps();
     }
 }

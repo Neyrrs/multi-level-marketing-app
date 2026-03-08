@@ -10,6 +10,7 @@ use App\Models\Commission;
 use App\Models\CommissionCalculation;
 use App\Models\CommissionLedger;
 use App\Models\CommissionMethod;
+use App\Models\CommissionPlan;
 use App\Models\MlmTree;
 use App\Models\Order;
 use App\Models\User;
@@ -87,7 +88,7 @@ class AffiliateService
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
             'activation_code_id' => $activationCode->id,
-            'commission_method_id' => $defaultPlanId,
+            'commission_plan_id' => $defaultPlanId,
             'username' => $username,
             'slug' => $slug,
             'position' => $position,
@@ -466,7 +467,7 @@ class AffiliateService
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
             'activation_code_id' => $activationCode?->id,
-            'commission_method_id' => $this->resolveDefaultPlanId(),
+            'commission_plan_id' => $this->resolveDefaultPlanId(),
             'username' => $this->generateUniqueUsername($user->name),
             'slug' => Str::slug($user->name) . '-' . uniqid(),
             'position' => $requestedPosition,
@@ -493,7 +494,7 @@ class AffiliateService
             'position' => in_array($position, ['left','right']) ? $position : 'none',
             'is_active' => true,
             'activated_at' => now(),
-            'commission_method_id' => $affiliate->commission_method_id ?: $defaultPlanId,
+            'commission_plan_id' => $affiliate->commission_plan_id ?: $defaultPlanId,
         ]);
 
         // Promote user role to affiliate only after approval.
@@ -547,11 +548,11 @@ class AffiliateService
 
     private function resolveDefaultPlanId(): ?int
     {
-        $defaultMethod = CommissionMethod::query()
+        $defaultPlan = CommissionPlan::query()
             ->where('is_default', true)
             ->where('is_active', true)
             ->first();
 
-        return $defaultMethod?->id;
+        return $defaultPlan?->id;
     }
 }

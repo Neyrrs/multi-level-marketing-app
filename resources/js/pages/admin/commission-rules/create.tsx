@@ -1,9 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-// import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import { router } from '@inertiajs/react';
-import { Textarea } from '@headlessui/react';
 
 interface MethodOption {
     id: number;
@@ -18,37 +16,43 @@ export default function CreateCommissionRule({ methods = [] }: Props) {
     const [data, setData] = useState({
         method_id: '',
         rule_name: '',
-        condition: '',
+        condition_type: 'percentage',
+        min_points: '',
+        min_leg_points: '',
+        template: '',
         depth: '',
         max_depth: '',
         value: '',
         priority: '',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = () => {
-        let parsedCondition: Record<string, unknown> = {};
-        if (data.condition.trim() !== '') {
-            try {
-                parsedCondition = JSON.parse(data.condition);
-            } catch {
-                alert('Format Kondisi (JSON) tidak valid.');
-                return;
-            }
+        const condition: Record<string, unknown> = {
+            type: data.condition_type || 'percentage',
+        };
+        if (data.min_points !== '') {
+            condition.min_points = Number(data.min_points);
+        }
+        if (data.min_leg_points !== '') {
+            condition.min_leg_points = Number(data.min_leg_points);
+        }
+        if (data.template !== '') {
+            condition.template = data.template;
         }
 
         const payload: Record<string, unknown> = {
-            ...data,
             method_id: Number(data.method_id),
+            rule_name: data.rule_name,
             value: Number(data.value),
             priority: data.priority === '' ? null : Number(data.priority),
             depth: data.depth === '' ? null : Number(data.depth),
             max_depth: data.max_depth === '' ? null : Number(data.max_depth),
-            condition: parsedCondition,
+            condition,
         };
 
         router.post('/admin/commission-rules', payload, {
@@ -79,12 +83,39 @@ export default function CreateCommissionRule({ methods = [] }: Props) {
                     value={data.rule_name}
                     onChange={handleChange}
                 />
-                <Textarea
-                    placeholder="Kondisi (JSON)"
-                    name="condition"
-                    value={data.condition}
-                    onChange={handleChange}
-                />
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <select
+                        name="condition_type"
+                        value={data.condition_type}
+                        onChange={handleChange}
+                        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                        <option value="percentage">Tipe Kondisi: Percentage</option>
+                        <option value="fixed">Tipe Kondisi: Fixed</option>
+                    </select>
+                    <Input
+                        placeholder="Template (opsional, contoh: standard)"
+                        name="template"
+                        value={data.template}
+                        onChange={handleChange}
+                    />
+                    <Input
+                        placeholder="Min Points (opsional)"
+                        name="min_points"
+                        type="number"
+                        min={0}
+                        value={data.min_points}
+                        onChange={handleChange}
+                    />
+                    <Input
+                        placeholder="Min Leg Points (opsional)"
+                        name="min_leg_points"
+                        type="number"
+                        min={0}
+                        value={data.min_leg_points}
+                        onChange={handleChange}
+                    />
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                         placeholder="Depth (opsional)"
