@@ -372,6 +372,10 @@ Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
 })->name('edit-profile');
 
+Route::post('/profile', [App\Http\Controllers\Settings\ProfileController::class, 'updateProfile'])
+    ->middleware('auth')
+    ->name('profile.update_public');
+
 // Route::get('/dashboard-sementara', function () {
 //     return Inertia::render('dashboard/dashboard');
 // })->name('dashboard.dashboard');

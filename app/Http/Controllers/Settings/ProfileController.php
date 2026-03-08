@@ -43,6 +43,45 @@ class ProfileController extends Controller
     }
 
     /**
+     * Update the user profile logic along with the photo.
+     */
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users')->ignore($request->user()->id)],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'alamat' => ['nullable', 'string'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:4096'],
+        ]);
+
+        $user = $request->user();
+
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'alamat' => $validated['alamat'] ?? null,
+        ]);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('profiles', 'public');
+
+            $profile = $user->profile ?? $user->profile()->create();
+            $profile->photo_profile = $path;
+            $profile->save();
+        }
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse

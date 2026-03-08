@@ -44,6 +44,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = [
+        'avatar',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -58,6 +62,24 @@ class User extends Authenticatable
             'status' => 'string',
             'phone' => 'string',
         ];
+    }
+
+    /**
+     * Get the user's avatar URL.
+     */
+    public function getAvatarAttribute(): string
+    {
+        $photo = $this->profile?->photo_profile;
+
+        if ($photo) {
+            return str_starts_with($photo, 'http') ? $photo : route('media.public', ['path' => ltrim(preg_replace('#^storage/#', '', $photo), '/')]);
+        }
+
+        $name = trim(collect(explode(' ', $this->name ?? 'User'))->map(function ($segment) {
+            return mb_substr($segment, 0, 1);
+        })->join(''));
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
     }
 
     // ===== ONE-TO-ONE RELATIONSHIPS =====

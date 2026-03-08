@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { editProfile } from '@/routes';
 import { SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { useForm } from 'react-hook-form';
@@ -57,7 +56,7 @@ const Profile = () => {
 
                     <div className="mb-10 flex items-center gap-8 rounded-3xl bg-white p-8 shadow-lg">
                         <img
-                            src=""
+                            src={user.avatar}
                             alt="Foto Profil"
                             className="h-24 w-24 rounded-full border-3 border-primary object-cover"
                         />
@@ -87,7 +86,7 @@ const Profile = () => {
                                 </h2>
 
                                 <Button size="sm" asChild>
-                                    <Link href={editProfile()}>Edit</Link>
+                                    <Link href="/edit-profile">Edit</Link>
                                 </Button>
                             </div>
                             <div className="mt-3 h-px w-full bg-black" />

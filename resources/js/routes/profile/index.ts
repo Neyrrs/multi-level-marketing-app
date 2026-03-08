@@ -286,8 +286,63 @@ update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     
     update.form = updateForm
 /**
-* @see \App\Http\Controllers\Settings\ProfileController::destroy
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
  * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
+ */
+export const update_public = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: update_public.url(options),
+    method: 'post',
+})
+
+update_public.definition = {
+    methods: ["post"],
+    url: '/profile',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
+ */
+update_public.url = (options?: RouteQueryOptions) => {
+    return update_public.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
+ */
+update_public.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: update_public.url(options),
+    method: 'post',
+})
+
+    /**
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
+ */
+    const update_publicForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: update_public.url(options),
+        method: 'post',
+    })
+
+            /**
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
+ */
+        update_publicForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: update_public.url(options),
+            method: 'post',
+        })
+    
+    update_public.form = update_publicForm
+/**
+* @see \App\Http\Controllers\Settings\ProfileController::destroy
+ * @see app/Http/Controllers/Settings/ProfileController.php:87
  * @route '/settings/profile'
  */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -302,7 +357,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
- * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @see app/Http/Controllers/Settings/ProfileController.php:87
  * @route '/settings/profile'
  */
 destroy.url = (options?: RouteQueryOptions) => {
@@ -311,7 +366,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
- * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @see app/Http/Controllers/Settings/ProfileController.php:87
  * @route '/settings/profile'
  */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -321,7 +376,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
     /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
- * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @see app/Http/Controllers/Settings/ProfileController.php:87
  * @route '/settings/profile'
  */
     const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -336,7 +391,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
             /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
- * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @see app/Http/Controllers/Settings/ProfileController.php:87
  * @route '/settings/profile'
  */
         destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -351,7 +406,8 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     
     destroy.form = destroyForm
 const profile = {
-    destroy: Object.assign(destroy, destroy),
+    update_public: Object.assign(update_public, update_public),
+destroy: Object.assign(destroy, destroy),
 }
 
 export default profile

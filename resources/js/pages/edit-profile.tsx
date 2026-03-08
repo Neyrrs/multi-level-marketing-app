@@ -18,12 +18,15 @@ import {
 import { SharedData } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const EditProfile = () => {
     const { auth } = usePage<SharedData>().props;
     const user = auth.user;
-    console.log(user);
+
+    const [photo, setPhoto] = useState<File | null>(null);
+    const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
     const {
         register,
@@ -39,9 +42,23 @@ const EditProfile = () => {
         },
     });
 
+    const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            setPhoto(file);
+            setPhotoPreview(URL.createObjectURL(file));
+        }
+    };
+
     const handleEditProfile = (data: EditProfileSchema) => {
-        router.put('/profile', data, {
+        router.post('/profile', {
+            ...data,
+            phone: data.phone || '',
+            alamat: data.alamat || '',
+            photo: photo,
+        }, {
             preserveScroll: true,
+            forceFormData: true,
         });
     };
 
@@ -85,59 +102,75 @@ const EditProfile = () => {
                             </div>
 
                             <div className="flex flex-col items-center gap-4">
-                                <div className="h-40 w-40 overflow-hidden rounded-full border-4 border-primary">
-                                    <img
-                                        src={''}
-                                        alt="Foto Profil"
-                                        className="h-full w-full object-cover"
-                                    />
-                                </div>
-                                <p className="text-xs text-gray-500">
-                                    Tekan untuk mengubah
-                                </p>
+                                <Label
+                                    htmlFor="photo-upload"
+                                    className="cursor-pointer group flex flex-col items-center gap-4"
+                                >
+                                    <div className="h-40 w-40 overflow-hidden rounded-full border-4 border-primary relative">
+                                        <img
+                                            src={photoPreview || user.avatar}
+                                            alt="Foto Profil"
+                                            className="h-full w-full object-cover transition duration-300 group-hover:opacity-75"
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <span className="text-white text-xs font-semibold">Ubah Foto</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                        Tekan untuk mengubah (Max 4MB)
+                                    </p>
+                                </Label>
+                                <Input
+                                    id="photo-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handlePhotoChange}
+                                />
                             </div>
                         </div>
 
                         <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-8">
                             <div className="flex flex-col gap-2">
-                                <div className="flex justify-between">
-                                    <div>
+                                <div className="flex flex-col md:flex-row md:justify-between gap-4 md:gap-8">
+                                    <div className="flex-1">
                                         <Label>Username</Label>
                                         <Input {...register('name')} />
                                         {errors.name && (
-                                            <p className="text-xs text-red-500">
+                                            <p className="text-xs text-red-500 mt-1">
                                                 {errors.name.message}
                                             </p>
                                         )}
                                     </div>
 
-                                    <div>
+                                    <div className="flex-1">
                                         <Label>Nomor Telepon</Label>
                                         <Input {...register('phone')} />
                                         {errors.phone && (
-                                            <p className="text-xs text-red-500">
+                                            <p className="text-xs text-red-500 mt-1">
                                                 {errors.phone.message}
                                             </p>
                                         )}
                                     </div>
-                                    <div>
+
+                                    <div className="flex-1">
                                         <Label>Email</Label>
                                         <Input {...register('email')} />
                                         {errors.email && (
-                                            <p className="text-xs text-red-500">
+                                            <p className="text-xs text-red-500 mt-1">
                                                 {errors.email.message}
                                             </p>
                                         )}
                                     </div>
                                 </div>
-                                <div className="md:w-full">
+                                <div className="w-full mt-4">
                                     <Label>Alamat</Label>
                                     <textarea
                                         {...register('alamat')}
-                                        className="mt-1 min-h-40 w-full resize-none rounded-md border-3 border-primary px-3 py-3 text-sm focus:ring-2 focus:ring-primary/30 focus:outline-none"
+                                        className="mt-1 min-h-40 w-full resize-none rounded-md border-2 border-primary/20 px-3 py-3 text-sm focus:ring-2 focus:border-primary focus:ring-primary/50 focus:outline-none transition"
                                     />
                                     {errors.alamat && (
-                                        <p className="text-xs text-red-500">
+                                        <p className="text-xs text-red-500 mt-1">
                                             {errors.alamat.message}
                                         </p>
                                     )}
@@ -146,20 +179,22 @@ const EditProfile = () => {
                         </div>
                     </div>
 
-                    <div className="mt-4 flex justify-end gap-4">
-                        <Button
-                            type="reset"
-                            variant="outline"
-                            className="border-red-500 font-bold text-red-500 hover:text-red-500"
-                        >
-                            Reset
-                        </Button>
+                    <div className="mt-8 flex justify-end gap-4">
+                        <Link href="/profile">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="font-bold text-gray-500 hover:text-gray-700"
+                            >
+                                Kembali
+                            </Button>
+                        </Link>
 
                         <Button
                             type="submit"
                             className="bg-green-600 font-bold hover:bg-green-700"
                         >
-                            Simpan
+                            Simpan Perubahan
                         </Button>
                     </div>
                 </ContainerWrapper>
