@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { CheckCircle2, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 // ─── Types and Globals ────────────────────────────────────────────────────
 
@@ -152,6 +153,14 @@ const Cart = () => {
 
         if (!auth.user) {
             router.get('/login');
+            return;
+        }
+
+        if (!auth.user.phone || auth.user.phone === '-' || !auth.user.alamat || auth.user.alamat === '-') {
+            toast.error('Gagal Checkout', {
+                description: 'Mohon lengkapi Alamat dan Nomor Telepon di Profil Anda sebelum checkout.',
+            });
+            router.get('/edit-profile');
             return;
         }
 

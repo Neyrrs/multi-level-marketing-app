@@ -20,7 +20,7 @@ const Footer = () => {
                         </div>
                         <div className="flex flex-col gap-3 font-poppins text-3xl">
                             <Link href={home()} className="hover:opacity-80">
-                                Home
+                                Beranda
                             </Link>
                             <Link href={mitra()} className="hover:opacity-80">
                                 Mitra

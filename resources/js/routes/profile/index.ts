@@ -1,82 +1,59 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
  */
-export const edit = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit.url(options),
-    method: 'get',
+export const update_public = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: update_public.url(options),
+    method: 'post',
 })
 
-edit.definition = {
-    methods: ["get","head"],
-    url: '/profile/edit',
-} satisfies RouteDefinition<["get","head"]>
+update_public.definition = {
+    methods: ["post"],
+    url: '/profile',
+} satisfies RouteDefinition<["post"]>
 
 /**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
  */
-edit.url = (options?: RouteQueryOptions) => {
-    return edit.definition.url + queryParams(options)
+update_public.url = (options?: RouteQueryOptions) => {
+    return update_public.definition.url + queryParams(options)
 }
 
 /**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
  */
-edit.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: edit.url(options),
-    method: 'get',
-})
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
- */
-edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: edit.url(options),
-    method: 'head',
+update_public.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: update_public.url(options),
+    method: 'post',
 })
 
     /**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
  */
-    const editForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-        action: edit.url(options),
-        method: 'get',
+    const update_publicForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: update_public.url(options),
+        method: 'post',
     })
 
             /**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
+* @see \App\Http\Controllers\Settings\ProfileController::update_public
+ * @see app/Http/Controllers/Settings/ProfileController.php:48
+ * @route '/profile'
  */
-        editForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: edit.url(options),
-            method: 'get',
-        })
-            /**
-* @see \App\Http\Controllers\Settings\ProfileController::edit
- * @see app/Http/Controllers/Settings/ProfileController.php:19
- * @route '/profile/edit'
- */
-        editForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-            action: edit.url({
-                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'HEAD',
-                            ...(options?.query ?? options?.mergeQuery ?? {}),
-                        }
-                    }),
-            method: 'get',
+        update_publicForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: update_public.url(options),
+            method: 'post',
         })
     
-    edit.form = editForm
+    update_public.form = update_publicForm
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::edit
  * @see app/Http/Controllers/Settings/ProfileController.php:19
@@ -155,71 +132,6 @@ edit.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
     
     edit.form = editForm
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::update
- * @see app/Http/Controllers/Settings/ProfileController.php:32
- * @route '/profile'
- */
-export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(options),
-    method: 'put',
-})
-
-update.definition = {
-    methods: ["put"],
-    url: '/profile',
-} satisfies RouteDefinition<["put"]>
-
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::update
- * @see app/Http/Controllers/Settings/ProfileController.php:32
- * @route '/profile'
- */
-update.url = (options?: RouteQueryOptions) => {
-    return update.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::update
- * @see app/Http/Controllers/Settings/ProfileController.php:32
- * @route '/profile'
- */
-update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
-    url: update.url(options),
-    method: 'put',
-})
-
-    /**
-* @see \App\Http\Controllers\Settings\ProfileController::update
- * @see app/Http/Controllers/Settings/ProfileController.php:32
- * @route '/profile'
- */
-    const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-        action: update.url({
-                    [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                        _method: 'PUT',
-                        ...(options?.query ?? options?.mergeQuery ?? {}),
-                    }
-                }),
-        method: 'post',
-    })
-
-            /**
-* @see \App\Http\Controllers\Settings\ProfileController::update
- * @see app/Http/Controllers/Settings/ProfileController.php:32
- * @route '/profile'
- */
-        updateForm.put = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-            action: update.url({
-                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
-                            _method: 'PUT',
-                            ...(options?.query ?? options?.mergeQuery ?? {}),
-                        }
-                    }),
-            method: 'post',
-        })
-    
-    update.form = updateForm
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::update
  * @see app/Http/Controllers/Settings/ProfileController.php:32
@@ -285,61 +197,6 @@ update.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
         })
     
     update.form = updateForm
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::update_public
- * @see app/Http/Controllers/Settings/ProfileController.php:48
- * @route '/profile'
- */
-export const update_public = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: update_public.url(options),
-    method: 'post',
-})
-
-update_public.definition = {
-    methods: ["post"],
-    url: '/profile',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::update_public
- * @see app/Http/Controllers/Settings/ProfileController.php:48
- * @route '/profile'
- */
-update_public.url = (options?: RouteQueryOptions) => {
-    return update_public.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\Settings\ProfileController::update_public
- * @see app/Http/Controllers/Settings/ProfileController.php:48
- * @route '/profile'
- */
-update_public.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: update_public.url(options),
-    method: 'post',
-})
-
-    /**
-* @see \App\Http\Controllers\Settings\ProfileController::update_public
- * @see app/Http/Controllers/Settings/ProfileController.php:48
- * @route '/profile'
- */
-    const update_publicForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-        action: update_public.url(options),
-        method: 'post',
-    })
-
-            /**
-* @see \App\Http\Controllers\Settings\ProfileController::update_public
- * @see app/Http/Controllers/Settings/ProfileController.php:48
- * @route '/profile'
- */
-        update_publicForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-            action: update_public.url(options),
-            method: 'post',
-        })
-    
-    update_public.form = update_publicForm
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::destroy
  * @see app/Http/Controllers/Settings/ProfileController.php:87
@@ -407,6 +264,8 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     destroy.form = destroyForm
 const profile = {
     update_public: Object.assign(update_public, update_public),
+edit: Object.assign(edit, edit),
+update: Object.assign(update, update),
 destroy: Object.assign(destroy, destroy),
 }
 

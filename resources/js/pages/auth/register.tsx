@@ -46,36 +46,12 @@ const Register = () => {
                                         Daftar
                                     </p>
                                     <p className="text-xs opacity-80">
-                                        Silahkan isi data berikut dengan lengkap
-                                        dan sesuai
+                                        Silahkan isi email dan password Anda untuk mendaftar
                                     </p>
                                 </div>
 
                                 {/* INPUT */}
                                 <div className="flex flex-col gap-4">
-                                    {/* NAMA */}
-                                    <div className="flex flex-col gap-2">
-                                        <Label>Nama Lengkap</Label>
-                                        <Input
-                                            name="name"
-                                            type="text"
-                                            placeholder="Nama lengkap"
-                                            required
-                                        />
-                                        <InputError message={errors.name} />
-                                    </div>
-
-                                    {/* USERNAME */}
-                                    <div className="flex flex-col gap-2">
-                                        <Label>Username</Label>
-                                        <Input
-                                            name="username"
-                                            type="text"
-                                            placeholder="Username"
-                                        />
-                                        <InputError message={errors.username} />
-                                    </div>
-
                                     {/* EMAIL */}
                                     <div className="flex flex-col gap-2">
                                         <Label>Email</Label>
@@ -135,14 +111,6 @@ const Register = () => {
                                                 errors.password_confirmation
                                             }
                                         />
-                                    </div>
-
-                                    {/* JENIS KELAMIN */}
-                                    <div className="flex flex-col gap-2">
-                                        <Label>Jenis Kelamin</Label>
-                                        {/* WAJIB pastikan combobox submit value */}
-                                        <Combobox />
-                                        <InputError message={errors.gender} />
                                     </div>
                                 </div>
 

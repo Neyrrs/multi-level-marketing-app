@@ -31,10 +31,10 @@ use App\Http\Controllers\PublicCartController;
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/profile/edit', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+        ->name('public.profile.edit');
 
     Route::put('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
+        ->name('public.profile.update');
     /*
     |--------------------------------------------------------------------------
     | GUEST

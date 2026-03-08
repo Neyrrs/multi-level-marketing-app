@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import ContainerWrapper from './fragments/container-wrapper';
 import { getCart } from './fragments/product-card';
 import { Badge } from './ui/badge';
@@ -60,7 +61,7 @@ const NavigationBar = () => {
     }, []);
 
     const links: LinkTypes[] = [
-        { path: home(), name: 'Home', protected: false },
+        { path: home(), name: 'Beranda', protected: false },
         { path: mitra(), name: 'Mitra', protected: false },
         { path: product(), name: 'Produk', protected: false },
     ];
@@ -158,16 +159,26 @@ const NavigationBar = () => {
                                         <Button
                                             variant={'destructive'}
                                             className="flex w-full justify-start gap-4 opacity-90"
-                                            asChild
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                toast.warning('Konfirmasi Keluar', {
+                                                    description: 'Apakah Anda yakin ingin keluar?',
+                                                    action: {
+                                                        label: 'Ya, Keluar',
+                                                        onClick: () => {
+                                                            handleLogout();
+                                                            window.location.href = logout() as unknown as string;
+                                                        },
+                                                    },
+                                                    cancel: {
+                                                        label: 'Batal',
+                                                        onClick: () => {}
+                                                    },
+                                                });
+                                            }}
                                         >
-                                            <Link
-                                                href={logout()}
-                                                as="button"
-                                                onClick={handleLogout}
-                                            >
-                                                <LogOut />
-                                                Keluar
-                                            </Link>
+                                            <LogOut />
+                                            Keluar
                                         </Button>
                                     </PopoverContent>
                                 </Popover>
