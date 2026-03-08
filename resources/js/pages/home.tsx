@@ -2,21 +2,18 @@ import CheckoutSteps from '@/components/fragments/checkout-steps';
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import HomeAboutUs from '@/components/fragments/home-about-us';
 import MainLayout from '@/components/fragments/main-layout';
-import { ContainerProductCard } from '@/components/fragments/product-card';
+import { ContainerProductCard, type ProductItem } from '@/components/fragments/product-card';
 import TopReviews from '@/components/fragments/top-reviews';
-import { Button } from '@/components/ui/button';
-import { useAppearance } from '@/hooks/use-appearance';
 import { type SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Moon, Sun } from 'lucide-react';
 
-export default function Home({
-    canRegister = true,
-}: {
+interface HomeProps {
     canRegister?: boolean;
-}) {
+    products?: ProductItem[];
+}
+
+export default function Home({ canRegister = true, products = [] }: HomeProps) {
     const { auth } = usePage<SharedData>().props;
-    const { updateAppearance, appearance } = useAppearance();
 
     return (
         <MainLayout>
@@ -27,15 +24,6 @@ export default function Home({
                     rel="stylesheet"
                 />
             </Head>
-            {/* {appearance == 'dark' ? (
-                <Button onClick={() => updateAppearance('light')}>
-                    <Sun />
-                </Button>
-            ) : (
-                <Button onClick={() => updateAppearance('dark')}>
-                    <Moon />
-                </Button>
-            )} */}
             <div className="flex flex-col gap-10">
                 <ContainerWrapper>
                     <div className="flex flex-col gap-6">
@@ -46,7 +34,7 @@ export default function Home({
                                 className="h-full aspect-video w-full rounded-2xl border"
                             />
                         </div>
-                        <ContainerProductCard />
+                        <ContainerProductCard products={products} />
                     </div>
                 </ContainerWrapper>
                 <CheckoutSteps />

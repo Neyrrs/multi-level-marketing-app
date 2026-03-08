@@ -1,11 +1,53 @@
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import MainLayout from '@/components/fragments/main-layout';
+import { addToCart } from '@/components/fragments/product-card';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 
+// ─── Image Selector ───────────────────────────────────────────────────────────
+
+const ImageSelectorDashboard = ({ images }: { images: string[] }) => {
+    const [activeImage, setActiveImage] = useState(images[0]);
+
+    return (
+        <div className="flex min-h-100 w-full gap-6">
+            <div className="flex flex-col gap-3">
+                {images.map((img) => (
+                    <button
+                        key={img}
+                        onClick={() => setActiveImage(img)}
+                        className={`h-20 w-20 rounded-lg border transition ${
+                            activeImage === img
+                                ? 'border-blue-500 ring-2 ring-blue-300'
+                                : 'border-gray-300 hover:border-gray-400'
+                        } `}
+                    >
+                        <img
+                            src={img}
+                            alt="Thumbnail"
+                            className="h-full w-full object-contain"
+                        />
+                    </button>
+                ))}
+            </div>
+
+            <div className="flex flex-1 items-center justify-center rounded-xl border p-6">
+                <img
+                    src={activeImage}
+                    alt="Preview"
+                    className="max-h-87.5 object-contain"
+                />
+            </div>
+        </div>
+    );
+};
+
+// ─── Detail Product Page ──────────────────────────────────────────────────────
+
 const DetailProduct = () => {
     const [quantity, setQuantity] = useState<number>(1);
+    const [added, setAdded] = useState(false);
 
     const images = [
         '/images/shoe-1.png',
@@ -15,17 +57,24 @@ const DetailProduct = () => {
         '/images/shoe-5.png',
     ];
 
-    const handleIncreaseQuantity = () => {
-        setQuantity(quantity + 1);
-    };
+    const handleIncreaseQuantity = () => setQuantity((q) => q + 1);
+    const handleDecreaseQuantity = () => setQuantity((q) => Math.max(1, q - 1));
 
-    const handleDecreaseQuantity = () => {
-        if (quantity > 1) {
-            setQuantity(quantity - 1);
-        }
+    const handleAddToCart = () => {
+        addToCart(
+            {
+                id: 0, // placeholder — replace with real product props when wired via Inertia
+                name: 'Ini adalah produk sebuah demo lestari',
+                description: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit.',
+                harga_akhir: 100000,
+                image: null,
+                stock: 99,
+            },
+            quantity,
+        );
+        setAdded(true);
+        setTimeout(() => setAdded(false), 1500);
     };
-
-    const handleAddToCart = () => {};
 
     return (
         <MainLayout>
@@ -70,6 +119,7 @@ const DetailProduct = () => {
                                 <Button
                                     size={'icon'}
                                     onClick={handleDecreaseQuantity}
+                                    disabled={quantity <= 1}
                                 >
                                     <Minus />
                                 </Button>
@@ -87,8 +137,9 @@ const DetailProduct = () => {
                             <Button
                                 onClick={handleAddToCart}
                                 className="w-full rounded-sm"
+                                variant={added ? 'outline' : 'default'}
                             >
-                                Keranjang <ShoppingCart />
+                                {added ? 'Ditambahkan ✓' : (<>Keranjang <ShoppingCart /></>)}
                             </Button>
                         </div>
                     </div>
@@ -99,39 +150,3 @@ const DetailProduct = () => {
 };
 
 export default DetailProduct;
-
-const ImageSelectorDashboard = ({images}: {images: string[]}) => {
-    const [activeImage, setActiveImage] = useState(images[0]);
-
-    return (
-        <div className="flex min-h-100 w-full gap-6">
-            <div className="flex flex-col gap-3">
-                {images.map((img) => (
-                    <button
-                        key={img}
-                        onClick={() => setActiveImage(img)}
-                        className={`h-20 w-20 rounded-lg border transition ${
-                            activeImage === img
-                                ? 'border-blue-500 ring-2 ring-blue-300'
-                                : 'border-gray-300 hover:border-gray-400'
-                        } `}
-                    >
-                        <img
-                            src={img}
-                            alt="Thumbnail"
-                            className="h-full w-full object-contain"
-                        />
-                    </button>
-                ))}
-            </div>
-
-            <div className="flex flex-1 items-center justify-center rounded-xl border p-6">
-                <img
-                    src={activeImage}
-                    alt="Preview"
-                    className="max-h-87.5 object-contain"
-                />
-            </div>
-        </div>
-    );
-};

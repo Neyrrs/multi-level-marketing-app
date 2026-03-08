@@ -14,6 +14,8 @@ use App\Http\Controllers\Guest as GuestControllers;
 use App\Http\Controllers\Logistik;
 use App\Http\Controllers\Finance;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PublicCartController;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -320,12 +322,10 @@ Route::get('/', function (Request $request) {
         return redirect('/' . $slug);
     }
 
-    return Inertia::render('home');
+    return app(ProductController::class)->index();
 })->name('home');
 
-Route::get('/produk', function () {
-    return Inertia::render('product');
-})->name('product');
+Route::get('/produk', [ProductController::class, 'produk'])->name('product');
 
 // Route::get('/login', function () {
 //     return Inertia::render('login');
@@ -349,9 +349,24 @@ Route::get('/profile', function () {
     return Inertia::render('profile');
 })->name('profile');
 
-Route::get('/cart', function () {
-    return Inertia::render('cart');
+// Cart page — render with user profile data (user may be null for guests)
+Route::get('/cart', function (Request $request) {
+    $user = $request->user();
+    return Inertia::render('cart', [
+        'user' => $user ? [
+            'name'   => $user->name,
+            'phone'  => $user->phone,
+            'alamat' => $user->alamat,
+            'email'  => $user->email,
+        ] : null,
+    ]);
 })->name('cart');
+
+// Cart checkout + cancel (login required)
+Route::middleware(['auth'])->group(function () {
+    Route::post('/cart/checkout', [PublicCartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/cart/cancel',   [PublicCartController::class, 'cancel'])->name('cart.cancel');
+});
 
 Route::get('/edit-profile', function () {
     return Inertia::render('edit-profile');
@@ -394,7 +409,7 @@ Route::get('/{slug}', function (Request $request, string $slug) {
     $request->session()->put('ref_affiliate_id', $affiliate->id);
     $request->session()->put('ref_affiliate_slug', $affiliate->slug);
 
-    return Inertia::render('home');
+    return app(ProductController::class)->index();
 })->where('slug', '^(?!login$|register$|logout$|produk$|mitra$|profile$|cart$|edit-profile$|dashboard-sementara$|storage$|media$|webhooks$|admin$|manager$|affiliate$|logistik$|finance$)[A-Za-z0-9_-]+$')
   ->name('affiliate.landing');
 

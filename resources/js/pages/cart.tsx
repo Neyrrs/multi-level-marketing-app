@@ -1,204 +1,355 @@
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import MainLayout from '@/components/fragments/main-layout';
+import { getCart, saveCart, type CartStorageItem } from '@/components/fragments/product-card';
 import { Button } from '@/components/ui/button';
-import { Trash } from 'lucide-react';
-import { useState } from 'react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { CheckCircle2, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
-interface CartItem {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    qty: number;
-    image: string;
+// ─── Types and Globals ────────────────────────────────────────────────────
+
+type InertiaPageProps = {
+    auth: {
+        user: any;
+    };
+    midtransConfig?: {
+        clientKey?: string;
+        isProduction?: boolean;
+    };
+    flash?: {
+        midtrans?: {
+            snap_token?: string | null;
+            redirect_url?: string | null;
+            order_number?: string | null;
+        } | null;
+        success?: string | null;
+        error?: string | null;
+    };
+};
+
+declare global {
+    interface Window {
+        snap?: {
+            pay: (
+                snapToken: string,
+                options?: {
+                    onSuccess?: (result: unknown) => void;
+                    onPending?: (result: unknown) => void;
+                    onError?: (result: unknown) => void;
+                    onClose?: () => void;
+                },
+            ) => void;
+        };
+    }
 }
 
-const cartItems: CartItem[] = [
-    {
-        id: 1,
-        name: 'Produk 1',
-        description:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam est dolor, malesuada non mollis sed, sodales eget sapien. Etiam eleifend ultrices lobortis. Etiam vel imperdiet turpis, vitae sollicitudin lorem. Proin eget sapien urna. Donec tincidunt finibus orci, nec vulputate nunc iaculis ut. Aliquam varius commodo magna, in iaculis ligula consectetur in. Sed ornare turpis tellus, non tincidunt lectus condimentum a. Maecenas vel interdum augue.',
-        price: 100000,
-        qty: 1,
-        image: 'https://via.placeholder.com/80',
-    },
-    {
-        id: 2,
-        name: 'Produk 2',
-        description: 'Pellentesque lobortis id lacus id commodo. Curabitur ac.',
-        price: 240000,
-        qty: 1,
-        image: 'https://via.placeholder.com/80',
-    },
-    {
-        id: 3,
-        name: 'Produk 3',
-        description: 'Pellentesque lobortis id lacus id commodo.',
-        price: 50000,
-        qty: 1,
-        image: 'https://via.placeholder.com/80',
-    },
-    {
-        id: 4,
-        name: 'Produk 4',
-        description: 'Curabitur ac consectetur ligula.',
-        price: 60000,
-        qty: 1,
-        image: 'https://via.placeholder.com/80',
-    },
-];
+// ─── Helpers ──────────────────────────────────────────────────────────────
 
 const formatRupiah = (value: number = 0) =>
     `Rp${value.toLocaleString('id-ID')}`;
 
+// ─── Success Screen ───────────────────────────────────────────────────────
+
+const OrderSuccess: React.FC<{ onBack: () => void }> = ({ onBack }) => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 flex flex-col items-center gap-4 text-center">
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+                <CheckCircle2 className="w-12 h-12 text-green-500" />
+            </div>
+            <h2 className="text-2xl font-bold">Pesanan Berhasil Dibuat!</h2>
+            <p className="text-gray-500 text-sm">
+                Terima kasih atas pembelian Anda. Anda dapat melihat status pesanan di dashboard Anda.
+            </p>
+            <Button onClick={onBack} className="w-full mt-2">
+                Kembali ke Beranda
+            </Button>
+        </div>
+    </div>
+);
+
+// ─── Main Cart Page ───────────────────────────────────────────────────────
+
 const Cart = () => {
-    const subtotal = cartItems.reduce(
-        (total, item) => total + item.price * item.qty,
-        0,
+    const { auth, midtransConfig, flash } = usePage<InertiaPageProps>().props;
+    const [items, setItems] = useState<CartStorageItem[]>([]);
+    const [isPaying, setIsPaying] = useState(false);
+    const [orderSuccess, setOrderSuccess] = useState(false);
+
+    // Load cart from localStorage on mount
+    useEffect(() => {
+        setItems(getCart());
+
+        const onCartUpdated = () => setItems(getCart());
+        window.addEventListener('cart-updated', onCartUpdated);
+        return () => window.removeEventListener('cart-updated', onCartUpdated);
+    }, []);
+
+    // Load Midtrans Script
+    useEffect(() => {
+        const clientKey = midtransConfig?.clientKey;
+        if (!clientKey || window.snap) {
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = midtransConfig?.isProduction
+            ? 'https://app.midtrans.com/snap/snap.js'
+            : 'https://app.sandbox.midtrans.com/snap/snap.js';
+        script.setAttribute('data-client-key', clientKey);
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            if (document.body.contains(script)) {
+                document.body.removeChild(script);
+            }
+        };
+    }, [midtransConfig?.clientKey, midtransConfig?.isProduction]);
+
+    const updateQty = (id: number, delta: number) => {
+        const updated = items.map((item) => {
+            if (item.id !== id) return item;
+            const newQty = Math.max(1, Math.min(item.qty + delta, item.stock));
+            return { ...item, qty: newQty };
+        });
+        setItems(updated);
+        saveCart(updated);
+    };
+
+    const removeItem = (id: number) => {
+        const updated = items.filter((item) => item.id !== id);
+        setItems(updated);
+        saveCart(updated);
+    };
+
+    const subtotal = items.reduce((total, item) => total + item.price * item.qty, 0);
+
+    const clearCartAndShowSuccess = () => {
+        saveCart([]);
+        setItems([]);
+        setOrderSuccess(true);
+    };
+
+    const openMidtransPopup = (snapToken?: string | null, redirectUrl?: string | null) => {
+        if (snapToken && window.snap) {
+            window.snap.pay(snapToken, {
+                onSuccess: () => clearCartAndShowSuccess(),
+                onPending: () => clearCartAndShowSuccess(),
+                onError: () => clearCartAndShowSuccess(),
+                onClose: () => clearCartAndShowSuccess(), // Cart is transformed into order even if closed
+            });
+            return;
+        }
+
+        if (redirectUrl) {
+            clearCartAndShowSuccess();
+            window.location.href = redirectUrl;
+        }
+    };
+
+    const handleCheckout = () => {
+        if (items.length === 0 || isPaying) return;
+
+        if (!auth.user) {
+            router.get('/login');
+            return;
+        }
+
+        setIsPaying(true);
+        router.post(
+            '/cart/checkout',
+            {
+                items: items.map((item) => ({
+                    id: item.id,
+                    qty: item.qty,
+                })),
+                notes: 'Pesanan dari keranjang',
+            },
+            {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    const pageProps = page.props as unknown as InertiaPageProps;
+                    const snapToken = pageProps.flash?.midtrans?.snap_token;
+                    const redirectUrl = pageProps.flash?.midtrans?.redirect_url;
+                    
+                    if (snapToken || redirectUrl) {
+                        openMidtransPopup(snapToken, redirectUrl);
+                    } else {
+                        // Fallback if no midtrans response
+                        clearCartAndShowSuccess();
+                    }
+                },
+                onFinish: () => setIsPaying(false),
+            }
+        );
+    };
+
+    // ── Summary panel (shared between desktop & mobile) ───────────────
+    const SummaryPanel = () => (
+        <div className="flex flex-col gap-3 text-sm">
+            <p className="text-base font-bold mb-1">Ringkasan Belanja</p>
+            <div className="flex justify-between">
+                <span className="text-gray-500">Subtotal ({items.length} produk)</span>
+                <span>{formatRupiah(subtotal)}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="text-gray-500">Ongkos Kirim</span>
+                <span className="text-green-500 font-medium">Gratis</span>
+            </div>
+            <div className="mt-3 flex justify-between border-t pt-3 font-bold text-base">
+                <span>Total</span>
+                <span className="text-primary">{formatRupiah(subtotal)}</span>
+            </div>
+
+            {flash?.error && (
+                <div className="mt-2 p-3 text-red-600 bg-red-50 rounded-lg text-xs font-medium">
+                    {flash.error}
+                </div>
+            )}
+
+            <Button
+                className="mt-4 w-full"
+                size="lg"
+                disabled={items.length === 0 || isPaying}
+                onClick={handleCheckout}
+            >
+                {isPaying ? 'Memproses...' : (auth.user ? 'Pesan Sekarang' : 'Login untuk Pesan')}
+            </Button>
+        </div>
     );
-    const [count, setCount] = useState<number>(1);
 
     return (
         <MainLayout>
+            <Head title="Keranjang" />
+
+            {/* Success Modal */}
+            {orderSuccess && (
+                <OrderSuccess onBack={() => { setOrderSuccess(false); window.location.href = '/'; }} />
+            )}
+
             <div className="py-10 relative">
                 <ContainerWrapper>
+                    {/* Title */}
                     <div className="mb-6 flex items-center gap-4">
-                        <h1 className="text-2xl font-bold text-primary">
-                            Keranjangku
-                        </h1>
+                        <h1 className="text-2xl font-bold text-primary">Keranjangku</h1>
                         <div className="flex-1 border-t border-black" />
+                        {items.length > 0 && (
+                            <span className="text-sm text-gray-500">
+                                {items.length} produk
+                            </span>
+                        )}
                     </div>
 
-                    <div className="rounded-3xl bg-white p-6 shadow-lg">
-                        <div className="flex flex-col gap-8 lg:flex-row">
-                            <div className="flex flex-1 flex-col gap-6 pr-0 lg:pr-8">
-                                {cartItems.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="flex items-start gap-4 border-b pb-6 last:border-b-0"
-                                    >
-                                        <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="h-20 w-20 rounded-xl object-cover"
-                                        />
+                    {/* Empty state */}
+                    {items.length === 0 ? (
+                        <div className="flex flex-col items-center gap-5 py-20 text-center">
+                            <ShoppingBag className="w-20 h-20 text-gray-200" />
+                            <p className="text-lg font-semibold text-gray-400">Keranjang kamu masih kosong</p>
+                            <p className="text-sm text-gray-400">Yuk, tambahkan produk dari halaman utama!</p>
+                            <Link href="/">
+                                <Button size="lg">Lihat Produk</Button>
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="rounded-3xl bg-white p-6 shadow-lg">
+                            <div className="flex flex-col gap-8 lg:flex-row">
 
-                                        <div className="flex flex-1 flex-col gap-1">
-                                            <p className="font-semibold">
-                                                {item.name}
-                                            </p>
-                                            <p className="line-clamp-2 text-xs text-gray-500">
-                                                {item.description}
-                                            </p>
-                                            <Button
-                                                variant={'link'}
-                                                size={'icon'}
-                                                className="w-fit text-red-500 hover:text-red-500/80"
-                                            >
-                                                <Trash className="h-4 w-4 bg-transparent" />{' '}
-                                                Hapus
-                                            </Button>
-                                        </div>
+                                {/* Items list */}
+                                <div className="flex flex-1 flex-col gap-6 pr-0 lg:pr-8">
+                                    {items.map((item) => (
+                                        <div
+                                            key={item.id}
+                                            className="flex items-start gap-4 border-b pb-6 last:border-b-0"
+                                        >
+                                            {/* Thumbnail */}
+                                            <div className="h-20 w-20 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                                                {item.image ? (
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="h-full w-full flex items-center justify-center text-gray-300">
+                                                        <ShoppingBag className="w-8 h-8" />
+                                                    </div>
+                                                )}
+                                            </div>
 
-                                        <div className="flex flex-col items-end gap-2">
-                                            <p className="font-semibold">
-                                                {formatRupiah(item.price)}
-                                            </p>
-                                            <div className="flex items-center gap-2">
-                                                <Button
-                                                    variant={'default'}
-                                                    onClick={() =>
-                                                        setCount(count - 1)
-                                                    }
-                                                    disabled={count <= 1}
-                                                    size={'sm'}
-                                                    className="rounded-md bg-primary text-white"
+                                            {/* Info */}
+                                            <div className="flex flex-1 flex-col gap-1 min-w-0">
+                                                <p className="font-semibold truncate">{item.name}</p>
+                                                <p className="line-clamp-2 text-xs text-gray-400">
+                                                    {item.description}
+                                                </p>
+                                                <button
+                                                    onClick={() => removeItem(item.id)}
+                                                    className="mt-1 flex items-center gap-1 text-xs text-red-500 hover:text-red-400 transition w-fit"
                                                 >
-                                                    -
-                                                </Button>
-                                                <span className="text-sm">
-                                                    {item.qty + count}
-                                                </span>
-                                                <Button
-                                                    variant={'default'}
-                                                    onClick={() =>
-                                                        setCount(count + 1)
-                                                    }
-                                                    size={'sm'}
-                                                    className="rounded-md bg-primary text-white"
-                                                >
-                                                    +
-                                                </Button>
+                                                    <Trash2 className="w-3 h-3" /> Hapus
+                                                </button>
+                                            </div>
+
+                                            {/* Price + Qty */}
+                                            <div className="flex flex-col items-end gap-2 shrink-0">
+                                                <p className="font-semibold text-sm">
+                                                    {formatRupiah(item.price)}
+                                                </p>
+                                                <div className="flex items-center gap-2">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        onClick={() => updateQty(item.id, -1)}
+                                                        disabled={item.qty <= 1}
+                                                        className="h-8 w-8 rounded-md"
+                                                    >
+                                                        <Minus className="h-3 w-3" />
+                                                    </Button>
+                                                    <span className="text-sm font-medium w-6 text-center">
+                                                        {item.qty}
+                                                    </span>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        onClick={() => updateQty(item.id, 1)}
+                                                        disabled={item.qty >= item.stock}
+                                                        className="h-8 w-8 rounded-md"
+                                                    >
+                                                        <Plus className="h-3 w-3" />
+                                                    </Button>
+                                                </div>
+                                                <p className="text-xs text-gray-400">
+                                                    Subtotal: {formatRupiah(item.price * item.qty)}
+                                                </p>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="hidden w-px bg-black lg:block" />
-
-                            <div className="hidden w-full md:block lg:w-80">
-                                <h2 className="mb-4 text-lg font-semibold">
-                                    Details
-                                </h2>
-
-                                <p className="mb-4 text-sm text-gray-500">
-                                    ut nunc. Vivamus nisl mauris, eleifend vel
-                                    mauris quis, cursus ultricies diam.
-                                </p>
-
-                                <div className="flex flex-col gap-3 text-sm">
-                                    <div className="flex justify-between">
-                                        <span>Subtotal</span>
-                                        <span>{formatRupiah(subtotal)}</span>
-                                    </div>
-
-                                    <div className="flex justify-between">
-                                        <span>Fee</span>
-                                        <span>Free</span>
-                                    </div>
-
-                                    <div className="mt-3 flex justify-between border-t pt-3 font-semibold">
-                                        <span>Total</span>
-                                        <span>{formatRupiah(subtotal)}</span>
-                                    </div>
+                                    ))}
                                 </div>
 
-                                <Button className="mt-6 w-full">
-                                    Pesan Sekarang
-                                </Button>
+                                {/* Desktop summary sidebar */}
+                                <div className="hidden w-px bg-gray-200 lg:block" />
+                                <div className="hidden w-full lg:block lg:w-72 shrink-0">
+                                    <SummaryPanel />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </ContainerWrapper>
-                <div className="fixed bottom-0 max-w-2xl rounded-t-xl bg-white p-4 shadow-2xl md:hidden lg:w-80">
-                    <h2 className="mb-4 text-lg font-semibold">Details</h2>
 
-                    <p className="mb-4 text-sm text-gray-500">
-                        ut nunc. Vivamus nisl mauris, eleifend vel mauris quis,
-                        cursus ultricies diam.
-                    </p>
-
-                    <div className="flex flex-col gap-3 text-sm">
-                        <div className="flex justify-between">
-                            <span>Subtotal</span>
-                            <span>{formatRupiah(subtotal)}</span>
-                        </div>
-
-                        <div className="flex justify-between">
-                            <span>Fee</span>
-                            <span>Free</span>
-                        </div>
-
-                        <div className="mt-3 flex justify-between border-t pt-3 font-semibold">
-                            <span>Total</span>
-                            <span>{formatRupiah(subtotal)}</span>
+                {/* Mobile sticky summary bar */}
+                {items.length > 0 && (
+                    <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-2xl p-4 lg:hidden z-40">
+                        <div className="flex items-center justify-between mb-3">
+                            <div>
+                                <p className="text-xs text-gray-500">Total</p>
+                                <p className="text-lg font-bold text-primary">{formatRupiah(subtotal)}</p>
+                            </div>
+                            <Button size="lg" disabled={isPaying} onClick={handleCheckout}>
+                                {isPaying ? 'Memproses...' : (auth.user ? 'Pesan Sekarang' : 'Login')}
+                            </Button>
                         </div>
                     </div>
-
-                    <Button className="mt-6 w-full">Pesan Sekarang</Button>
-                </div>
+                )}
             </div>
         </MainLayout>
     );

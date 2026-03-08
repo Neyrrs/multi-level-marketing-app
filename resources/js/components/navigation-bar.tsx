@@ -21,8 +21,9 @@ import {
     X,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ContainerWrapper from './fragments/container-wrapper';
+import { getCart } from './fragments/product-card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
@@ -48,6 +49,15 @@ const NavigationBar = () => {
     const { auth } = usePage<SharedData>().props;
     const cleanup = useMobileNavigation();
     const [open, setOpen] = useState(false);
+    const [cartCount, setCartCount] = useState(() =>
+        getCart().reduce((sum, item) => sum + item.qty, 0)
+    );
+
+    useEffect(() => {
+        const refresh = () => setCartCount(getCart().reduce((sum, item) => sum + item.qty, 0));
+        window.addEventListener('cart-updated', refresh);
+        return () => window.removeEventListener('cart-updated', refresh);
+    }, []);
 
     const links: LinkTypes[] = [
         { path: home(), name: 'Home', protected: false },
@@ -98,9 +108,11 @@ const NavigationBar = () => {
                                 >
                                     <Link href={cart()}>
                                         <ShoppingCart className="size-6" />
-                                        <Badge className="absolute -top-1 -right-2 bg-red-500 text-[10px]">
-                                            10
-                                        </Badge>
+                                        {cartCount > 0 && (
+                                            <Badge className="absolute -top-1 -right-2 bg-red-500 text-[10px]">
+                                                {cartCount > 99 ? '99+' : cartCount}
+                                            </Badge>
+                                        )}
                                     </Link>
                                 </Button>
                                 <Popover>
