@@ -44,6 +44,7 @@ class ShopController extends Controller
                 'id' => $item->id,
                 'name' => $item->name,
                 'price' => (float) $item->harga_akhir,
+                'point_value' => (float) $item->point_value,
                 'stock' => (int) $item->stock,
                 'image' => $imageUrl,
                 'category' => $item->type ?? 'single',

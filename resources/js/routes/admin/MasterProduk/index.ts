@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::create
- * @see app/Http/Controllers/Admin/MasterProdukController.php:60
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:61
  * @route '/admin/MasterProduk/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::store
- * @see app/Http/Controllers/Admin/MasterProdukController.php:68
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:69
  * @route '/admin/MasterProduk'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::store
- * @see app/Http/Controllers/Admin/MasterProdukController.php:68
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:69
  * @route '/admin/MasterProduk'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::store
- * @see app/Http/Controllers/Admin/MasterProdukController.php:68
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:69
  * @route '/admin/MasterProduk'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::store
- * @see app/Http/Controllers/Admin/MasterProdukController.php:68
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:69
  * @route '/admin/MasterProduk'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::store
- * @see app/Http/Controllers/Admin/MasterProdukController.php:68
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:69
  * @route '/admin/MasterProduk'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 export const show = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 show.url = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -255,7 +255,7 @@ show.url = (args: { MasterProduk: string | number } | [MasterProduk: string | nu
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 show.get = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -264,7 +264,7 @@ show.get = (args: { MasterProduk: string | number } | [MasterProduk: string | nu
 })
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 show.head = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -274,7 +274,7 @@ show.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
 
     /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
     const showForm = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -284,7 +284,7 @@ show.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
 
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
         showForm.get = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -293,7 +293,7 @@ show.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
         })
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::show
- * @see app/Http/Controllers/Admin/MasterProdukController.php:76
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:77
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
         showForm.head = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -309,7 +309,7 @@ show.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
 export const edit = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -324,7 +324,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
 edit.url = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -352,7 +352,7 @@ edit.url = (args: { MasterProduk: string | number } | [MasterProduk: string | nu
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
 edit.get = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -361,7 +361,7 @@ edit.get = (args: { MasterProduk: string | number } | [MasterProduk: string | nu
 })
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
 edit.head = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -371,7 +371,7 @@ edit.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
 
     /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
     const editForm = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -381,7 +381,7 @@ edit.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
 
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
         editForm.get = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -390,7 +390,7 @@ edit.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
         })
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::edit
- * @see app/Http/Controllers/Admin/MasterProdukController.php:84
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:85
  * @route '/admin/MasterProduk/{MasterProduk}/edit'
  */
         editForm.head = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -406,7 +406,7 @@ edit.head = (args: { MasterProduk: string | number } | [MasterProduk: string | n
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 export const update = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -421,7 +421,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 update.url = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -449,7 +449,7 @@ update.url = (args: { MasterProduk: string | number } | [MasterProduk: string | 
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 update.put = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -458,7 +458,7 @@ update.put = (args: { MasterProduk: string | number } | [MasterProduk: string | 
 })
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 update.patch = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -468,7 +468,7 @@ update.patch = (args: { MasterProduk: string | number } | [MasterProduk: string 
 
     /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
     const updateForm = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -483,7 +483,7 @@ update.patch = (args: { MasterProduk: string | number } | [MasterProduk: string 
 
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
         updateForm.put = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -497,7 +497,7 @@ update.patch = (args: { MasterProduk: string | number } | [MasterProduk: string 
         })
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::update
- * @see app/Http/Controllers/Admin/MasterProdukController.php:92
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:93
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
         updateForm.patch = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -513,7 +513,7 @@ update.patch = (args: { MasterProduk: string | number } | [MasterProduk: string 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::destroy
- * @see app/Http/Controllers/Admin/MasterProdukController.php:100
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:101
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 export const destroy = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -528,7 +528,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::destroy
- * @see app/Http/Controllers/Admin/MasterProdukController.php:100
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:101
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 destroy.url = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -556,7 +556,7 @@ destroy.url = (args: { MasterProduk: string | number } | [MasterProduk: string |
 
 /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::destroy
- * @see app/Http/Controllers/Admin/MasterProdukController.php:100
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:101
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
 destroy.delete = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -566,7 +566,7 @@ destroy.delete = (args: { MasterProduk: string | number } | [MasterProduk: strin
 
     /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::destroy
- * @see app/Http/Controllers/Admin/MasterProdukController.php:100
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:101
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
     const destroyForm = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -581,7 +581,7 @@ destroy.delete = (args: { MasterProduk: string | number } | [MasterProduk: strin
 
             /**
 * @see \App\Http\Controllers\Admin\MasterProdukController::destroy
- * @see app/Http/Controllers/Admin/MasterProdukController.php:100
+ * @see app/Http/Controllers/Admin/MasterProdukController.php:101
  * @route '/admin/MasterProduk/{MasterProduk}'
  */
         destroyForm.delete = (args: { MasterProduk: string | number } | [MasterProduk: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

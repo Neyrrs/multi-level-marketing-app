@@ -17,6 +17,7 @@ interface Product {
     id: number;
     name: string;
     price: number;
+    point_value: number;
     stock: number;
     image: string;
     category: string;
@@ -241,11 +242,12 @@ export default function Shop({
                                         title={item.name}
                                         price={`Rp${item.price.toLocaleString('id-ID')}`}
                                         stock={remainingStock}
-                                        point={`${(item.price / 1000).toFixed(0)} point`}
+                                        point={`${item.point_value.toLocaleString('id-ID')} point`}
                                         pin="1 PIN"
                                         productInfo={[
                                             `Kategori: ${item.category}`,
                                             `Harga: Rp${item.price.toLocaleString('id-ID')}`,
+                                            `Poin: ${item.point_value.toLocaleString('id-ID')}`,
                                             `Stok tersisa: ${remainingStock}`,
                                         ]}
                                         onAddToCart={(qty) =>

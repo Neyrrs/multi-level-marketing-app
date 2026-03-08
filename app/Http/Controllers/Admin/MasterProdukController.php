@@ -37,6 +37,7 @@ class MasterProdukController extends Controller
                 'harga_awal' => (float) ($product->harga_awal ?? 0),
                 'diskon' => (float) ($product->diskon ?? 0),
                 'harga_akhir' => (float) ($product->harga_akhir ?? 0),
+                'point_value' => (float) ($product->point_value ?? 0),
                 'is_active' => (bool) ($product->is_active ?? true),
                 'image_url' => $this->extractImageUrl($product),
                 'created_at' => $product->created_at?->format('Y-m-d H:i'),
