@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
     editProfileSchema,
     EditProfileSchema,
@@ -18,14 +19,17 @@ import {
 import { SharedData } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, router, usePage } from '@inertiajs/react';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 const EditProfile = () => {
     const { auth } = usePage<SharedData>().props;
     const user = auth.user;
 
     const [photo, setPhoto] = useState<File | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
     const {
@@ -51,15 +55,26 @@ const EditProfile = () => {
     };
 
     const handleEditProfile = (data: EditProfileSchema) => {
-        router.post('/profile', {
-            ...data,
-            phone: data.phone || '',
-            alamat: data.alamat || '',
-            photo: photo,
-        }, {
-            preserveScroll: true,
-            forceFormData: true,
-        });
+        try {
+            setLoading(true);
+            router.post(
+                '/profile',
+                {
+                    ...data,
+                    phone: data.phone || '',
+                    alamat: data.alamat || '',
+                    photo: photo,
+                },
+                {
+                    preserveScroll: true,
+                    forceFormData: true,
+                },
+            );
+        } catch (error) {
+            toast.error('Gagal mengubah profile');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -104,16 +119,18 @@ const EditProfile = () => {
                             <div className="flex flex-col items-center gap-4">
                                 <Label
                                     htmlFor="photo-upload"
-                                    className="cursor-pointer group flex flex-col items-center gap-4"
+                                    className="group flex cursor-pointer flex-col items-center gap-4"
                                 >
-                                    <div className="h-40 w-40 overflow-hidden rounded-full border-4 border-primary relative">
+                                    <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-primary">
                                         <img
                                             src={photoPreview || user.avatar}
                                             alt="Foto Profil"
                                             className="h-full w-full object-cover transition duration-300 group-hover:opacity-75"
                                         />
-                                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <span className="text-white text-xs font-semibold">Ubah Foto</span>
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                                            <span className="text-xs font-semibold text-white">
+                                                Ubah Foto
+                                            </span>
                                         </div>
                                     </div>
                                     <p className="text-xs text-gray-500">
@@ -132,12 +149,12 @@ const EditProfile = () => {
 
                         <div className="rounded-lg bg-white p-8 shadow-lg lg:col-span-8">
                             <div className="flex flex-col gap-2">
-                                <div className="flex flex-col md:flex-row md:justify-between gap-4 md:gap-8">
+                                <div className="flex flex-col gap-4 md:flex-row md:justify-between md:gap-8">
                                     <div className="flex-1">
                                         <Label>Username</Label>
                                         <Input {...register('name')} />
                                         {errors.name && (
-                                            <p className="text-xs text-red-500 mt-1">
+                                            <p className="mt-1 text-xs text-red-500">
                                                 {errors.name.message}
                                             </p>
                                         )}
@@ -147,7 +164,7 @@ const EditProfile = () => {
                                         <Label>Nomor Telepon</Label>
                                         <Input {...register('phone')} />
                                         {errors.phone && (
-                                            <p className="text-xs text-red-500 mt-1">
+                                            <p className="mt-1 text-xs text-red-500">
                                                 {errors.phone.message}
                                             </p>
                                         )}
@@ -157,20 +174,20 @@ const EditProfile = () => {
                                         <Label>Email</Label>
                                         <Input {...register('email')} />
                                         {errors.email && (
-                                            <p className="text-xs text-red-500 mt-1">
+                                            <p className="mt-1 text-xs text-red-500">
                                                 {errors.email.message}
                                             </p>
                                         )}
                                     </div>
                                 </div>
-                                <div className="w-full mt-4">
+                                <div className="mt-4 w-full">
                                     <Label>Alamat</Label>
-                                    <textarea
+                                    <Textarea
                                         {...register('alamat')}
-                                        className="mt-1 min-h-40 w-full resize-none rounded-md border-2 border-primary/20 px-3 py-3 text-sm focus:ring-2 focus:border-primary focus:ring-primary/50 focus:outline-none transition"
+                                        className="mt-1 min-h-40 resize-none text-xs"
                                     />
                                     {errors.alamat && (
-                                        <p className="text-xs text-red-500 mt-1">
+                                        <p className="mt-1 text-xs text-red-500">
                                             {errors.alamat.message}
                                         </p>
                                     )}
@@ -192,9 +209,14 @@ const EditProfile = () => {
 
                         <Button
                             type="submit"
-                            className="bg-green-600 font-bold hover:bg-green-700"
+                            className="bg-primary font-bold hover:bg-primary/80"
+                            disabled={loading}
                         >
-                            Simpan Perubahan
+                            {loading ? (
+                                <Loader2 className="animate-spin" />
+                            ) : (
+                                'Simpan Perubahan'
+                            )}
                         </Button>
                     </div>
                 </ContainerWrapper>

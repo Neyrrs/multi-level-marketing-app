@@ -1,3 +1,5 @@
+import { ArrowDownIcon } from "lucide-react";
+
 const HighlightSection = () => {
     return (
         <section className="bg-primary py-20 text-white">
@@ -14,7 +16,7 @@ const HighlightSection = () => {
                     </p>
 
                     <button className="mt-6 inline-flex items-center gap-2 font-medium">
-                        Pelajari lebih lanjut →
+                        Pelajari lebih lanjut <ArrowDownIcon />
                     </button>
                 </div>
 

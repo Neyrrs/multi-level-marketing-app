@@ -10,7 +10,7 @@ const Footer = () => {
                     <div className="flex flex-col gap-8 md:flex-row md:justify-between">
                         <div className="max-w-md">
                             <div className="mb-3 flex items-center gap-2 text-3xl font-bold">
-                                ALUS
+                                Alus
                             </div>
                             <p className="text-sm leading-relaxed text-gray-600">
                                 Alus Astech menghadirkan solusi teknologi infrastruktur gedung yang modern, aman, dan efisien. Kami berkomitmen untuk mendukung pertumbuhan bisnis Anda melalui layanan terbaik dan terpercaya.

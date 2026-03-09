@@ -255,7 +255,7 @@ const Cart = () => {
                             <ShoppingBag className="w-20 h-20 text-gray-200" />
                             <p className="text-lg font-semibold text-gray-400">Keranjang kamu masih kosong</p>
                             <p className="text-sm text-gray-400">Yuk, tambahkan produk dari halaman utama!</p>
-                            <Link href="/">
+                            <Link href="/product">
                                 <Button size="lg">Lihat Produk</Button>
                             </Link>
                         </div>
