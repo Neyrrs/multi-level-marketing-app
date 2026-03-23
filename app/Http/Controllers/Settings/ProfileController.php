@@ -61,19 +61,32 @@ class ProfileController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'] ?? null,
-            'alamat' => $validated['alamat'] ?? null,
         ]);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
+        // Ensure non-existing DB attribute is never persisted to users table.
+        if (array_key_exists('alamat', $user->getAttributes())) {
+            $user->offsetUnset('alamat');
+        }
+
         $user->save();
+
+        $profile = $user->profile ?? $user->profile()->create();
+        $existingAddress = $profile->address;
+        if (!is_array($existingAddress)) {
+            $existingAddress = [];
+        }
+        $profile->address = array_merge($existingAddress, [
+            'full_address' => $validated['alamat'] ?? null,
+        ]);
+        $profile->save();
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('profiles', 'public');
 
-            $profile = $user->profile ?? $user->profile()->create();
             $profile->photo_profile = $path;
             $profile->save();
         }

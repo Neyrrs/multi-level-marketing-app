@@ -48,17 +48,23 @@ interface NavigationItem {
 
 const NavigationBar = () => {
     const { auth } = usePage<SharedData>().props;
+    const roleNames = (auth.user?.roles ?? []).map((role: any) =>
+        typeof role === 'string' ? role : role?.name
+    ).filter(Boolean);
+    const isGuestRole = roleNames.includes('guest');
+    const authUserId = auth.user?.id ? Number(auth.user.id) : null;
     const cleanup = useMobileNavigation();
     const [open, setOpen] = useState(false);
     const [cartCount, setCartCount] = useState(() =>
-        getCart().reduce((sum, item) => sum + item.qty, 0)
+        getCart(authUserId).reduce((sum, item) => sum + item.qty, 0)
     );
 
     useEffect(() => {
-        const refresh = () => setCartCount(getCart().reduce((sum, item) => sum + item.qty, 0));
+        const refresh = () => setCartCount(getCart(authUserId).reduce((sum, item) => sum + item.qty, 0));
+        refresh();
         window.addEventListener('cart-updated', refresh);
         return () => window.removeEventListener('cart-updated', refresh);
-    }, []);
+    }, [authUserId]);
 
     const links: LinkTypes[] = [
         { path: home.url(), name: 'Beranda', protected: false },
@@ -146,15 +152,17 @@ const NavigationBar = () => {
                                                     <span>Profil</span>
                                                 </Button>
                                             </Link>
-                                            <Link href={dashboard.url()}>
-                                                <Button
-                                                    variant={'ghost'}
-                                                    className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"
-                                                >
-                                                    <LayoutDashboard />
-                                                    <span>Dasbor</span>
-                                                </Button>
-                                            </Link>
+                                            {!isGuestRole && (
+                                                <Link href={dashboard.url()}>
+                                                    <Button
+                                                        variant={'ghost'}
+                                                        className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"
+                                                    >
+                                                        <LayoutDashboard />
+                                                        <span>Dasbor</span>
+                                                    </Button>
+                                                </Link>
+                                            )}
                                         </div>
                                         <Button
                                             variant={'destructive'}

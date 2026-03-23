@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CommissionMethod;
 use App\Models\CommissionRule;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CommissionRuleController extends Controller
@@ -13,25 +14,31 @@ class CommissionRuleController extends Controller
     public function index(Request $request)
     {
         $search = $request->input('search', '');
-        $perPage = (int) $request->input('per_page', 10);
-
-        $query = CommissionRule::with('method');
+        $query = CommissionRule::with('method')
+            ->orderBy('method_id')
+            ->orderBy('priority')
+            ->orderBy('id');
         if ($search) {
             $query->whereRelation('method', 'name', 'like', "%{$search}%");
         }
 
-        $rules = $query->paginate($perPage);
+        // One visible rule per method (first by priority).
+        $rules = $query->get()
+            ->groupBy('method_id')
+            ->map(fn ($rows) => $rows->first())
+            ->values();
 
         return Inertia::render('admin/commission-rules/index', [
-            'rules' => $rules->items(),
+            'rules' => $rules,
             'pagination' => [
-                'total' => $rules->total(),
-                'currentPage' => $rules->currentPage(),
-                'perPage' => $rules->perPage(),
-                'lastPage' => $rules->lastPage(),
-                'hasMore' => $rules->hasMorePages(),
+                'total' => $rules->count(),
+                'currentPage' => 1,
+                'perPage' => $rules->count(),
+                'lastPage' => 1,
+                'hasMore' => false,
             ],
             'search' => $search,
+            'locked_single_rule' => true,
         ]);
     }
 
@@ -72,9 +79,22 @@ class CommissionRuleController extends Controller
             $data['max_depth'] ?? null
         );
         unset($data['depth'], $data['max_depth']);
+        $data['priority'] = 1;
+
+        // Enforce single rule per method.
+        $existing = CommissionRule::query()
+            ->where('method_id', $data['method_id'])
+            ->orderBy('priority')
+            ->orderBy('id')
+            ->first();
+
+        if ($existing) {
+            $existing->update($data);
+            return response()->json(['success' => true, 'rule' => $existing, 'updated_existing' => true]);
+        }
 
         $rule = CommissionRule::create($data);
-        return response()->json(['success' => true, 'rule' => $rule], 201);
+        return response()->json(['success' => true, 'rule' => $rule, 'updated_existing' => false], 201);
     }
 
     public function update(Request $request, CommissionRule $commissionRule)
@@ -95,6 +115,17 @@ class CommissionRuleController extends Controller
             $data['max_depth'] ?? null
         );
         unset($data['depth'], $data['max_depth']);
+        $data['priority'] = 1;
+
+        $conflict = CommissionRule::query()
+            ->where('method_id', $data['method_id'])
+            ->where('id', '!=', $commissionRule->id)
+            ->exists();
+        if ($conflict) {
+            throw ValidationException::withMessages([
+                'method_id' => 'Setiap metode hanya boleh memiliki 1 rule.',
+            ]);
+        }
 
         $commissionRule->update($data);
         return response()->json(['success' => true, 'rule' => $commissionRule]);

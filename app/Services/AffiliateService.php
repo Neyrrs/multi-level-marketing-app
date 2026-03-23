@@ -25,9 +25,15 @@ class AffiliateService
      */
     public function assignRandomSponsor(): ?Affiliate
     {
-        return Affiliate::where('is_active', true)
+        $randomActiveAffiliate = Affiliate::where('is_active', true)
             ->inRandomOrder()
             ->first();
+
+        if ($randomActiveAffiliate) {
+            return $randomActiveAffiliate;
+        }
+
+        return $this->getOrCreateAdminRootAffiliate();
     }
 
     /**
@@ -55,7 +61,8 @@ class AffiliateService
         User $newUser,
         Affiliate $sponsor,
         string $position = 'left',
-        ?ActivationCode $activationCode = null
+        ?ActivationCode $activationCode = null,
+        ?Affiliate $placementUpline = null
     ): Affiliate {
         // Validate position
         if (!in_array($position, ['left', 'right'])) {
@@ -81,18 +88,22 @@ class AffiliateService
         $username = $this->generateUniqueUsername($newUser->name);
         $slug = Str::slug($username);
 
+        $targetUpline = $placementUpline && ((int) $placementUpline->sponsor_id === (int) $sponsor->user_id || (int) $placementUpline->id === (int) $sponsor->id)
+            ? $placementUpline
+            : $sponsor;
+
         // Create affiliate record
         $defaultPlanId = $this->resolveDefaultPlanId();
         $newAffiliate = Affiliate::create([
             'user_id' => $newUser->id,
             'sponsor_id' => $sponsor->user_id,
-            'upline_id' => $sponsor->user_id,
+            'upline_id' => $targetUpline->user_id,
             'activation_code_id' => $activationCode->id,
             'commission_plan_id' => $defaultPlanId,
             'username' => $username,
             'slug' => $slug,
             'position' => $position,
-            'level' => $sponsor->level + 1,
+            'level' => $targetUpline->level + 1,
             'direct_downline' => 0,
             'total_downline' => 0,
             'left_count' => 0,
@@ -104,27 +115,28 @@ class AffiliateService
             'total_volume' => 0,
             'is_active' => true,
             'activated_at' => now(),
+            'active_until' => now()->addMonth(),
         ]);
 
-        // Ensure sponsor has MLM tree root node.
-        $parentTree = $sponsor->mlmTree;
+        // Ensure target upline has MLM tree node.
+        $parentTree = $targetUpline->mlmTree;
         if (!$parentTree) {
             $parentTree = MlmTree::create([
-                'affiliate_id' => $sponsor->id,
+                'affiliate_id' => $targetUpline->id,
                 'parent_id' => null,
                 'position' => null,
                 'depth' => 0,
                 'left_position' => 1,
                 'right_position' => 2,
-                'path' => (string) $sponsor->id,
-                'lineage' => (string) $sponsor->id,
+                'path' => (string) $targetUpline->id,
+                'lineage' => (string) $targetUpline->id,
             ]);
         }
 
         // Create MLM Tree node for new affiliate under sponsor tree.
         MlmTree::create([
             'affiliate_id' => $newAffiliate->id,
-            'parent_id' => $parentTree->id,
+            'parent_id' => $targetUpline->id,
             'position' => $position,
             'depth' => max(1, (int) $newAffiliate->level),
             'left_position' => 0,
@@ -146,12 +158,12 @@ class AffiliateService
             'used_at' => now(),
         ]);
 
-        // Update sponsor downline count
+        // Update sponsor + target upline counters
         $sponsor->increment('direct_downline');
         if ($position === 'left') {
-            $sponsor->increment('left_count');
+            $targetUpline->increment('left_count');
         } else {
-            $sponsor->increment('right_count');
+            $targetUpline->increment('right_count');
         }
 
         return $newAffiliate;
@@ -481,35 +493,43 @@ class AffiliateService
     /**
      * Confirm a pending affiliate and place them into the tree.
      */
-    public function confirmAffiliate(int $affiliateId, string $position = 'left'): Affiliate
+    public function confirmAffiliate(int $affiliateId, string $position = 'left', ?Affiliate $placementUpline = null): Affiliate
     {
         $affiliate = Affiliate::findOrFail($affiliateId);
         if ($affiliate->is_active) {
             return $affiliate; // already active
         }
 
+        $sponsor = Affiliate::where('user_id', $affiliate->sponsor_id)->first();
+        $targetUpline = $placementUpline && $sponsor
+            && ((int) $placementUpline->sponsor_id === (int) $sponsor->user_id || (int) $placementUpline->id === (int) $sponsor->id)
+            ? $placementUpline
+            : $sponsor;
+
         // set position and active
         $defaultPlanId = $this->resolveDefaultPlanId();
         $affiliate->update([
             'position' => in_array($position, ['left','right']) ? $position : 'none',
+            'upline_id' => $targetUpline?->user_id,
+            'level' => $targetUpline ? ($targetUpline->level + 1) : $affiliate->level,
             'is_active' => true,
             'activated_at' => now(),
+            'active_until' => now()->addMonth(),
             'commission_plan_id' => $affiliate->commission_plan_id ?: $defaultPlanId,
         ]);
 
         // Promote user role to affiliate only after approval.
         $affiliate->user?->syncRoles(['affiliate']);
 
-        // create mlm tree node under sponsor's tree
-        $sponsor = Affiliate::where('user_id', $affiliate->sponsor_id)->first();
-        $parentTree = $sponsor->mlmTree ?? null;
-        $parentId = $parentTree?->id ?? null;
+        // create mlm tree node under selected upline tree
+        $parentTree = $targetUpline?->mlmTree ?? null;
+        $parentId = $targetUpline?->id ?? null;
 
         $node = MlmTree::create([
             'affiliate_id' => $affiliate->id,
             'parent_id' => $parentId,
             'position' => $affiliate->position,
-            'depth' => $sponsor->level ?? 1,
+            'depth' => $affiliate->level ?? 1,
             'path' => null,
         ]);
 
@@ -532,7 +552,7 @@ class AffiliateService
 
         $recurse = function ($node) use (&$recurse, &$counter) {
             $left = $counter++;
-            $children = MlmTree::where('parent_id', $node->id)->orderBy('id')->get();
+            $children = MlmTree::where('parent_id', $node->affiliate_id)->orderBy('id')->get();
             foreach ($children as $child) {
                 $recurse($child);
             }
@@ -554,5 +574,58 @@ class AffiliateService
             ->first();
 
         return $defaultPlan?->id;
+    }
+
+    /**
+     * Fallback sponsor when network has no active affiliate:
+     * create/get root affiliate from first admin account.
+     */
+    private function getOrCreateAdminRootAffiliate(): ?Affiliate
+    {
+        $adminUser = User::query()
+            ->whereHas('roles', fn ($q) => $q->where('name', 'admin'))
+            ->orderBy('id')
+            ->first();
+
+        if (!$adminUser) {
+            return null;
+        }
+
+        $existing = Affiliate::query()->where('user_id', $adminUser->id)->first();
+        if ($existing) {
+            if (!$existing->is_active) {
+                $existing->update([
+                    'is_active' => true,
+                    'activated_at' => $existing->activated_at ?? now(),
+                    'active_until' => $existing->active_until ?? now()->addMonth(),
+                ]);
+            }
+
+            return $existing;
+        }
+
+        return Affiliate::create([
+            'user_id' => $adminUser->id,
+            'username' => 'admin' . $adminUser->id,
+            'slug' => 'admin-' . $adminUser->id,
+            'sponsor_id' => null,
+            'upline_id' => null,
+            'activation_code_id' => null,
+            'commission_plan_id' => $this->resolveDefaultPlanId(),
+            'position' => 'none',
+            'level' => 1,
+            'direct_downline' => 0,
+            'total_downline' => 0,
+            'left_count' => 0,
+            'right_count' => 0,
+            'pair_count' => 0,
+            'left_volume' => 0,
+            'right_volume' => 0,
+            'total_personal_volume' => 0,
+            'total_volume' => 0,
+            'is_active' => true,
+            'activated_at' => now(),
+            'active_until' => now()->addMonth(),
+        ]);
     }
 }

@@ -93,7 +93,7 @@ class ProductController extends Controller
                 $url = (string) $first['url'];
                 return str_starts_with($url, 'http')
                     ? $url
-                    : route('media.public', ['path' => ltrim(preg_replace('#^storage/#', '', $url), '/')]);
+                    : route('media.public', ['path' => $this->normalizePublicStoragePath($url)]);
             }
             if (!empty($first['path'])) {
                 return route('media.public', ['path' => ltrim((string) $first['path'], '/')]);
@@ -103,10 +103,15 @@ class ProductController extends Controller
         if (is_string($first) && $first !== '') {
             return str_starts_with($first, 'http')
                 ? $first
-                : route('media.public', ['path' => ltrim(preg_replace('#^storage/#', '', $first), '/')]);
+                : route('media.public', ['path' => $this->normalizePublicStoragePath($first)]);
         }
 
         return null;
     }
-}
 
+    private function normalizePublicStoragePath(string $value): string
+    {
+        $normalized = ltrim($value, '/');
+        return preg_replace('#^storage/#', '', $normalized) ?? $normalized;
+    }
+}

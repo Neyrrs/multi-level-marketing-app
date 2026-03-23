@@ -25,6 +25,7 @@ interface CommissionRule {
 
 interface Props {
     rules: CommissionRule[];
+    locked_single_rule?: boolean;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,7 +39,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function CommissionRulesIndex({ rules = [] }: Props) {
+export default function CommissionRulesIndex({ rules = [], locked_single_rule = true }: Props) {
     const [search, setSearch] = useState('');
 
     const handleSearch = (value: string) => {
@@ -59,7 +60,12 @@ export default function CommissionRulesIndex({ rules = [] }: Props) {
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Rule Komisi</h1>
-                    <Button onClick={() => router.get('/admin/commission-rules/create')} className="gap-2">
+                    <Button
+                        onClick={() => router.get('/admin/commission-rules/create')}
+                        className="gap-2"
+                        disabled={locked_single_rule}
+                        title={locked_single_rule ? 'Rule dikunci: 1 metode = 1 rule' : undefined}
+                    >
                         <PlusCircleIcon className="w-4 h-4" />
                         Tambah Rule
                     </Button>

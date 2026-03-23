@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Affiliate;
 
 use App\Http\Controllers\Controller;
 use App\Models\Commission;
-use App\Models\Order;
+use App\Models\CommissionLedger;
 use App\Models\Affiliate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,7 +19,7 @@ class DashboardController extends Controller
         if (!$affiliate) {
             return Inertia::render('affiliate/dashboard', [
                 'stats' => null,
-                'recentCommissions' => [],
+                'latestCommission' => null,
                 'networkStats' => null,
             ]);
         }
@@ -28,35 +28,40 @@ class DashboardController extends Controller
         $thisMonth = now()->month;
         $thisYear = now()->year;
 
-        // Total earnings this month
-        $earningThisMonth = Commission::where('affiliate_id', $affiliate->id)
-            ->where('status', 'paid')
-            ->whereMonth('paid_at', $thisMonth)
-            ->whereYear('paid_at', $thisYear)
+        // Commission totals from ledger (source of truth for credited commission)
+        $totalCommissionReceived = CommissionLedger::where('affiliate_id', $affiliate->id)
+            ->where('type', 'credit')
             ->sum('amount');
 
-        // Pending commission
+        $earningThisMonth = CommissionLedger::where('affiliate_id', $affiliate->id)
+            ->where('type', 'credit')
+            ->whereMonth('created_at', $thisMonth)
+            ->whereYear('created_at', $thisYear)
+            ->sum('amount');
+
+        // Pending commission that has not been paid/credited yet
         $pendingCommission = Commission::where('affiliate_id', $affiliate->id)
-            ->where('status', 'pending')
+            ->whereIn('status', ['pending', 'calculated', 'approved'])
             ->sum('amount');
 
-        // Recent commission records (last 5)
-        $recentCommissions = Commission::where('affiliate_id', $affiliate->id)
-            ->with(['order', 'method'])
-            ->orderBy('created_at', 'desc')
-            ->limit(5)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'amount' => (float)$item->amount,
-                    'type' => $item->commission_type,
-                    'status' => $item->status,
-                    'order_number' => $item->order?->order_number,
-                    'created_at' => $item->created_at->format('Y-m-d H:i'),
-                ];
-            })
-            ->toArray();
+        $activeUntil = $affiliate->active_until
+            ?? ($affiliate->activated_at ? $affiliate->activated_at->copy()->addMonth() : null);
+        $activeRemainingDays = $activeUntil
+            ? max(0, now()->diffInDays($activeUntil, false))
+            : 0;
+
+        $latestCreditLedger = CommissionLedger::query()
+            ->where('affiliate_id', $affiliate->id)
+            ->where('type', 'credit')
+            ->latest('created_at')
+            ->first();
+
+        $latestCommission = $latestCreditLedger ? [
+            'amount' => (float) $latestCreditLedger->amount,
+            'created_at' => $latestCreditLedger->created_at?->format('Y-m-d H:i:s'),
+            'description' => $latestCreditLedger->description,
+            'reference' => $latestCreditLedger->reference,
+        ] : null;
 
         // Network statistics
         $stats = [
@@ -66,10 +71,14 @@ class DashboardController extends Controller
             'rightCount' => $affiliate->right_count,
             'totalVolume' => (float)$affiliate->total_volume,
             'totalPersonalVolume' => (float)$affiliate->total_personal_volume,
+            'totalCommissionReceived' => (float)$totalCommissionReceived,
             'earningThisMonth' => (float)$earningThisMonth,
             'pendingCommission' => (float)$pendingCommission,
+            'pairCount' => (int)$affiliate->pair_count,
             'level' => $affiliate->level,
             'isActive' => $affiliate->is_active,
+            'activeUntil' => $activeUntil?->format('Y-m-d H:i:s'),
+            'activeRemainingDays' => (int)$activeRemainingDays,
         ];
 
         // Binary tree visualization data
@@ -96,7 +105,7 @@ class DashboardController extends Controller
 
         return Inertia::render('affiliate/dashboard', [
             'stats' => $stats,
-            'recentCommissions' => $recentCommissions,
+            'latestCommission' => $latestCommission,
             'binaryTree' => $binaryTree,
         ]);
     }

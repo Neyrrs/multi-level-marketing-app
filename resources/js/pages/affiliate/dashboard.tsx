@@ -1,6 +1,4 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,19 +18,20 @@ interface DashboardStats {
     totalVolume: number;
     totalPersonalVolume: number;
     earningThisMonth: number;
+    totalCommissionReceived: number;
     pendingCommission: number;
     level: number;
     isActive: boolean;
     pairCount: number;
+    activeUntil?: string | null;
+    activeRemainingDays: number;
 }
 
-interface RecentCommission {
-    id: number;
+interface LatestCommission {
     amount: number;
-    type: string;
-    status: string;
-    order_number: string;
-    created_at: string;
+    created_at?: string | null;
+    description?: string | null;
+    reference?: string | null;
 }
 
 interface BinaryTreeData {
@@ -43,11 +42,11 @@ interface BinaryTreeData {
 
 export default function AffiliateDashboard({
     stats,
-    recentCommissions,
+    latestCommission,
     binaryTree,
 }: {
     stats: DashboardStats | null;
-    recentCommissions: RecentCommission[];
+    latestCommission: LatestCommission | null;
     binaryTree: BinaryTreeData | null;
 }) {
     return (
@@ -56,19 +55,19 @@ export default function AffiliateDashboard({
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
                 {/* Key Statistics */}
                 {stats && (
-                    <div className="grid auto-rows-min gap-4 md:grid-cols-4">
+                    <div className="grid auto-rows-min gap-4 md:grid-cols-3">
                         <Card>
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                                    Komisi Bulan Ini
+                                    Total Komisi Diterima
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="text-2xl font-bold">
-                                    Rp {stats.earningThisMonth.toLocaleString('id-ID')}
+                                    Rp {stats.totalCommissionReceived.toLocaleString('id-ID')}
                                 </div>
                                 <p className="text-xs text-muted-foreground mt-1">
-                                    Pending: Rp {stats.pendingCommission.toLocaleString('id-ID')}
+                                    Bulan ini: Rp {stats.earningThisMonth.toLocaleString('id-ID')} | Pending: Rp {stats.pendingCommission.toLocaleString('id-ID')}
                                 </p>
                             </CardContent>
                         </Card>
@@ -76,13 +75,13 @@ export default function AffiliateDashboard({
                         <Card>
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-sm font-medium text-muted-foreground">
-                                    Total Downline
+                                    Masa Aktif Akun
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">{stats.totalDownline}</div>
+                                <div className="text-2xl font-bold">{Math.max(0, stats.activeRemainingDays)} hari</div>
                                 <p className="text-xs text-muted-foreground mt-1">
-                                    Direct: {stats.directDownline}
+                                    {stats.activeUntil ? `Sampai: ${new Date(stats.activeUntil).toLocaleString('id-ID')}` : 'Belum ada tanggal masa aktif'}
                                 </p>
                             </CardContent>
                         </Card>
@@ -103,58 +102,27 @@ export default function AffiliateDashboard({
                             </CardContent>
                         </Card>
 
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-medium text-muted-foreground">
-                                    Total Volume
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">
-                                    Rp {stats.totalVolume.toLocaleString('id-ID')}
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    Personal: Rp {stats.totalPersonalVolume.toLocaleString('id-ID')}
-                                </p>
-                            </CardContent>
-                        </Card>
                     </div>
                 )}
 
-                {/* Recent Commissions */}
+                {/* Latest Commission */}
                 <div className="rounded-xl border bg-white p-4">
                     <h3 className="font-semibold mb-4">Komisi Terbaru</h3>
-                    {recentCommissions && recentCommissions.length > 0 ? (
-                        <div className="space-y-2">
-                            {recentCommissions.map((commission) => (
-                                <div
-                                    key={commission.id}
-                                    className="flex justify-between items-center p-2 border rounded text-sm"
-                                >
-                                    <div>
-                                        <p className="font-medium">
-                                            {commission.order_number || 'Order'}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {commission.created_at}
-                                        </p>
-                                    </div>
-                                    <div className="text-right">
-                                        <p className="font-semibold">
-                                            Rp {commission.amount.toLocaleString('id-ID')}
-                                        </p>
-                                        <p className={`text-xs ${
-                                            commission.status === 'paid'
-                                                ? 'text-green-600'
-                                                : commission.status === 'approved'
-                                                  ? 'text-blue-600'
-                                                  : 'text-yellow-600'
-                                        }`}>
-                                            {commission.status.toUpperCase()}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
+                    {latestCommission ? (
+                        <div className="rounded border p-3">
+                            <div className="text-2xl font-bold">
+                                Rp {latestCommission.amount.toLocaleString('id-ID')}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1">
+                                {latestCommission.created_at
+                                    ? new Date(latestCommission.created_at).toLocaleString('id-ID')
+                                    : '-'}
+                            </p>
+                            {latestCommission.description && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    {latestCommission.description}
+                                </p>
+                            )}
                         </div>
                     ) : (
                         <p className="text-muted-foreground">Belum ada komisi</p>

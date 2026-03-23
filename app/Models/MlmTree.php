@@ -36,11 +36,11 @@ class MlmTree extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(MlmTree::class, 'parent_id');
+        return $this->belongsTo(Affiliate::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(MlmTree::class, 'parent_id', 'id');
+        return $this->hasMany(MlmTree::class, 'parent_id', 'affiliate_id');
     }
 }

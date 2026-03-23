@@ -13,6 +13,7 @@ interface RequestItem {
     id: number;
     name: string;
     email: string;
+    activation_code: string;
     requested_at: string;
     status: string;
 }
@@ -46,6 +47,7 @@ export default function AffiliateRequestIndex({ requests = [] }: Props) {
                                 <TableHead>No</TableHead>
                                 <TableHead>Nama</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Kode Aktivasi</TableHead>
                                 <TableHead>Tanggal Request</TableHead>
                                 <TableHead>Status</TableHead>
                             </TableRow>
@@ -57,13 +59,14 @@ export default function AffiliateRequestIndex({ requests = [] }: Props) {
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{request.name}</TableCell>
                                         <TableCell>{request.email}</TableCell>
+                                        <TableCell className="font-mono text-xs">{request.activation_code}</TableCell>
                                         <TableCell>{request.requested_at}</TableCell>
                                         <TableCell>{request.status}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="py-4 text-center text-gray-500">
+                                    <TableCell colSpan={6} className="py-4 text-center text-gray-500">
                                         Belum ada request.
                                     </TableCell>
                                 </TableRow>
@@ -75,4 +78,3 @@ export default function AffiliateRequestIndex({ requests = [] }: Props) {
         </AppLayout>
     );
 }
-

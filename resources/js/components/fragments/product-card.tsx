@@ -1,6 +1,9 @@
 import { ShoppingCart } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { usePage } from '@inertiajs/react';
+import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { SharedData } from '@/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────
 
@@ -30,24 +33,32 @@ export interface CartStorageItem {
 
 // ─── LocalStorage helpers ─────────────────────────────────────────────────
 
-const CART_KEY = 'alus_cart';
+const CART_KEY_PREFIX = 'alus_cart';
 
-export function getCart(): CartStorageItem[] {
+function getCartKey(userId?: number | null): string {
+    if (userId && userId > 0) {
+        return `${CART_KEY_PREFIX}_user_${userId}`;
+    }
+
+    return `${CART_KEY_PREFIX}_guest`;
+}
+
+export function getCart(userId?: number | null): CartStorageItem[] {
     try {
-        return JSON.parse(localStorage.getItem(CART_KEY) ?? '[]');
+        return JSON.parse(localStorage.getItem(getCartKey(userId)) ?? '[]');
     } catch {
         return [];
     }
 }
 
-export function saveCart(items: CartStorageItem[]): void {
-    localStorage.setItem(CART_KEY, JSON.stringify(items));
+export function saveCart(items: CartStorageItem[], userId?: number | null): void {
+    localStorage.setItem(getCartKey(userId), JSON.stringify(items));
     // Dispatch a custom event so cart icon and cart page can react.
     window.dispatchEvent(new Event('cart-updated'));
 }
 
-export function addToCart(product: ProductItem, qty = 1): void {
-    const cart = getCart();
+export function addToCart(product: ProductItem, qty = 1, userId?: number | null): void {
+    const cart = getCart(userId);
     const existing = cart.find((i) => i.id === product.id);
     if (existing) {
         existing.qty = Math.min(existing.qty + qty, product.stock ?? 99);
@@ -63,7 +74,7 @@ export function addToCart(product: ProductItem, qty = 1): void {
             slug: product.slug,
         });
     }
-    saveCart(cart);
+    saveCart(cart, userId);
 }
 
 // ─── ProductCard ──────────────────────────────────────────────────────────
@@ -73,10 +84,23 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+    const { auth } = usePage<SharedData>().props;
     const [added, setAdded] = useState(false);
+    const [imgSrc, setImgSrc] = useState(product.image ?? '');
+
+    useEffect(() => {
+        setImgSrc(product.image ?? '');
+    }, [product.image]);
 
     const handleAddToCart = () => {
-        addToCart(product);
+        if (!auth.user) {
+            toast.error('Harus login dulu', {
+                description: 'Silakan login dulu sebelum menambahkan produk ke keranjang.',
+            });
+            return;
+        }
+
+        addToCart(product, 1, auth.user.id);
         setAdded(true);
         setTimeout(() => setAdded(false), 1500);
     };
@@ -89,11 +113,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return (
         <div className="flex h-fit flex-col gap-0 rounded-xl bg-slate-200 shadow-md w-65 md:w-75 shrink-0 overflow-hidden">
             <div className="h-45 md:h-60 w-full bg-slate-300">
-                {product.image ? (
+                {imgSrc ? (
                     <img
-                        src={product.image}
+                        src={imgSrc}
                         alt={product.name}
                         className="h-full w-full object-cover"
+                        onError={() => setImgSrc('')}
                     />
                 ) : (
                     <div className="h-full w-full flex items-center justify-center text-slate-400">

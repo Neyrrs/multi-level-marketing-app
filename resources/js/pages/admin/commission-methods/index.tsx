@@ -23,6 +23,7 @@ interface CommissionMethod {
 
 interface Props {
     methods: CommissionMethod[];
+    locked_methods?: boolean;
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -36,7 +37,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function CommissionMethodsIndex({ methods = [] }: Props) {
+export default function CommissionMethodsIndex({ methods = [], locked_methods = true }: Props) {
     const [search, setSearch] = useState('');
 
     const handleSearch = (value: string) => {
@@ -66,7 +67,12 @@ export default function CommissionMethodsIndex({ methods = [] }: Props) {
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold">Metode Komisi</h1>
-                    <Button onClick={() => router.get('/admin/commission-methods/create')} className="gap-2">
+                    <Button
+                        onClick={() => router.get('/admin/commission-methods/create')}
+                        className="gap-2"
+                        disabled={locked_methods}
+                        title={locked_methods ? 'Metode komisi dikunci' : undefined}
+                    >
                         <PlusCircleIcon className="w-4 h-4" />
                         Tambah Metode
                     </Button>
@@ -107,6 +113,7 @@ export default function CommissionMethodsIndex({ methods = [] }: Props) {
                                             <Button
                                                 variant="destructive"
                                                 size="sm"
+                                                disabled={locked_methods}
                                                 onClick={() => handleDelete(method.id)}
                                             >
                                                 <Trash2 className="w-4 h-4" />

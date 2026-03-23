@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::index
- * @see app/Http/Controllers/Finance/WithdrawalController.php:16
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:17
  * @route '/finance/withdrawals'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
 export const show = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
 show.url = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -127,7 +127,7 @@ show.url = (args: { withdrawal: number | { id: number } } | [withdrawal: number 
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
 show.get = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -136,7 +136,7 @@ show.get = (args: { withdrawal: number | { id: number } } | [withdrawal: number 
 })
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
 show.head = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -146,7 +146,7 @@ show.head = (args: { withdrawal: number | { id: number } } | [withdrawal: number
 
     /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
     const showForm = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -156,7 +156,7 @@ show.head = (args: { withdrawal: number | { id: number } } | [withdrawal: number
 
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
         showForm.get = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -165,7 +165,7 @@ show.head = (args: { withdrawal: number | { id: number } } | [withdrawal: number
         })
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::show
- * @see app/Http/Controllers/Finance/WithdrawalController.php:86
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:87
  * @route '/finance/withdrawals/{withdrawal}'
  */
         showForm.head = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -181,7 +181,7 @@ show.head = (args: { withdrawal: number | { id: number } } | [withdrawal: number
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::approve
- * @see app/Http/Controllers/Finance/WithdrawalController.php:119
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:120
  * @route '/finance/withdrawals/{withdrawal}/approve'
  */
 export const approve = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -196,7 +196,7 @@ approve.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::approve
- * @see app/Http/Controllers/Finance/WithdrawalController.php:119
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:120
  * @route '/finance/withdrawals/{withdrawal}/approve'
  */
 approve.url = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -229,7 +229,7 @@ approve.url = (args: { withdrawal: number | { id: number } } | [withdrawal: numb
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::approve
- * @see app/Http/Controllers/Finance/WithdrawalController.php:119
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:120
  * @route '/finance/withdrawals/{withdrawal}/approve'
  */
 approve.post = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -239,7 +239,7 @@ approve.post = (args: { withdrawal: number | { id: number } } | [withdrawal: num
 
     /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::approve
- * @see app/Http/Controllers/Finance/WithdrawalController.php:119
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:120
  * @route '/finance/withdrawals/{withdrawal}/approve'
  */
     const approveForm = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -249,7 +249,7 @@ approve.post = (args: { withdrawal: number | { id: number } } | [withdrawal: num
 
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::approve
- * @see app/Http/Controllers/Finance/WithdrawalController.php:119
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:120
  * @route '/finance/withdrawals/{withdrawal}/approve'
  */
         approveForm.post = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -260,7 +260,7 @@ approve.post = (args: { withdrawal: number | { id: number } } | [withdrawal: num
     approve.form = approveForm
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::process
- * @see app/Http/Controllers/Finance/WithdrawalController.php:137
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:138
  * @route '/finance/withdrawals/{withdrawal}/process'
  */
 export const process = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -275,7 +275,7 @@ process.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::process
- * @see app/Http/Controllers/Finance/WithdrawalController.php:137
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:138
  * @route '/finance/withdrawals/{withdrawal}/process'
  */
 process.url = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -308,7 +308,7 @@ process.url = (args: { withdrawal: number | { id: number } } | [withdrawal: numb
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::process
- * @see app/Http/Controllers/Finance/WithdrawalController.php:137
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:138
  * @route '/finance/withdrawals/{withdrawal}/process'
  */
 process.post = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -318,7 +318,7 @@ process.post = (args: { withdrawal: number | { id: number } } | [withdrawal: num
 
     /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::process
- * @see app/Http/Controllers/Finance/WithdrawalController.php:137
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:138
  * @route '/finance/withdrawals/{withdrawal}/process'
  */
     const processForm = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -328,7 +328,7 @@ process.post = (args: { withdrawal: number | { id: number } } | [withdrawal: num
 
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::process
- * @see app/Http/Controllers/Finance/WithdrawalController.php:137
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:138
  * @route '/finance/withdrawals/{withdrawal}/process'
  */
         processForm.post = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -339,7 +339,7 @@ process.post = (args: { withdrawal: number | { id: number } } | [withdrawal: num
     process.form = processForm
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::reject
- * @see app/Http/Controllers/Finance/WithdrawalController.php:154
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:201
  * @route '/finance/withdrawals/{withdrawal}/reject'
  */
 export const reject = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -354,7 +354,7 @@ reject.definition = {
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::reject
- * @see app/Http/Controllers/Finance/WithdrawalController.php:154
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:201
  * @route '/finance/withdrawals/{withdrawal}/reject'
  */
 reject.url = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -387,7 +387,7 @@ reject.url = (args: { withdrawal: number | { id: number } } | [withdrawal: numbe
 
 /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::reject
- * @see app/Http/Controllers/Finance/WithdrawalController.php:154
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:201
  * @route '/finance/withdrawals/{withdrawal}/reject'
  */
 reject.post = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -397,7 +397,7 @@ reject.post = (args: { withdrawal: number | { id: number } } | [withdrawal: numb
 
     /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::reject
- * @see app/Http/Controllers/Finance/WithdrawalController.php:154
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:201
  * @route '/finance/withdrawals/{withdrawal}/reject'
  */
     const rejectForm = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -407,7 +407,7 @@ reject.post = (args: { withdrawal: number | { id: number } } | [withdrawal: numb
 
             /**
 * @see \App\Http\Controllers\Finance\WithdrawalController::reject
- * @see app/Http/Controllers/Finance/WithdrawalController.php:154
+ * @see app/Http/Controllers/Finance/WithdrawalController.php:201
  * @route '/finance/withdrawals/{withdrawal}/reject'
  */
         rejectForm.post = (args: { withdrawal: number | { id: number } } | [withdrawal: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

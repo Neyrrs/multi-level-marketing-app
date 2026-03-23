@@ -39,11 +39,12 @@ class ShopController extends Controller
         $products = $query->paginate($perPage);
         $products->getCollection()->transform(function ($item) {
             $imageUrl = $this->resolveImageUrl($item);
+            $modalPrice = (float) ($item->harga_modal ?? $item->harga_awal);
 
             return [
                 'id' => $item->id,
                 'name' => $item->name,
-                'price' => (float) $item->harga_akhir,
+                'price' => $modalPrice,
                 'point_value' => (float) $item->point_value,
                 'stock' => (int) $item->stock,
                 'image' => $imageUrl,
@@ -120,18 +121,20 @@ class ShopController extends Controller
         if ($existing) {
             $existing->update([
                 'quantity' => $newQty,
-                'harga_awal' => (float) $product->harga_awal,
+                'harga_awal' => (float) ($product->harga_modal ?? $product->harga_awal),
                 'diskon' => (float) $product->diskon,
-                'harga_akhir' => (float) $product->harga_akhir,
+                // Affiliate shop uses modal/base price.
+                'harga_akhir' => (float) ($product->harga_modal ?? $product->harga_awal),
             ]);
         } else {
             CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $product->id,
                 'quantity' => $data['quantity'],
-                'harga_awal' => (float) $product->harga_awal,
+                'harga_awal' => (float) ($product->harga_modal ?? $product->harga_awal),
                 'diskon' => (float) $product->diskon,
-                'harga_akhir' => (float) $product->harga_akhir,
+                // Affiliate shop uses modal/base price.
+                'harga_akhir' => (float) ($product->harga_modal ?? $product->harga_awal),
             ]);
         }
 

@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
@@ -23,12 +22,22 @@ interface Props {
             email: string;
         } | null;
     }>;
+    placementOptions: Array<{
+        id: number;
+        name: string;
+        username: string;
+        level: number;
+        left_available: boolean;
+        right_available: boolean;
+    }>;
+    defaultPlacementAffiliateId?: number;
 }
 
-export default function Redeem({ availableCodes }: Props) {
+export default function Redeem({ availableCodes, placementOptions = [], defaultPlacementAffiliateId }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm({
         code_id: '',
         request_user_id: '',
+        placement_affiliate_id: defaultPlacementAffiliateId ? String(defaultPlacementAffiliateId) : '',
         name: '',
         email: '',
         password: '',
@@ -39,6 +48,10 @@ export default function Redeem({ availableCodes }: Props) {
     const selectedCode = useMemo(
         () => availableCodes.find((code) => String(code.id) === data.code_id),
         [availableCodes, data.code_id],
+    );
+    const selectedPlacement = useMemo(
+        () => placementOptions.find((item) => String(item.id) === data.placement_affiliate_id),
+        [placementOptions, data.placement_affiliate_id],
     );
     const hasRequestUser = !!selectedCode?.request_user;
 
@@ -146,6 +159,25 @@ export default function Redeem({ availableCodes }: Props) {
                             </div>
 
                             <div className="grid gap-2">
+                                <Label htmlFor="placement_affiliate_id">Taruh Di Bawah Affiliate</Label>
+                                <select
+                                    id="placement_affiliate_id"
+                                    value={data.placement_affiliate_id}
+                                    onChange={(e) => setData('placement_affiliate_id', e.target.value)}
+                                    className="w-full rounded-md border bg-white px-3 py-2 text-sm"
+                                    required
+                                >
+                                    <option value="">Pilih node</option>
+                                    {placementOptions.map((option) => (
+                                        <option key={option.id} value={option.id}>
+                                            {option.name} (@{option.username}) | L{option.level} | Left {option.left_available ? 'kosong' : 'isi'} | Right {option.right_available ? 'kosong' : 'isi'}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.placement_affiliate_id && <p className="text-sm text-red-600">{errors.placement_affiliate_id}</p>}
+                            </div>
+
+                            <div className="grid gap-2">
                                 <Label htmlFor="position">Posisi Downline</Label>
                                 <select
                                     id="position"
@@ -154,8 +186,12 @@ export default function Redeem({ availableCodes }: Props) {
                                     className="w-full rounded-md border bg-white px-3 py-2 text-sm"
                                     required
                                 >
-                                    <option value="left">Kiri</option>
-                                    <option value="right">Kanan</option>
+                                    <option value="left" disabled={selectedPlacement ? !selectedPlacement.left_available : false}>
+                                        Kiri {selectedPlacement && !selectedPlacement.left_available ? '(terisi)' : ''}
+                                    </option>
+                                    <option value="right" disabled={selectedPlacement ? !selectedPlacement.right_available : false}>
+                                        Kanan {selectedPlacement && !selectedPlacement.right_available ? '(terisi)' : ''}
+                                    </option>
                                 </select>
                                 {errors.position && <p className="text-sm text-red-600">{errors.position}</p>}
                             </div>
@@ -169,24 +205,6 @@ export default function Redeem({ availableCodes }: Props) {
                     )}
                 </div>
 
-                {availableCodes?.length > 0 && (
-                    <div className="rounded-xl border bg-white p-6">
-                        <h3 className="mb-4 text-lg font-semibold">Daftar Kode Tersedia</h3>
-                        <div className="grid gap-3">
-                            {availableCodes.map((code) => (
-                                <Card key={code.id}>
-                                    <CardContent className="flex items-center justify-between pt-6">
-                                        <div>
-                                            <p className="font-semibold">{code.product_name}</p>
-                                            <p className="font-mono text-sm text-gray-600">{code.code}</p>
-                                        </div>
-                                        <p className="text-sm text-gray-600">Sisa: {code.remaining_usage}</p>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </div>
-                )}
             </div>
         </AppLayout>
     );

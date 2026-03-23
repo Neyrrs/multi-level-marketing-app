@@ -35,7 +35,7 @@ export default function ProductCard({
     }, [image]);
 
     return (
-        <div className="group relative w-fit flex overflow-hidden rounded-2xl border bg-white shadow-sm">
+        <div className="group relative flex h-full w-full overflow-hidden rounded-2xl border bg-white shadow-sm">
             <div className="relative w-40 shrink-0">
                 <div className="relative h-full overflow-hidden">
                     <img
@@ -86,43 +86,43 @@ export default function ProductCard({
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        <button
-                            className="rounded-lg border p-1"
-                            onClick={() =>
-                                setQuantity((q) => Math.max(1, q - 1))
-                            }
-                            disabled={isOutOfStock}
-                        >
-                            <Minus size={14} />
-                        </button>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-2">
+                            <button
+                                className="rounded-lg border p-1"
+                                onClick={() =>
+                                    setQuantity((q) => Math.max(1, q - 1))
+                                }
+                                disabled={isOutOfStock}
+                            >
+                                <Minus size={14} />
+                            </button>
 
-                        <span className="w-6 text-center text-sm font-semibold">
-                            {quantity}
-                        </span>
+                            <span className="w-6 text-center text-sm font-semibold">
+                                {quantity}
+                            </span>
 
-                        <button
-                            className="rounded-lg border p-1"
-                            onClick={() =>
-                                setQuantity((q) =>
-                                    stock > 0 ? Math.min(stock, q + 1) : q,
-                                )
-                            }
-                            disabled={isOutOfStock || maxReached}
-                        >
-                            <Plus size={14} />
-                        </button>
+                            <button
+                                className="rounded-lg border p-1"
+                                onClick={() =>
+                                    setQuantity((q) =>
+                                        stock > 0 ? Math.min(stock, q + 1) : q,
+                                    )
+                                }
+                                disabled={isOutOfStock || maxReached}
+                            >
+                                <Plus size={14} />
+                            </button>
+                        </div>
                         <Button
                             size="sm"
-                            className="gap-2 rounded-xl"
+                            className="ml-auto w-full gap-2 rounded-xl sm:w-auto"
                             onClick={() => onAddToCart?.(quantity)}
                             disabled={isOutOfStock}
                         >
                             <ShoppingCart size={16} />
-                            <span className="hidden sm:inline">
-                                {isOutOfStock
-                                    ? 'Stok Habis'
-                                    : 'Tambah ke Keranjang'}
+                            <span>
+                                {isOutOfStock ? 'Stok Habis' : 'Tambah ke Keranjang'}
                             </span>
                         </Button>
                     </div>

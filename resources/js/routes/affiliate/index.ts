@@ -1,4 +1,5 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import pengaturan151a91 from './pengaturan'
 import request from './request'
 import tree from './tree'
 import shop from './shop'
@@ -320,7 +321,7 @@ kode.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     kode.form = kodeForm
 /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
 export const pengaturan = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -335,7 +336,7 @@ pengaturan.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
 pengaturan.url = (options?: RouteQueryOptions) => {
@@ -344,7 +345,7 @@ pengaturan.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
 pengaturan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -353,7 +354,7 @@ pengaturan.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
 pengaturan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -363,7 +364,7 @@ pengaturan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
     const pengaturanForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -373,7 +374,7 @@ pengaturan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
         pengaturanForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -382,7 +383,7 @@ pengaturan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Affiliate\PengaturanController::pengaturan
- * @see app/Http/Controllers/Affiliate/PengaturanController.php:13
+ * @see app/Http/Controllers/Affiliate/PengaturanController.php:27
  * @route '/affiliate/pengaturan'
  */
         pengaturanForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -398,7 +399,7 @@ pengaturan.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     pengaturan.form = pengaturanForm
 /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
 export const personal = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -413,7 +414,7 @@ personal.definition = {
 
 /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
 personal.url = (options?: RouteQueryOptions) => {
@@ -422,7 +423,7 @@ personal.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
 personal.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -431,7 +432,7 @@ personal.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
 personal.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -441,7 +442,7 @@ personal.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
     const personalForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -451,7 +452,7 @@ personal.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
         personalForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -460,7 +461,7 @@ personal.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Affiliate\PersonalController::personal
- * @see app/Http/Controllers/Affiliate/PersonalController.php:12
+ * @see app/Http/Controllers/Affiliate/PersonalController.php:13
  * @route '/affiliate/personal'
  */
         personalForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1021,7 +1022,7 @@ methodAffiliate.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
     
     methodAffiliate.form = methodAffiliateForm
 /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
 export const ref = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1035,7 +1036,7 @@ ref.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
 ref.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -1062,7 +1063,7 @@ ref.url = (args: { slug: string | number } | [slug: string | number ] | string |
 }
 
 /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
 ref.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1070,7 +1071,7 @@ ref.get = (args: { slug: string | number } | [slug: string | number ] | string |
     method: 'get',
 })
 /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
 ref.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1079,7 +1080,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
 })
 
     /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
     const refForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1088,7 +1089,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     })
 
             /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
         refForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1096,7 +1097,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
             method: 'get',
         })
             /**
- * @see routes/web.php:393
+ * @see routes/web.php:413
  * @route '/a/{slug}'
  */
         refForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1111,7 +1112,7 @@ ref.head = (args: { slug: string | number } | [slug: string | number ] | string 
     
     ref.form = refForm
 /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
 export const landing = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1125,7 +1126,7 @@ landing.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
 landing.url = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -1152,7 +1153,7 @@ landing.url = (args: { slug: string | number } | [slug: string | number ] | stri
 }
 
 /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
 landing.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -1160,7 +1161,7 @@ landing.get = (args: { slug: string | number } | [slug: string | number ] | stri
     method: 'get',
 })
 /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
 landing.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -1169,7 +1170,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
 })
 
     /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
     const landingForm = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1178,7 +1179,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
     })
 
             /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
         landingForm.get = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1186,7 +1187,7 @@ landing.head = (args: { slug: string | number } | [slug: string | number ] | str
             method: 'get',
         })
             /**
- * @see routes/web.php:407
+ * @see routes/web.php:427
  * @route '/{slug}'
  */
         landingForm.head = (args: { slug: string | number } | [slug: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -1205,7 +1206,7 @@ const affiliate = {
 binary: Object.assign(binary, binary),
 komisi: Object.assign(komisi, komisi),
 kode: Object.assign(kode, kode),
-pengaturan: Object.assign(pengaturan, pengaturan),
+pengaturan: Object.assign(pengaturan, pengaturan151a91),
 personal: Object.assign(personal, personal),
 downline: Object.assign(downline, downline),
 sponsor: Object.assign(sponsor, sponsor),

@@ -19,7 +19,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Search, Eye } from 'lucide-react';
+import { Search, CheckCircle, XCircle, CircleDollarSign } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 
@@ -68,8 +68,11 @@ const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
         pending: 'bg-yellow-100 text-yellow-800',
         approved: 'bg-blue-100 text-blue-800',
+        processing: 'bg-indigo-100 text-indigo-800',
         processed: 'bg-green-100 text-green-800',
+        completed: 'bg-green-100 text-green-800',
         rejected: 'bg-red-100 text-red-800',
+        failed: 'bg-red-100 text-red-800',
     };
     return colors[status] || 'bg-gray-100 text-gray-800';
 };
@@ -95,6 +98,26 @@ export default function WithdrawalsIndex({ withdrawals, filters, statuses }: Pro
         setStartDate('');
         setEndDate('');
         router.get('/finance/withdrawals');
+    };
+
+    const approveWithdrawal = (id: number) => {
+        if (!confirm('Approve pengajuan withdrawal ini?')) return;
+        router.post(`/finance/withdrawals/${id}/approve`, {}, { preserveScroll: true });
+    };
+
+    const processWithdrawal = (id: number) => {
+        if (!confirm('Tandai withdrawal ini sebagai selesai diproses?')) return;
+        router.post(`/finance/withdrawals/${id}/process`, {}, { preserveScroll: true });
+    };
+
+    const rejectWithdrawal = (id: number) => {
+        const reason = prompt('Alasan reject withdrawal:') ?? '';
+        if (!reason.trim()) return;
+        router.post(
+            `/finance/withdrawals/${id}/reject`,
+            { rejection_reason: reason },
+            { preserveScroll: true },
+        );
     };
 
     return (
@@ -224,15 +247,38 @@ export default function WithdrawalsIndex({ withdrawals, filters, statuses }: Pro
                                                     {withdrawal.created_at}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() =>
-                                                            router.visit(`/finance/withdrawals/${withdrawal.id}`)
-                                                        }
-                                                    >
-                                                        <Eye className="w-4 h-4" />
-                                                    </Button>
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        {withdrawal.status === 'pending' && (
+                                                            <>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    onClick={() => approveWithdrawal(withdrawal.id)}
+                                                                    title="Approve"
+                                                                >
+                                                                    <CheckCircle className="w-4 h-4" />
+                                                                </Button>
+                                                                <Button
+                                                                    variant="destructive"
+                                                                    size="sm"
+                                                                    onClick={() => rejectWithdrawal(withdrawal.id)}
+                                                                    title="Reject"
+                                                                >
+                                                                    <XCircle className="w-4 h-4" />
+                                                                </Button>
+                                                            </>
+                                                        )}
+                                                        {withdrawal.status === 'approved' && (
+                                                            <Button
+                                                                variant="default"
+                                                                size="sm"
+                                                                onClick={() => processWithdrawal(withdrawal.id)}
+                                                                title="Process"
+                                                            >
+                                                                <CircleDollarSign className="w-4 h-4" />
+                                                            </Button>
+                                                        )}
+                                                    </div>
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -273,4 +319,3 @@ export default function WithdrawalsIndex({ withdrawals, filters, statuses }: Pro
         </AppLayout>
     );
 }
-

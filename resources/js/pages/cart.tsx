@@ -3,8 +3,8 @@ import MainLayout from '@/components/fragments/main-layout';
 import { getCart, saveCart, type CartStorageItem } from '@/components/fragments/product-card';
 import { Button } from '@/components/ui/button';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { CheckCircle2, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 // ─── Types and Globals ────────────────────────────────────────────────────
@@ -51,39 +51,23 @@ const formatRupiah = (value: number = 0) =>
 
 // ─── Success Screen ───────────────────────────────────────────────────────
 
-const OrderSuccess: React.FC<{ onBack: () => void }> = ({ onBack }) => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-8 flex flex-col items-center gap-4 text-center">
-            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckCircle2 className="w-12 h-12 text-green-500" />
-            </div>
-            <h2 className="text-2xl font-bold">Pesanan Berhasil Dibuat!</h2>
-            <p className="text-gray-500 text-sm">
-                Terima kasih atas pembelian Anda. Anda dapat melihat status pesanan di dashboard Anda.
-            </p>
-            <Button onClick={onBack} className="w-full mt-2">
-                Kembali ke Beranda
-            </Button>
-        </div>
-    </div>
-);
-
 // ─── Main Cart Page ───────────────────────────────────────────────────────
 
 const Cart = () => {
     const { auth, midtransConfig, flash } = usePage<InertiaPageProps>().props;
+    const authUserId = auth.user?.id ? Number(auth.user.id) : null;
     const [items, setItems] = useState<CartStorageItem[]>([]);
     const [isPaying, setIsPaying] = useState(false);
-    const [orderSuccess, setOrderSuccess] = useState(false);
+    const handledMidtransOrderRef = useRef<string | null>(null);
 
     // Load cart from localStorage on mount
     useEffect(() => {
-        setItems(getCart());
+        setItems(getCart(authUserId));
 
-        const onCartUpdated = () => setItems(getCart());
+        const onCartUpdated = () => setItems(getCart(authUserId));
         window.addEventListener('cart-updated', onCartUpdated);
         return () => window.removeEventListener('cart-updated', onCartUpdated);
-    }, []);
+    }, [authUserId]);
 
     // Load Midtrans Script
     useEffect(() => {
@@ -114,39 +98,54 @@ const Cart = () => {
             return { ...item, qty: newQty };
         });
         setItems(updated);
-        saveCart(updated);
+        saveCart(updated, authUserId);
     };
 
     const removeItem = (id: number) => {
         const updated = items.filter((item) => item.id !== id);
         setItems(updated);
-        saveCart(updated);
+        saveCart(updated, authUserId);
     };
 
     const subtotal = items.reduce((total, item) => total + item.price * item.qty, 0);
 
-    const clearCartAndShowSuccess = () => {
-        saveCart([]);
+    const clearCart = () => {
+        saveCart([], authUserId);
         setItems([]);
-        setOrderSuccess(true);
     };
 
     const openMidtransPopup = (snapToken?: string | null, redirectUrl?: string | null) => {
         if (snapToken && window.snap) {
             window.snap.pay(snapToken, {
-                onSuccess: () => clearCartAndShowSuccess(),
-                onPending: () => clearCartAndShowSuccess(),
-                onError: () => clearCartAndShowSuccess(),
-                onClose: () => clearCartAndShowSuccess(), // Cart is transformed into order even if closed
+                onSuccess: () => router.reload(),
+                onPending: () => router.reload(),
+                onError: () => router.reload(),
+                onClose: () => router.reload(),
             });
             return;
         }
 
         if (redirectUrl) {
-            clearCartAndShowSuccess();
             window.location.href = redirectUrl;
         }
     };
+
+    useEffect(() => {
+        const midtrans = flash?.midtrans;
+        if (!midtrans) return;
+
+        const orderNumber = midtrans.order_number ?? null;
+        if (orderNumber && handledMidtransOrderRef.current === orderNumber) {
+            return;
+        }
+
+        if (orderNumber) {
+            handledMidtransOrderRef.current = orderNumber;
+        }
+
+        // Fallback-safe: if Snap JS is not ready yet, redirect URL still works.
+        openMidtransPopup(midtrans.snap_token, midtrans.redirect_url);
+    }, [flash?.midtrans]);
 
     const handleCheckout = () => {
         if (items.length === 0 || isPaying) return;
@@ -180,12 +179,19 @@ const Cart = () => {
                     const pageProps = page.props as unknown as InertiaPageProps;
                     const snapToken = pageProps.flash?.midtrans?.snap_token;
                     const redirectUrl = pageProps.flash?.midtrans?.redirect_url;
+                    const orderNumber = pageProps.flash?.midtrans?.order_number ?? null;
                     
                     if (snapToken || redirectUrl) {
+                        if (orderNumber) {
+                            handledMidtransOrderRef.current = orderNumber;
+                        }
+                        clearCart();
                         openMidtransPopup(snapToken, redirectUrl);
                     } else {
-                        // Fallback if no midtrans response
-                        clearCartAndShowSuccess();
+                        if (!pageProps.errors || Object.keys(pageProps.errors).length === 0) {
+                            clearCart();
+                            toast.success('Order berhasil dibuat. Lanjutkan pembayaran di riwayat transaksi.');
+                        }
                     }
                 },
                 onFinish: () => setIsPaying(false),
@@ -230,11 +236,6 @@ const Cart = () => {
     return (
         <MainLayout>
             <Head title="Keranjang" />
-
-            {/* Success Modal */}
-            {orderSuccess && (
-                <OrderSuccess onBack={() => { setOrderSuccess(false); window.location.href = '/'; }} />
-            )}
 
             <div className="py-10 relative">
                 <ContainerWrapper>

@@ -29,6 +29,7 @@ class ProductController extends Controller
                 'id' => $product->id,
                 'name' => $product->name,
                 'description' => $product->description,
+                'harga_modal' => (float) $product->harga_modal,
                 'harga_awal' => (float) $product->harga_awal,
                 'diskon' => (float) $product->diskon,
                 'harga_akhir' => (float) $product->harga_akhir,
@@ -67,9 +68,9 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'harga_modal' => 'required|numeric|min:0',
             'harga_awal' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
-            'harga_akhir' => 'nullable|numeric|min:0',
             'point_value' => 'nullable|numeric|min:0',
             'type' => 'nullable|in:single,bundle',
             'stock' => 'nullable|integer|min:0',
@@ -81,9 +82,10 @@ class ProductController extends Controller
         $data['point_value'] = (float) ($data['point_value'] ?? 0);
         $data['type'] = $data['type'] ?? 'single';
         $data['slug'] = $this->generateUniqueSlug($data['name']);
-        $data['harga_akhir'] = isset($data['harga_akhir']) && $data['harga_akhir'] !== null
-            ? (float) $data['harga_akhir']
-            : max((float) $data['harga_awal'] - ((float) $data['harga_awal'] * ($data['diskon'] / 100)), 0);
+        $data['harga_modal'] = (float) $data['harga_modal'];
+        $data['harga_awal'] = (float) $data['harga_awal'];
+        // Harga akhir (untuk storefront) dihitung dari harga_awal dan diskon.
+        $data['harga_akhir'] = max($data['harga_awal'] - ($data['harga_awal'] * ($data['diskon'] / 100)), 0);
         if ($request->hasFile('image')) {
             $data['image'] = $this->storeProductImage($request->file('image'), $data['name']);
         }
@@ -100,9 +102,9 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'harga_modal' => 'required|numeric|min:0',
             'harga_awal' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
-            'harga_akhir' => 'nullable|numeric|min:0',
             'point_value' => 'nullable|numeric|min:0',
             'type' => 'nullable|in:single,bundle',
             'stock' => 'nullable|integer|min:0',
@@ -114,9 +116,9 @@ class ProductController extends Controller
         $data['point_value'] = (float) ($data['point_value'] ?? 0);
         $data['type'] = $data['type'] ?? 'single';
         $data['slug'] = $this->generateUniqueSlug($data['name'], $product->id);
-        $data['harga_akhir'] = isset($data['harga_akhir']) && $data['harga_akhir'] !== null
-            ? (float) $data['harga_akhir']
-            : max((float) $data['harga_awal'] - ((float) $data['harga_awal'] * ($data['diskon'] / 100)), 0);
+        $data['harga_modal'] = (float) $data['harga_modal'];
+        $data['harga_awal'] = (float) $data['harga_awal'];
+        $data['harga_akhir'] = max($data['harga_awal'] - ($data['harga_awal'] * ($data['diskon'] / 100)), 0);
         if ($request->hasFile('image')) {
             $currentImagePath = $this->extractStoredPath($product);
             if ($currentImagePath && Storage::disk('public')->exists($currentImagePath)) {

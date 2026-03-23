@@ -243,6 +243,13 @@ export function AppSidebar() {
                                 '/affiliate/shop-history',
                             ),
                         },
+                        {
+                            title: 'Withdraw',
+                            href: getHref(
+                                'affiliate.pengaturan',
+                                '/affiliate/pengaturan',
+                            ),
+                        },
                     ],
                 },
                 {

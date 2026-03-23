@@ -56,7 +56,17 @@ class ActivationService
         $generatedByUserId = $order->affiliate?->user_id ?? $order->user_id;
         $orderType = strtolower((string) $order->product_type);
         $isLegacyPackageOrder = $orderType === 'package';
-        $isBundleOrder = $orderType === 'bundle';
+        $isBundleOrder = $orderType === 'bundle'
+            || $order->items()
+                ->whereHas('product', function ($q) {
+                    $q->whereRaw('LOWER(type) = ?', ['bundle']);
+                })
+                ->exists();
+        $isGuestBundleOrder = (bool) ($order->user?->hasRole('guest')) && $isBundleOrder;
+        $generatedFrom = $isGuestBundleOrder ? 'guest_bundle_order' : 'order';
+        $notesPrefix = $isGuestBundleOrder
+            ? "Guest bundle redeem-only | request_user_id={$order->user_id}"
+            : 'Generated dari order';
 
         for ($i = 0; $i < $count; $i++) {
             do {
@@ -67,7 +77,7 @@ class ActivationService
                 'code' => $code,
                 'owner_id' => $ownerUserId,
                 'generated_by' => $generatedByUserId,
-                'generated_from' => 'order',
+                'generated_from' => $generatedFrom,
                 // Main flow uses product "bundle" type.
                 // Keep legacy package compatibility for older data.
                 'product_id' => $isLegacyPackageOrder ? null : $order->product_id,
@@ -81,7 +91,7 @@ class ActivationService
                 'status' => 'available',
                 'valid_from' => now(),
                 'valid_until' => now()->addMonths(1),
-                'notes' => "Generated dari order {$order->order_number}",
+                'notes' => "{$notesPrefix} | order={$order->order_number}",
             ]);
 
             $codes[] = $ac;

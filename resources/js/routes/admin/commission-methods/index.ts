@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::index
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:12
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:13
  * @route '/admin/commission-methods'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::create
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:37
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:47
  * @route '/admin/commission-methods/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::store
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:49
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:59
  * @route '/admin/commission-methods'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::store
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:49
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:59
  * @route '/admin/commission-methods'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::store
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:49
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:59
  * @route '/admin/commission-methods'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::store
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:49
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:59
  * @route '/admin/commission-methods'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::store
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:49
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:59
  * @route '/admin/commission-methods'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
 export const edit = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
 edit.url = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -260,7 +260,7 @@ edit.url = (args: { commissionMethod: number | { id: number } } | [commissionMet
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
 edit.get = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,7 +269,7 @@ edit.get = (args: { commissionMethod: number | { id: number } } | [commissionMet
 })
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
 edit.head = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -279,7 +279,7 @@ edit.head = (args: { commissionMethod: number | { id: number } } | [commissionMe
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
     const editForm = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -289,7 +289,7 @@ edit.head = (args: { commissionMethod: number | { id: number } } | [commissionMe
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
         editForm.get = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ edit.head = (args: { commissionMethod: number | { id: number } } | [commissionMe
         })
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::edit
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:42
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:52
  * @route '/admin/commission-methods/{commissionMethod}/edit'
  */
         editForm.head = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ edit.head = (args: { commissionMethod: number | { id: number } } | [commissionMe
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::update
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:61
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:66
  * @route '/admin/commission-methods/{commissionMethod}'
  */
 export const update = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -329,7 +329,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::update
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:61
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:66
  * @route '/admin/commission-methods/{commissionMethod}'
  */
 update.url = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -362,7 +362,7 @@ update.url = (args: { commissionMethod: number | { id: number } } | [commissionM
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::update
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:61
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:66
  * @route '/admin/commission-methods/{commissionMethod}'
  */
 update.put = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -372,7 +372,7 @@ update.put = (args: { commissionMethod: number | { id: number } } | [commissionM
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::update
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:61
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:66
  * @route '/admin/commission-methods/{commissionMethod}'
  */
     const updateForm = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -387,7 +387,7 @@ update.put = (args: { commissionMethod: number | { id: number } } | [commissionM
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::update
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:61
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:66
  * @route '/admin/commission-methods/{commissionMethod}'
  */
         updateForm.put = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -403,7 +403,7 @@ update.put = (args: { commissionMethod: number | { id: number } } | [commissionM
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::destroy
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:73
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:78
  * @route '/admin/commission-methods/{commissionMethod}'
  */
 export const destroy = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -418,7 +418,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::destroy
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:73
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:78
  * @route '/admin/commission-methods/{commissionMethod}'
  */
 destroy.url = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -451,7 +451,7 @@ destroy.url = (args: { commissionMethod: number | { id: number } } | [commission
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::destroy
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:73
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:78
  * @route '/admin/commission-methods/{commissionMethod}'
  */
 destroy.delete = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -461,7 +461,7 @@ destroy.delete = (args: { commissionMethod: number | { id: number } } | [commiss
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::destroy
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:73
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:78
  * @route '/admin/commission-methods/{commissionMethod}'
  */
     const destroyForm = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -476,7 +476,7 @@ destroy.delete = (args: { commissionMethod: number | { id: number } } | [commiss
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionMethodController::destroy
- * @see app/Http/Controllers/Admin/CommissionMethodController.php:73
+ * @see app/Http/Controllers/Admin/CommissionMethodController.php:78
  * @route '/admin/commission-methods/{commissionMethod}'
  */
         destroyForm.delete = (args: { commissionMethod: number | { id: number } } | [commissionMethod: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

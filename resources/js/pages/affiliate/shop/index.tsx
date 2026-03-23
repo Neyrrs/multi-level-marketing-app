@@ -232,7 +232,7 @@ export default function Shop({
                     <h3 className="mb-6 text-lg font-semibold">Produk Tersedia</h3>
 
                     {products && products.data && products.data.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                             {products.data.map((item) => {
                                 const remainingStock = getRemainingStock(item);
                                 return (

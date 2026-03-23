@@ -16,6 +16,7 @@ use App\Http\Controllers\Finance;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicCartController;
+use App\Http\Middleware\EnsureAffiliateActivePeriod;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -193,7 +194,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
      */
         Route::prefix('affiliate')
             ->name('affiliate.')
-            ->middleware([RoleMiddleware::class . ':affiliate'])
+            ->middleware([RoleMiddleware::class . ':affiliate', EnsureAffiliateActivePeriod::class])
             ->group(function () {
 
             Route::get('dashboard', [Affiliate\DashboardController::class , 'index'])
@@ -206,6 +207,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('kode');
             Route::get('pengaturan', [Affiliate\PengaturanController::class , 'index'])
                 ->name('pengaturan');
+            Route::post('pengaturan/bank-account', [Affiliate\PengaturanController::class , 'storeBankAccount'])
+                ->name('pengaturan.bank-account.store');
+            Route::post('pengaturan/withdraw', [Affiliate\PengaturanController::class , 'requestWithdrawal'])
+                ->name('pengaturan.withdraw.store');
             Route::get('personal', [Affiliate\PersonalController::class , 'index'])
                 ->name('personal');
             Route::get('downline', [Affiliate\DownlineController::class , 'index'])
@@ -357,11 +362,21 @@ Route::get('/profile', function () {
 // Cart page — render with user profile data (user may be null for guests)
 Route::get('/cart', function (Request $request) {
     $user = $request->user();
+    $profileAddress = null;
+    if ($user?->profile?->address) {
+        $address = $user->profile->address;
+        if (is_string($address)) {
+            $profileAddress = trim($address) !== '' ? trim($address) : null;
+        } elseif (is_array($address)) {
+            $profileAddress = $address['full_address'] ?? null;
+        }
+    }
+
     return Inertia::render('cart', [
     'user' => $user ? [
     'name' => $user->name,
     'phone' => $user->phone,
-    'alamat' => $user->alamat,
+    'alamat' => $profileAddress,
     'email' => $user->email,
     ] : null,
     ]);

@@ -20,6 +20,15 @@ class ReedemController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $sponsorAffiliate = $user->affiliate;
+
+        if (!$sponsorAffiliate) {
+            return Inertia::render('affiliate/redeem/index', [
+                'availableCodes' => [],
+                'placementOptions' => [],
+                'defaultPlacementAffiliateId' => null,
+            ]);
+        }
 
         $codes = ActivationCode::where('owner_id', $user->id)
             ->where('status', 'available')
@@ -54,8 +63,41 @@ class ReedemController extends Controller
             })
             ->toArray();
 
+        $placementCandidates = Affiliate::query()
+            ->where(function ($q) use ($user, $sponsorAffiliate) {
+                $q->where('id', $sponsorAffiliate->id)
+                    ->orWhere('sponsor_id', $user->id);
+            })
+            ->where('is_active', true)
+            ->with('user:id,name')
+            ->orderBy('level')
+            ->orderBy('id')
+            ->get();
+
+        $placementOptions = $placementCandidates->map(function (Affiliate $candidate) {
+            $leftTaken = Affiliate::query()
+                ->where('upline_id', $candidate->user_id)
+                ->where('position', 'left')
+                ->exists();
+            $rightTaken = Affiliate::query()
+                ->where('upline_id', $candidate->user_id)
+                ->where('position', 'right')
+                ->exists();
+
+            return [
+                'id' => $candidate->id,
+                'name' => $candidate->user?->name ?? '-',
+                'username' => $candidate->username,
+                'level' => (int) $candidate->level,
+                'left_available' => !$leftTaken,
+                'right_available' => !$rightTaken,
+            ];
+        })->values()->toArray();
+
         return Inertia::render('affiliate/redeem/index', [
             'availableCodes' => $availableCodes,
+            'placementOptions' => $placementOptions,
+            'defaultPlacementAffiliateId' => $sponsorAffiliate->id,
         ]);
     }
 
@@ -67,6 +109,7 @@ class ReedemController extends Controller
         $request->validate([
             'code_id' => 'required|integer|exists:activation_codes,id',
             'request_user_id' => 'nullable|integer|exists:users,id',
+            'placement_affiliate_id' => 'nullable|integer|exists:affiliates,id',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255',
             'password' => 'nullable|string|min:8|confirmed',
@@ -80,8 +123,21 @@ class ReedemController extends Controller
             return back()->withErrors(['sponsor' => 'Akun ini belum terdaftar sebagai affiliate aktif.']);
         }
 
+        $placementAffiliate = Affiliate::query()
+            ->where('id', $request->integer('placement_affiliate_id', $sponsorAffiliate->id))
+            ->where('is_active', true)
+            ->first();
+
+        if (
+            !$placementAffiliate
+            || ((int) $placementAffiliate->id !== (int) $sponsorAffiliate->id
+                && (int) $placementAffiliate->sponsor_id !== (int) $sponsorAffiliate->user_id)
+        ) {
+            return back()->withErrors(['placement_affiliate_id' => 'Node penempatan tidak valid.']);
+        }
+
         $position = $request->string('position')->toString();
-        $positionTaken = Affiliate::where('upline_id', $user->id)
+        $positionTaken = Affiliate::where('upline_id', $placementAffiliate->user_id)
             ->where('position', $position)
             ->exists();
 
@@ -101,8 +157,25 @@ class ReedemController extends Controller
         }
 
         $requestUserId = $request->integer('request_user_id');
+        $isGuestBundleCode = strtolower((string) $code->generated_from) === 'guest_bundle_order';
+        $expectedRequestUserId = null;
+        if (preg_match('/request_user_id=(\d+)/', (string) $code->notes, $m)) {
+            $expectedRequestUserId = (int) $m[1];
+        }
 
-        DB::transaction(function () use ($request, $sponsorAffiliate, $code, $position, $requestUserId) {
+        if ($isGuestBundleCode && $requestUserId <= 0) {
+            return back()->withErrors([
+                'request_user_id' => 'Kode ini khusus untuk request guest. Pilih data request user terlebih dahulu.',
+            ]);
+        }
+
+        if ($isGuestBundleCode && $expectedRequestUserId && $requestUserId > 0 && $requestUserId !== $expectedRequestUserId) {
+            return back()->withErrors([
+                'request_user_id' => 'Request user tidak sesuai dengan data kode aktivasi ini.',
+            ]);
+        }
+
+        DB::transaction(function () use ($request, $sponsorAffiliate, $placementAffiliate, $code, $position, $requestUserId) {
             if ($requestUserId > 0) {
                 $pendingAffiliate = Affiliate::query()
                     ->where('user_id', $requestUserId)
@@ -112,7 +185,7 @@ class ReedemController extends Controller
                     ->first();
 
                 if ($pendingAffiliate) {
-                    app(AffiliateService::class)->confirmAffiliate($pendingAffiliate->id, $position);
+                    app(AffiliateService::class)->confirmAffiliate($pendingAffiliate->id, $position, $placementAffiliate);
                     return;
                 }
             }
@@ -139,7 +212,7 @@ class ReedemController extends Controller
 
             $newUser->assignRole('affiliate');
 
-            app(AffiliateService::class)->registerNewAffiliate($newUser, $sponsorAffiliate, $position, $code);
+            app(AffiliateService::class)->registerNewAffiliate($newUser, $sponsorAffiliate, $position, $code, $placementAffiliate);
         });
 
         return back()->with('success', 'Redeem berhasil, akun affiliate baru sudah dibuat.');

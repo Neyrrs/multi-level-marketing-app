@@ -26,6 +26,7 @@ interface Pin {
     usage_remaining: number;
     created_at: string;
     used_at: string | null;
+    auto_used_for_ro?: boolean;
 }
 
 interface StatusCounts {
@@ -139,9 +140,16 @@ export default function PinList({ pins, statusCounts }: Props) {
                                             <TableCell className="font-mono font-semibold">{pin.code}</TableCell>
                                             <TableCell>{pin.product_name}</TableCell>
                                             <TableCell>
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(pin.status)}`}>
-                                                    {getStatusLabel(pin.status)}
-                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(pin.status)}`}>
+                                                        {getStatusLabel(pin.status)}
+                                                    </span>
+                                                    {pin.auto_used_for_ro && (
+                                                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                                                            Auto-used for RO
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </TableCell>
                                             <TableCell>{pin.usage_remaining}</TableCell>
                                             <TableCell>

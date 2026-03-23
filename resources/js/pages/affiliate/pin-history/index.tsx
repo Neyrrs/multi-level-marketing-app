@@ -25,8 +25,8 @@ export default function PinHistory({ history }: Props) {
                                     <TableHead>No</TableHead>
                                     <TableHead>PIN</TableHead>
                                     <TableHead>Produk</TableHead>
-                                    <TableHead>Dibuat</TableHead>
                                     <TableHead>Digunakan</TableHead>
+                                    <TableHead>Digunakan Untuk</TableHead>
                                     <TableHead>Dipakai Oleh</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -36,9 +36,11 @@ export default function PinHistory({ history }: Props) {
                                         <TableCell>{i + 1}</TableCell>
                                         <TableCell className="font-mono">{item.code}</TableCell>
                                         <TableCell>{item.product_name}</TableCell>
-                                        <TableCell>{new Date(item.created_at).toLocaleDateString('id-ID')}</TableCell>
-                                        <TableCell>{new Date(item.used_at).toLocaleDateString('id-ID')}</TableCell>
-                                        <TableCell>{item.used_by_name}</TableCell>
+                                        <TableCell>{item.used_at ? new Date(item.used_at).toLocaleDateString('id-ID') : '-'}</TableCell>
+                                        <TableCell>{item.usage_purpose}</TableCell>
+                                        <TableCell>
+                                            <span>{item.used_by_name}</span>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

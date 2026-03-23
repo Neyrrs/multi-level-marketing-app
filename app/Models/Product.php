@@ -18,6 +18,7 @@ class Product extends Model
         'image',
         'stock',
         'weight',
+        'harga_modal',
         'harga_awal',
         'diskon',
         'harga_akhir',
@@ -28,6 +29,7 @@ class Product extends Model
     ];
 
     protected $casts = [
+        'harga_modal' => 'decimal:2',
         'harga_awal' => 'decimal:2',
         'diskon' => 'decimal:2',
         'harga_akhir' => 'decimal:2',

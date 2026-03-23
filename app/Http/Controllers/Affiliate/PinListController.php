@@ -34,6 +34,7 @@ class PinListController extends Controller
 
         // Transform data for frontend
         $codes->getCollection()->transform(function ($item) {
+            $notes = (string) ($item->notes ?? '');
             return [
                 'id' => $item->id,
                 'code' => $item->code,
@@ -42,6 +43,7 @@ class PinListController extends Controller
                 'usage_remaining' => $item->remaining_usage ?? $item->usage_count ?? 1,
                 'created_at' => $item->created_at->format('Y-m-d H:i'),
                 'used_at' => $item->used_at ? $item->used_at->format('Y-m-d H:i') : null,
+                'auto_used_for_ro' => str_contains(strtolower($notes), 'auto-used for ro'),
             ];
         });
 

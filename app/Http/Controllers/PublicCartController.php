@@ -27,6 +27,12 @@ class PublicCartController extends Controller
     public function checkout(Request $request)
     {
         $user = $request->user();
+        $address = $this->resolveProfileAddress($user);
+        if (blank($user?->name) || blank($user?->email) || blank($user?->phone) || blank($address)) {
+            return back()->withErrors([
+                'cart' => 'Lengkapi data profil (nama, email, no. HP, alamat) sebelum checkout.',
+            ]);
+        }
 
         $data = $request->validate([
             'items'         => 'required|array|min:1',
@@ -37,14 +43,30 @@ class PublicCartController extends Controller
 
         $sessionAffiliateId = (int) $request->session()->get('ref_affiliate_id', 0);
         $affiliateId = null;
+        if ($user && $user->hasRole('affiliate')) {
+            $affiliateId = $user->affiliate?->id;
+        }
+
         if ($sessionAffiliateId > 0) {
-            $affiliateId = Affiliate::where('id', $sessionAffiliateId)
+            $sessionAffiliate = Affiliate::where('id', $sessionAffiliateId)
                 ->where('is_active', true)
                 ->value('id');
+            if (!$affiliateId && $sessionAffiliate) {
+                $affiliateId = $sessionAffiliate;
+            }
+        }
+
+        if (!$affiliateId && $user && $user->hasRole('guest')) {
+            $randomAffiliate = app(\App\Services\AffiliateService::class)->assignRandomSponsor();
+            if ($randomAffiliate) {
+                $affiliateId = $randomAffiliate->id;
+                $request->session()->put('ref_affiliate_id', $randomAffiliate->id);
+                $request->session()->put('ref_affiliate_slug', $randomAffiliate->slug);
+            }
         }
 
         try {
-            $order = DB::transaction(function () use ($data, $user, $affiliateId) {
+            $order = DB::transaction(function () use ($data, $user, $affiliateId, $address) {
                 $productIds = collect($data['items'])->pluck('id');
                 $products   = Product::whereIn('id', $productIds)
                     ->where('is_active', true)
@@ -92,6 +114,8 @@ class PublicCartController extends Controller
                     ];
                 }
 
+                $this->enforceGuestBundleRule($user, $lineItems);
+
                 $order = Order::create([
                     'order_number'             => 'ORD-' . uniqid(),
                     'user_id'                  => $user->id,
@@ -101,7 +125,7 @@ class PublicCartController extends Controller
                     'shipping_data'            => [
                         'recipient_name'  => $user->name,
                         'recipient_phone' => $user->phone,
-                        'address'         => $user->alamat ?? $this->resolveProfileAddress($user),
+                        'address'         => $address,
                     ],
                     'product_type'             => strtolower((string) ($firstProduct?->type ?? 'single')),
                     'product_id'               => $firstProduct?->id,
@@ -256,5 +280,37 @@ class PublicCartController extends Controller
             $address['postal_code'] ?? null,
         ]);
         return !empty($parts) ? implode(', ', $parts) : null;
+    }
+
+    private function enforceGuestBundleRule($user, array $lineItems): void
+    {
+        if (!$user || !$user->hasRole('guest')) {
+            return;
+        }
+
+        $bundleQty = collect($lineItems)->sum(function (array $line): int {
+            $type = strtolower((string) ($line['product']->type ?? ''));
+            return $type === 'bundle' ? (int) ($line['qty'] ?? 0) : 0;
+        });
+
+        if ($bundleQty <= 0) {
+            return;
+        }
+
+        if ($bundleQty > 1) {
+            throw new \RuntimeException('Guest hanya bisa membeli 1 produk bundle per transaksi.');
+        }
+
+        $hasPaidBundle = Order::query()
+            ->where('user_id', $user->id)
+            ->where('payment_status', 'paid')
+            ->whereHas('items.product', function ($q) {
+                $q->whereRaw('LOWER(type) = ?', ['bundle']);
+            })
+            ->exists();
+
+        if ($hasPaidBundle) {
+            throw new \RuntimeException('Guest sudah pernah membeli produk bundle sebelumnya.');
+        }
     }
 }

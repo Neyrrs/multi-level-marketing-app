@@ -29,6 +29,12 @@ class FortifyLoginResponse implements LoginResponseContract
         }
 
         if ($user->hasRole('affiliate')) {
+            $affiliate = $user->affiliate;
+            if ($affiliate && $affiliate->active_until && now()->greaterThan($affiliate->active_until)) {
+                $affiliate->update(['is_active' => false]);
+                return redirect()->intended(route('cart'))
+                    ->with('error', 'Masa aktif affiliate habis. Lakukan RO untuk aktif lagi 1 bulan.');
+            }
             return redirect()->intended(route('affiliate.dashboard'));
         }
 
@@ -37,6 +43,6 @@ class FortifyLoginResponse implements LoginResponseContract
         }
 
         // default/guest
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('home'));
     }
 }

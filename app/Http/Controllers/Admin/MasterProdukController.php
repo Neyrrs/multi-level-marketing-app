@@ -34,6 +34,7 @@ class MasterProdukController extends Controller
                 'description' => $product->description,
                 'type' => $product->type,
                 'stock' => (int) ($product->stock ?? 0),
+                'harga_modal' => (float) ($product->harga_modal ?? $product->harga_awal ?? 0),
                 'harga_awal' => (float) ($product->harga_awal ?? 0),
                 'diskon' => (float) ($product->diskon ?? 0),
                 'harga_akhir' => (float) ($product->harga_akhir ?? 0),
@@ -92,7 +93,7 @@ class MasterProdukController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // 
     }
 
     /**

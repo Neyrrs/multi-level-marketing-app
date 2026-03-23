@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Affiliate;
 use App\Models\Order;
 use App\Services\ActivationService;
 use App\Services\AffiliateService;
@@ -91,6 +92,9 @@ class OrderService
                 ?? $order->payment_reference,
         ]);
 
+        // RO behavior: paid affiliate bundle order extends active period when expired.
+        $wasAutoRenewedByBundleRo = $this->renewAffiliateActivePeriod($order);
+
         $activationCodeCount = (int) $order->items()
             ->where('gives_activation_code', true)
             ->sum('quantity');
@@ -103,12 +107,19 @@ class OrderService
 
             $generated = $this->activationService->generateFromOrder($order, $activationCodeCount);
 
+            // If affiliate was expired and got reactivated by bundle purchase, consume one code automatically for RO.
+            if ($wasAutoRenewedByBundleRo) {
+                $this->consumeGeneratedCodeForAutoRo($order, $generated);
+            }
+
             foreach ($generated as $code) {
                 OrderActivationCode::firstOrCreate([
                     'order_id' => $order->id,
                     'activation_code_id' => $code->id,
                 ]);
             }
+
+            $this->createPendingAffiliateRequestForGuest($order, $generated);
         }
 
         // trigger commission calculation via CommissionService
@@ -123,6 +134,53 @@ class OrderService
         }
 
         return $order;
+    }
+
+    private function createPendingAffiliateRequestForGuest(Order $order, array $generatedCodes): void
+    {
+        $buyer = $order->user;
+        if (!$buyer || !$buyer->hasRole('guest')) {
+            return;
+        }
+
+        if ($buyer->affiliate()->exists()) {
+            return;
+        }
+
+        $sponsorAffiliate = Affiliate::query()
+            ->whereKey($order->affiliate_id)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$sponsorAffiliate) {
+            return;
+        }
+
+        $primaryCode = collect($generatedCodes)->first();
+        if (!$primaryCode) {
+            return;
+        }
+
+        $existingPending = Affiliate::query()
+            ->where('user_id', $buyer->id)
+            ->where('sponsor_id', $sponsorAffiliate->user_id)
+            ->where('is_active', false)
+            ->latest('id')
+            ->first();
+
+        if ($existingPending) {
+            $existingPending->update([
+                'activation_code_id' => $primaryCode->id,
+            ]);
+            return;
+        }
+
+        $this->affiliateService->registerPendingAffiliate(
+            $buyer,
+            $sponsorAffiliate,
+            $primaryCode,
+            'left'
+        );
     }
 
     public function cancelPendingOrder(int $orderId, string $reason = '', string $paymentStatus = 'failed'): ?Order
@@ -276,5 +334,72 @@ class OrderService
             ?? env('MIDTRANS_IS_SANITIZED', true));
         MidtransConfig::$is3ds = (bool) (config('midtans.is_3ds')
             ?? env('MIDTRANS_IS_3DS', true));
+    }
+
+    private function renewAffiliateActivePeriod(Order $order): bool
+    {
+        $buyer = $order->user;
+        if (!$buyer || !$buyer->hasRole('affiliate')) {
+            return false;
+        }
+
+        $affiliate = $buyer->affiliate;
+        if (!$affiliate) {
+            return false;
+        }
+
+        $hasBundleItem = $order->items()
+            ->whereHas('product', function ($q) {
+                $q->whereRaw('LOWER(type) = ?', ['bundle']);
+            })
+            ->exists() || strtolower((string) $order->product_type) === 'bundle';
+
+        if (!$hasBundleItem) {
+            return false;
+        }
+
+        $isExpired = !$affiliate->active_until || now()->greaterThan($affiliate->active_until);
+        if (!$isExpired && $affiliate->is_active) {
+            // Active account buying bundle should still get code, but no RO extension.
+            return false;
+        }
+
+        $affiliate->update([
+            'is_active' => true,
+            'activated_at' => $affiliate->activated_at ?? now(),
+            'active_until' => now()->addMonth(),
+            'last_activity_at' => now(),
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Auto-consume one generated activation code when bundle payment is used as RO reactivation.
+     */
+    private function consumeGeneratedCodeForAutoRo(Order $order, array $generatedCodes): void
+    {
+        $buyer = $order->user;
+        if (!$buyer || empty($generatedCodes)) {
+            return;
+        }
+
+        $code = $generatedCodes[0] ?? null;
+        if (!$code) {
+            return;
+        }
+
+        $remaining = (int) ($code->remaining_usage ?? $code->usage_count ?? 1);
+        $remaining = max(0, $remaining - 1);
+        $existingNotes = trim((string) ($code->notes ?? ''));
+        $autoNote = 'Auto-used for RO reactivation (affiliate expired) order=' . $order->order_number;
+
+        $code->update([
+            'remaining_usage' => $remaining,
+            'status' => $remaining <= 0 ? 'used' : 'available',
+            'used_by' => $buyer->id,
+            'used_at' => now(),
+            'notes' => trim($existingNotes . ' | ' . $autoNote, ' |'),
+        ]);
     }
 }

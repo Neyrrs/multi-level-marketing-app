@@ -41,8 +41,8 @@ const EditProfile = () => {
         defaultValues: {
             name: user.name || '',
             email: user.email || '',
-            phone: user.phone || '-',
-            alamat: user.alamat || '-',
+            phone: user.phone || '',
+            alamat: user.alamat || '',
         },
     });
 

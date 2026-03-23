@@ -39,13 +39,16 @@ class PinHistoryController extends Controller
 
         // Transform data for frontend
         $history->getCollection()->transform(function ($item) {
+            $notes = (string) ($item->notes ?? '');
+            $notesLower = strtolower($notes);
+            $isRo = str_contains($notesLower, 'auto-used for ro') || str_contains($notesLower, 'ro redeemed');
             return [
                 'id' => $item->id,
                 'code' => $item->code,
                 'product_name' => $item->product?->name ?? '-',
-                'created_at' => $item->created_at->format('Y-m-d H:i'),
                 'used_at' => $item->used_at ? $item->used_at->format('Y-m-d H:i') : null,
                 'used_by_name' => $item->usedBy ? $item->usedBy->name : 'Unknown',
+                'usage_purpose' => $isRo ? 'RO' : 'Redeem',
             ];
         });
 

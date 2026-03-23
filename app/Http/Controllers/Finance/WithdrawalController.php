@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
+use App\Models\CommissionLedger;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -76,7 +77,7 @@ class WithdrawalController extends Controller
                 'end_date' => $request->get('end_date'),
                 'search' => $request->get('search'),
             ],
-            'statuses' => ['pending', 'approved', 'rejected', 'processed'],
+            'statuses' => ['pending', 'approved', 'processing', 'completed', 'rejected', 'failed'],
         ]);
     }
 
@@ -140,10 +141,56 @@ class WithdrawalController extends Controller
             return back()->withErrors(['error' => 'Hanya withdrawal approved yang bisa diproses']);
         }
 
-        $withdrawal->update([
-            'status' => 'processed',
-            'processed_at' => now(),
-        ]);
+        DB::transaction(function () use ($withdrawal) {
+            $withdrawal->refresh();
+
+            if ($withdrawal->status !== 'approved') {
+                throw new \RuntimeException('Status withdrawal berubah saat proses.');
+            }
+
+            $reference = 'withdrawal:' . $withdrawal->id;
+            $existingLedger = CommissionLedger::query()
+                ->where('affiliate_id', $withdrawal->affiliate_id)
+                ->where('type', 'debit')
+                ->where('reference', $reference)
+                ->where('reference_type', 'withdrawal')
+                ->exists();
+
+            if (!$existingLedger) {
+                $totalDebit = (float) CommissionLedger::query()
+                    ->where('affiliate_id', $withdrawal->affiliate_id)
+                    ->where('status', 'posted')
+                    ->where('type', 'debit')
+                    ->sum('amount');
+                $totalCredit = (float) CommissionLedger::query()
+                    ->where('affiliate_id', $withdrawal->affiliate_id)
+                    ->where('status', 'posted')
+                    ->where('type', 'credit')
+                    ->sum('amount');
+                $before = $totalCredit - $totalDebit;
+                $amount = (float) $withdrawal->net_amount;
+
+                CommissionLedger::create([
+                    'affiliate_id' => $withdrawal->affiliate_id,
+                    'commission_id' => null,
+                    'order_id' => null,
+                    'type' => 'debit',
+                    'amount' => $amount,
+                    'description' => 'Withdrawal payout ' . $withdrawal->withdrawal_number,
+                    'balance_before' => $before,
+                    'balance_after' => $before - $amount,
+                    'reference' => $reference,
+                    'reference_type' => 'withdrawal',
+                    'status' => 'posted',
+                    'notes' => 'Processed by finance user id: ' . (auth()->id() ?? '-'),
+                ]);
+            }
+
+            $withdrawal->update([
+                'status' => 'completed',
+                'processed_at' => now(),
+            ]);
+        });
 
         return back()->with('success', 'Withdrawal berhasil diproses');
     }

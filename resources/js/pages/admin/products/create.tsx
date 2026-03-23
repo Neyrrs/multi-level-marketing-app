@@ -23,9 +23,9 @@ export default function CreateProduct() {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         description: '',
+        harga_modal: '',
         harga_awal: '',
         diskon: '',
-        harga_akhir: '',
         point_value: '',
         type: 'single',
         stock: '',
@@ -63,14 +63,14 @@ export default function CreateProduct() {
                     />
                     {errors.description && <p className="text-sm text-red-600">{errors.description}</p>}
 
-                    <Input placeholder="Harga Awal" name="harga_awal" type="number" value={data.harga_awal} onChange={handleChange} />
+                    <Input placeholder="Harga Modal" name="harga_modal" type="number" value={data.harga_modal} onChange={handleChange} />
+                    {errors.harga_modal && <p className="text-sm text-red-600">{errors.harga_modal}</p>}
+
+                    <Input placeholder="Harga Jual (Sebelum Diskon)" name="harga_awal" type="number" value={data.harga_awal} onChange={handleChange} />
                     {errors.harga_awal && <p className="text-sm text-red-600">{errors.harga_awal}</p>}
 
                     <Input placeholder="Diskon (%)" name="diskon" type="number" value={data.diskon} onChange={handleChange} />
                     {errors.diskon && <p className="text-sm text-red-600">{errors.diskon}</p>}
-
-                    <Input placeholder="Harga Akhir (opsional)" name="harga_akhir" type="number" value={data.harga_akhir} onChange={handleChange} />
-                    {errors.harga_akhir && <p className="text-sm text-red-600">{errors.harga_akhir}</p>}
 
                     <Input placeholder="Poin Produk" name="point_value" type="number" value={data.point_value} onChange={handleChange} />
                     {errors.point_value && <p className="text-sm text-red-600">{errors.point_value}</p>}

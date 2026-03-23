@@ -8,6 +8,7 @@ interface Product {
     id: number;
     name: string;
     description?: string;
+    harga_modal: string;
     harga_awal: string;
     diskon?: string;
     harga_akhir?: string;
@@ -40,9 +41,9 @@ export default function EditProduct({ product }: Props) {
     const { data, setData, put, processing, errors } = useForm({
         name: product.name,
         description: product.description ?? '',
-        harga_awal: product.harga_awal,
+        harga_modal: product.harga_modal ?? product.harga_awal,
+        harga_awal: product.harga_awal ?? '',
         diskon: product.diskon ?? '',
-        harga_akhir: product.harga_akhir ?? '',
         point_value: product.point_value ?? '',
         type: product.type ?? 'single',
         stock: product.stock ?? '',
@@ -80,14 +81,14 @@ export default function EditProduct({ product }: Props) {
                     />
                     {errors.description && <p className="text-sm text-red-600">{errors.description}</p>}
 
-                    <Input placeholder="Harga Awal" name="harga_awal" type="number" value={data.harga_awal} onChange={handleChange} />
+                    <Input placeholder="Harga Modal" name="harga_modal" type="number" value={data.harga_modal} onChange={handleChange} />
+                    {errors.harga_modal && <p className="text-sm text-red-600">{errors.harga_modal}</p>}
+
+                    <Input placeholder="Harga Jual (Sebelum Diskon)" name="harga_awal" type="number" value={data.harga_awal} onChange={handleChange} />
                     {errors.harga_awal && <p className="text-sm text-red-600">{errors.harga_awal}</p>}
 
                     <Input placeholder="Diskon (%)" name="diskon" type="number" value={data.diskon} onChange={handleChange} />
                     {errors.diskon && <p className="text-sm text-red-600">{errors.diskon}</p>}
-
-                    <Input placeholder="Harga Akhir (opsional)" name="harga_akhir" type="number" value={data.harga_akhir} onChange={handleChange} />
-                    {errors.harga_akhir && <p className="text-sm text-red-600">{errors.harga_akhir}</p>}
 
                     <Input placeholder="Poin Produk" name="point_value" type="number" value={data.point_value} onChange={handleChange} />
                     {errors.point_value && <p className="text-sm text-red-600">{errors.point_value}</p>}

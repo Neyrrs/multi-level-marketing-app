@@ -63,7 +63,7 @@ class CommissionService
         $pairs = min($left, $right);
         if ($pairs <= 0) return null;
 
-        $rule = $this->resolveRuleForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']);
+        $rule = $this->resolveRuleForAffiliate($aff, ['matching_binary', 'percentage'], ['matching'], null, true);
         if (!$rule) {
             return null;
         }
@@ -91,7 +91,7 @@ class CommissionService
             $pairs = min($left, $right);
             if ($pairs <= 0) continue;
 
-            $resolvedRule = $this->resolveRuleForAffiliate($aff, ['matching_binary', 'percentage'], ['matching']);
+            $resolvedRule = $this->resolveRuleForAffiliate($aff, ['matching_binary', 'percentage'], ['matching'], null, true);
             if (!$resolvedRule) {
                 continue;
             }
@@ -158,6 +158,19 @@ class CommissionService
             }
         }
 
+        // Optional depth guard from rule condition.
+        if ($depth !== null) {
+            $exactDepth = Arr::get($cond, 'depth');
+            if ($exactDepth !== null && (int) $exactDepth !== (int) $depth) {
+                return 0;
+            }
+
+            $maxDepth = Arr::get($cond, 'max_depth');
+            if ($maxDepth !== null && (int) $depth > (int) $maxDepth) {
+                return 0;
+            }
+        }
+
         // percentage vs fixed (value field semantics)
         if ($rule->value && Arr::get($cond, 'type') === 'percentage') {
             return ($order->total_amount * $rule->value) / 100;
@@ -208,7 +221,7 @@ class CommissionService
      */
     private function resolveMethod(array $types, array $names): ?CommissionMethod
     {
-        $query = CommissionMethod::query()->where('is_active', true);
+        $query = CommissionMethod::query()->where('is_active', true); 
 
         if (!empty($types)) {
             $typed = (clone $query)->whereIn('calculation_type', $types)->first();
@@ -236,7 +249,13 @@ class CommissionService
         return $this->resolveMethod($types, $names);
     }
 
-    private function resolveRuleForAffiliate(?Affiliate $affiliate, array $types, array $names, ?int $priority = null): ?CommissionRule
+    private function resolveRuleForAffiliate(
+        ?Affiliate $affiliate,
+        array $types,
+        array $names,
+        ?int $priority = null,
+        bool $requirePlanRule = false
+    ): ?CommissionRule
     {
         if ($affiliate) {
             $plan = $affiliate->commissionPlan()->where('is_active', true)->first();
@@ -266,18 +285,38 @@ class CommissionService
                         });
                     });
 
+                $priorityQuery = clone $query;
                 if ($priority !== null) {
-                    $query->where('commission_rules.priority', $priority);
+                    $priorityQuery->where('commission_rules.priority', $priority);
                 }
 
-                $rule = $query
+                $rule = $priorityQuery
                     ->orderBy('commission_rules.priority')
                     ->first();
 
                 if ($rule) {
                     return $rule;
                 }
+
+                // Fallback for single-rule-per-method setup: use first active rule from plan.
+                $fallbackRule = $query
+                    ->orderBy('commission_rules.priority')
+                    ->first();
+                if ($fallbackRule) {
+                    return $fallbackRule;
+                }
+
+                if ($requirePlanRule) {
+                    return null;
+                }
+            } elseif ($requirePlanRule) {
+                // Matching (or other strict mode) must come from active/default plan.
+                return null;
             }
+        }
+
+        if ($requirePlanRule) {
+            return null;
         }
 
         $method = $this->resolveMethodForAffiliate($affiliate, $types, $names);
@@ -286,8 +325,14 @@ class CommissionService
         }
 
         $ruleQuery = $method->rules()->where('is_active', true);
+        $priorityRuleQuery = clone $ruleQuery;
         if ($priority !== null) {
-            $ruleQuery->where('priority', $priority);
+            $priorityRuleQuery->where('priority', $priority);
+        }
+
+        $priorityRule = $priorityRuleQuery->orderBy('priority')->first();
+        if ($priorityRule) {
+            return $priorityRule;
         }
 
         return $ruleQuery->orderBy('priority')->first();

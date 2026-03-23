@@ -37,6 +37,31 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $authUser = $request->user();
+        $authUserPayload = null;
+        if ($authUser) {
+            $authUser->loadMissing('roles:id,name', 'profile:id,user_id,address,photo_profile');
+            $address = $authUser->profile?->address;
+            $fullAddress = null;
+
+            if (is_string($address)) {
+                $fullAddress = trim($address) !== '' ? trim($address) : null;
+            } elseif (is_array($address)) {
+                $fullAddress = $address['full_address'] ?? null;
+            }
+
+            $authUserPayload = array_merge($authUser->toArray(), [
+                'alamat' => $fullAddress,
+                'roles' => $authUser->roles
+                    ->map(fn ($role) => [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                    ])
+                    ->values()
+                    ->all(),
+                'avatar' => $authUser->avatar,
+            ]);
+        }
 
         return [
             ...parent::share($request),
@@ -56,7 +81,7 @@ class HandleInertiaRequests extends Middleware
                 'isProduction' => (bool) (config('midtans.is_production') ?? config('services.midtrans.is_production')),
             ],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $authUserPayload,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

@@ -42,38 +42,42 @@ interface Props {
     maxDepth: number;
 }
 
+const NodeCard = ({ node }: { node: TreeNode }) => (
+    <Card className="w-44">
+        <CardContent className="text-center pt-4">
+            <div className="font-semibold text-sm">{node.name}</div>
+            <div className="text-xs text-gray-600">@{node.username}</div>
+            <div className="text-[10px] text-gray-500 mt-1">
+                Level {node.level} | {node.position}
+            </div>
+            <div className="text-[10px] mt-2">
+                <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => router.get('/affiliate/tree', { focus: node.id }, { preserveState: true })}
+                >
+                    Lihat Node
+                </Button>
+            </div>
+        </CardContent>
+    </Card>
+);
+
 const TreeNodeComponent = ({ node }: { node: TreeNode | null }) => {
     if (!node) return null;
 
     return (
-        <div className="flex flex-col items-center gap-2">
-            <Card className="w-44">
-                <CardContent className="text-center pt-4">
-                    <div className="font-semibold text-sm">{node.name}</div>
-                    <div className="text-xs text-gray-600">@{node.username}</div>
-                    <div className="text-[10px] text-gray-500 mt-1">
-                        Level {node.level} | {node.position}
-                    </div>
-                    <div className="text-[10px] mt-2">
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => router.get('/affiliate/tree', { focus: node.id }, { preserveState: true })}
-                        >
-                            Lihat Node
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-            <div className="flex gap-8">
-                <div>
-                    {node.left ? <TreeNodeComponent node={node.left} /> : (
-                        <div className="text-xs text-gray-400 text-center">Kiri kosong</div>
+        <div className="flex flex-col items-center gap-4">
+            <NodeCard node={node} />
+            <div className="grid grid-cols-2 gap-8">
+                <div className="flex justify-center">
+                    {node.left ? <NodeCard node={node.left} /> : (
+                        <div className="text-xs text-gray-400 text-center self-center">Kiri kosong</div>
                     )}
                 </div>
-                <div>
-                    {node.right ? <TreeNodeComponent node={node.right} /> : (
-                        <div className="text-xs text-gray-400 text-center">Kanan kosong</div>
+                <div className="flex justify-center">
+                    {node.right ? <NodeCard node={node.right} /> : (
+                        <div className="text-xs text-gray-400 text-center self-center">Kanan kosong</div>
                     )}
                 </div>
             </div>

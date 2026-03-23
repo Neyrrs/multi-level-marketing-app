@@ -42,7 +42,11 @@ class PlanController extends Controller
             ->where('is_active', true)
             ->orderBy('method_id')
             ->orderBy('priority')
+            ->orderBy('id')
             ->get()
+            ->groupBy('method_id')
+            ->map(fn ($rows) => $rows->first())
+            ->values()
             ->map(function (CommissionRule $rule) {
                 return [
                     'id' => $rule->id,
@@ -116,8 +120,12 @@ class PlanController extends Controller
                 'is_default' => $isDefault,
             ]);
 
-            $ruleIds = collect($data['selected_rule_ids'] ?? [])->filter()->values()->all();
+            $ruleIds = $this->normalizeRuleIds($data['selected_rule_ids'] ?? []);
             $plan->rules()->sync($ruleIds);
+
+            if ($isDefault) {
+                $this->assignPlanToAllAffiliates($plan->id);
+            }
         });
 
         return redirect()->route('admin.PengaturanPlan.index')->with('success', 'Plan berhasil dibuat.');
@@ -170,8 +178,12 @@ class PlanController extends Controller
             ]);
 
             if (array_key_exists('selected_rule_ids', $data)) {
-                $ruleIds = collect($data['selected_rule_ids'] ?? [])->filter()->values()->all();
+                $ruleIds = $this->normalizeRuleIds($data['selected_rule_ids'] ?? []);
                 $plan->rules()->sync($ruleIds);
+            }
+
+            if ($isDefault) {
+                $this->assignPlanToAllAffiliates($plan->id);
             }
         });
 
@@ -211,8 +223,54 @@ class PlanController extends Controller
         DB::transaction(function () use ($plan) {
             CommissionPlan::query()->update(['is_default' => false]);
             $plan->update(['is_default' => true, 'is_active' => true]);
+            $this->assignPlanToAllAffiliates($plan->id);
         });
 
         return redirect()->route('admin.plan-setting')->with('success', 'Default plan berhasil diperbarui.');
+    }
+
+    /**
+     * Enforce single-method plan:
+     * - A plan can only contain rules from one method.
+     * - If multiple methods are selected, only the first method (by priority/id)
+     *   is retained and the first active rule for that method is used.
+     */
+    private function normalizeRuleIds(array $selectedRuleIds): array
+    {
+        $ruleIds = collect($selectedRuleIds)
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->values();
+
+        if ($ruleIds->isEmpty()) {
+            return [];
+        }
+
+        $rules = CommissionRule::query()
+            ->whereIn('id', $ruleIds->all())
+            ->where('is_active', true)
+            ->orderBy('method_id')
+            ->orderBy('priority')
+            ->orderBy('id')
+            ->get();
+
+        if ($rules->isEmpty()) {
+            return [];
+        }
+
+        $firstMethodId = (int) $rules->first()->method_id;
+
+        $firstRuleForMethod = $rules
+            ->where('method_id', $firstMethodId)
+            ->first();
+
+        return $firstRuleForMethod ? [(int) $firstRuleForMethod->id] : [];
+    }
+
+    private function assignPlanToAllAffiliates(int $planId): void
+    {
+        Affiliate::query()->update([
+            'commission_plan_id' => $planId,
+        ]);
     }
 }

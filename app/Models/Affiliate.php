@@ -39,6 +39,7 @@ class Affiliate extends Model
         'total_volume',
         'is_active',
         'activated_at',
+        'active_until',
         'last_activity_at',
     ];
 
@@ -60,6 +61,7 @@ class Affiliate extends Model
         'total_volume' => 'decimal:2',
         'is_active' => 'boolean',
         'activated_at' => 'datetime',
+        'active_until' => 'datetime',
         'last_activity_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
