@@ -319,9 +319,18 @@ export default function OrderShow({ order }: Props) {
                 ) : (
                     <Card className="border-yellow-200 bg-yellow-50">
                         <CardContent className="pt-6">
-                            <p className="text-sm text-yellow-800">
-                                Pesanan ini belum memiliki data pengiriman.
-                            </p>
+                            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                                <p className="text-sm text-yellow-800">
+                                    Pesanan ini belum memiliki data pengiriman.
+                                </p>
+                                <Button
+                                    size="sm"
+                                    onClick={() => router.get(`/logistik/shipments/create?order_id=${order.id}`)}
+                                >
+                                    <Truck className="mr-2 h-4 w-4" />
+                                    Buat Data Pengiriman
+                                </Button>
+                            </div>
                         </CardContent>
                     </Card>
                 )}

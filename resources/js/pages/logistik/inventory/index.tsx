@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage, Link, router } from '@inertiajs/react';
-import { Eye, Package, AlertTriangle, Minus, Plus } from 'lucide-react';
+import { Eye, Package, AlertTriangle, Minus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Logistik', href: '#' },
@@ -47,29 +47,16 @@ export default function InventoryIndex() {
     const { products, stats, pagination, filters } = usePage().props as any;
     const [search, setSearch] = useState(filters?.search || '');
 
-    const handleAddStock = (product: Product) => {
-        const raw = window.prompt(`Tambah stok untuk ${product.name}. Masukkan jumlah:`, '1');
-        if (!raw) return;
+    const submitSearch = (event?: FormEvent) => {
+        event?.preventDefault();
 
-        const qty = Number(raw);
-        if (!Number.isInteger(qty) || qty <= 0) {
-            window.alert('Jumlah stok harus bilangan bulat lebih dari 0.');
-            return;
-        }
-
-        router.put(
-            `/logistik/inventory/${product.id}`,
-            {
-                quantity: qty,
-                reason: 'Restok manual dari menu inventaris logistik',
-            },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    router.reload({ only: ['products', 'stats', 'pagination'] });
-                },
-            },
-        );
+        router.get('/logistik/inventory', {
+            search: search?.trim() || undefined,
+        }, {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+        });
     };
 
     const getStatusBadge = (status: string) => {
@@ -150,15 +137,15 @@ export default function InventoryIndex() {
                 </div>
 
                 {/* Search */}
-                <div className="flex gap-2">
+                <form className="flex gap-2" onSubmit={submitSearch}>
                     <Input
                         placeholder="Cari produk..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         className="max-w-sm"
                     />
-                    <Button variant="outline">Cari</Button>
-                </div>
+                    <Button type="submit" variant="outline">Cari</Button>
+                </form>
 
                 {/* Products Table */}
                 <Card>
@@ -172,7 +159,6 @@ export default function InventoryIndex() {
                                     <TableHead>Produk</TableHead>
                                     <TableHead className="text-right">Stok</TableHead>
                                     <TableHead className="text-right">Harga</TableHead>
-                                    <TableHead className="text-right">Berat (kg)</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead className="text-center">Aksi</TableHead>
                                 </TableRow>
@@ -185,7 +171,6 @@ export default function InventoryIndex() {
                                         <TableCell className="text-right">
                                             Rp {product.price.toLocaleString('id-ID')}
                                         </TableCell>
-                                        <TableCell className="text-right">{product.weight}</TableCell>
                                         <TableCell>
                                             <div className="flex items-center gap-2">
                                                 {getStatusIcon(product.status)}
@@ -194,15 +179,6 @@ export default function InventoryIndex() {
                                         </TableCell>
                                         <TableCell className="text-center">
                                             <div className="flex items-center justify-center gap-2">
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={() => handleAddStock(product)}
-                                                    className="gap-1"
-                                                >
-                                                    <Plus className="h-4 w-4" />
-                                                    Restok
-                                                </Button>
                                                 <Link href={`/logistik/inventory/${product.id}`}>
                                                     <Button variant="ghost" size="sm">
                                                         <Eye className="h-4 w-4" />

@@ -61,6 +61,12 @@ class Withdrawal extends Model
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    // Alias used by finance pages/controllers.
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
     // ===== HAS MANY =====
 
     public function histories(): HasMany

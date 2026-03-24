@@ -1,7 +1,10 @@
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
 import { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 
 interface MethodOption {
     id: number;
@@ -11,6 +14,12 @@ interface MethodOption {
 interface Props {
     methods: MethodOption[];
 }
+
+const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Admin', href: '/admin/dashboard' },
+    { title: 'Rule Komisi', href: '/admin/commission-rules' },
+    { title: 'Tambah', href: '#' },
+];
 
 export default function CreateCommissionRule({ methods = [] }: Props) {
     const [data, setData] = useState({
@@ -61,101 +70,122 @@ export default function CreateCommissionRule({ methods = [] }: Props) {
     };
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Tambah Rule Komisi</h1>
-            <div className="space-y-4 max-w-2xl">
-                <select
-                    name="method_id"
-                    value={data.method_id}
-                    onChange={(e) => setData((prev) => ({ ...prev, method_id: e.target.value }))}
-                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                >
-                    <option value="">Pilih Metode Komisi</option>
-                    {methods.map((method) => (
-                        <option key={method.id} value={method.id}>
-                            {method.name}
-                        </option>
-                    ))}
-                </select>
-                <Input
-                    placeholder="Nama Rule"
-                    name="rule_name"
-                    value={data.rule_name}
-                    onChange={handleChange}
-                />
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <select
-                        name="condition_type"
-                        value={data.condition_type}
-                        onChange={handleChange}
-                        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                    >
-                        <option value="percentage">Tipe Kondisi: Percentage</option>
-                        <option value="fixed">Tipe Kondisi: Fixed</option>
-                    </select>
-                    <Input
-                        placeholder="Template (opsional, contoh: standard)"
-                        name="template"
-                        value={data.template}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        placeholder="Min Points (opsional)"
-                        name="min_points"
-                        type="number"
-                        min={0}
-                        value={data.min_points}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        placeholder="Min Leg Points (opsional)"
-                        name="min_leg_points"
-                        type="number"
-                        min={0}
-                        value={data.min_leg_points}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                        placeholder="Depth (opsional)"
-                        name="depth"
-                        type="number"
-                        min={1}
-                        value={data.depth}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        placeholder="Max Depth (opsional)"
-                        name="max_depth"
-                        type="number"
-                        min={1}
-                        value={data.max_depth}
-                        onChange={handleChange}
-                    />
-                </div>
-                <Input
-                    placeholder="Nilai"
-                    name="value"
-                    type="number"
-                    step="0.01"
-                    value={data.value}
-                    onChange={handleChange}
-                />
-                <Input
-                    placeholder="Prioritas"
-                    name="priority"
-                    type="number"
-                    value={data.priority}
-                    onChange={handleChange}
-                />
-                <div className="flex gap-2">
-                    <Button onClick={handleSubmit}>Simpan</Button>
-                    <Button variant="outline" onClick={() => router.visit('/admin/commission-rules')}>
-                        Batal
-                    </Button>
-                </div>
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Tambah Rule Komisi" />
+            <div className="mx-auto w-full max-w-4xl p-6">
+                <Card className="border border-slate-200 shadow-sm">
+                    <CardHeader className="border-b bg-slate-50/70">
+                        <CardTitle className="text-2xl font-semibold">Tambah Rule Komisi</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6 pt-6">
+                        <div className="space-y-4 rounded-lg border border-slate-200 p-4">
+                            <p className="text-sm font-semibold text-slate-700">Informasi Rule</p>
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <select
+                                    name="method_id"
+                                    value={data.method_id}
+                                    onChange={(e) => setData((prev) => ({ ...prev, method_id: e.target.value }))}
+                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                                >
+                                    <option value="">Pilih Metode Komisi</option>
+                                    {methods.map((method) => (
+                                        <option key={method.id} value={method.id}>
+                                            {method.name}
+                                        </option>
+                                    ))}
+                                </select>
+                                <Input
+                                    placeholder="Nama Rule"
+                                    name="rule_name"
+                                    value={data.rule_name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 rounded-lg border border-slate-200 p-4">
+                            <p className="text-sm font-semibold text-slate-700">Kondisi</p>
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <select
+                                    name="condition_type"
+                                    value={data.condition_type}
+                                    onChange={handleChange}
+                                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                                >
+                                    <option value="percentage">Tipe Kondisi: Percentage</option>
+                                    <option value="fixed">Tipe Kondisi: Fixed</option>
+                                </select>
+                                <Input
+                                    placeholder="Template (opsional, contoh: standard)"
+                                    name="template"
+                                    value={data.template}
+                                    onChange={handleChange}
+                                />
+                                <Input
+                                    placeholder="Min Points (opsional)"
+                                    name="min_points"
+                                    type="number"
+                                    min={0}
+                                    value={data.min_points}
+                                    onChange={handleChange}
+                                />
+                                <Input
+                                    placeholder="Min Leg Points (opsional)"
+                                    name="min_leg_points"
+                                    type="number"
+                                    min={0}
+                                    value={data.min_leg_points}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 rounded-lg border border-slate-200 p-4">
+                            <p className="text-sm font-semibold text-slate-700">Struktur Dan Nilai</p>
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <Input
+                                    placeholder="Depth (opsional)"
+                                    name="depth"
+                                    type="number"
+                                    min={1}
+                                    value={data.depth}
+                                    onChange={handleChange}
+                                />
+                                <Input
+                                    placeholder="Max Depth (opsional)"
+                                    name="max_depth"
+                                    type="number"
+                                    min={1}
+                                    value={data.max_depth}
+                                    onChange={handleChange}
+                                />
+                                <Input
+                                    placeholder="Nilai"
+                                    name="value"
+                                    type="number"
+                                    step="0.01"
+                                    value={data.value}
+                                    onChange={handleChange}
+                                />
+                                <Input
+                                    placeholder="Prioritas"
+                                    name="priority"
+                                    type="number"
+                                    value={data.priority}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 pt-2">
+                            <Button onClick={handleSubmit}>Simpan</Button>
+                            <Button variant="outline" onClick={() => router.visit('/admin/commission-rules')}>
+                                Batal
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
-        </div>
+        </AppLayout>
     );
 }

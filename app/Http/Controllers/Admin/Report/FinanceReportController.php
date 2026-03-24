@@ -18,9 +18,9 @@ class FinanceReportController extends Controller
     {
         $totalMasuk = (float) Order::whereIn('payment_status', ['paid', 'settlement', 'capture'])->sum('grand_total');
         $totalKeluarKomisi = (float) DB::table('commission_ledgers')
-            ->where('amount', '<', 0)
-            ->sum(DB::raw('ABS(amount)'));
-        $totalKeluarWithdrawal = (float) Withdrawal::whereIn('status', ['approved', 'processed'])
+            ->where('type', 'debit')
+            ->sum('amount');
+        $totalKeluarWithdrawal = (float) Withdrawal::whereIn('status', ['processing', 'completed'])
             ->sum('net_amount');
         $totalKeluar = $totalKeluarKomisi + $totalKeluarWithdrawal;
         $nettFlow = $totalMasuk - $totalKeluar;

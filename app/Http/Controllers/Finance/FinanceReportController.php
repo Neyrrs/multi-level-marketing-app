@@ -25,8 +25,8 @@ class FinanceReportController extends Controller
                 users.id,
                 users.name,
                 COUNT(*) as transaction_count,
-                SUM(CASE WHEN commission_ledgers.amount > 0 THEN commission_ledgers.amount ELSE 0 END)::numeric as earned,
-                SUM(CASE WHEN commission_ledgers.amount < 0 THEN ABS(commission_ledgers.amount) ELSE 0 END)::numeric as paid
+                SUM(CASE WHEN commission_ledgers.type = \'credit\' THEN commission_ledgers.amount ELSE 0 END)::numeric as earned,
+                SUM(CASE WHEN commission_ledgers.type = \'debit\' THEN commission_ledgers.amount ELSE 0 END)::numeric as paid
             ')
             ->whereBetween('commission_ledgers.created_at', [$startDate, $endDate])
             ->groupBy('users.id', 'users.name')
@@ -48,8 +48,8 @@ class FinanceReportController extends Controller
             ->selectRaw('
                 type,
                 COUNT(*) as count,
-                SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END)::numeric as earned,
-                SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END)::numeric as paid
+                SUM(amount)::numeric as earned,
+                SUM(CASE WHEN type = \'debit\' THEN amount ELSE 0 END)::numeric as paid
             ')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('type')
@@ -67,8 +67,8 @@ class FinanceReportController extends Controller
             ->selectRaw('
                 DATE(created_at) as date,
                 COUNT(*) as count,
-                SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END)::numeric as earned,
-                SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END)::numeric as paid
+                SUM(CASE WHEN type = \'credit\' THEN amount ELSE 0 END)::numeric as earned,
+                SUM(CASE WHEN type = \'debit\' THEN amount ELSE 0 END)::numeric as paid
             ')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('date')
@@ -104,8 +104,8 @@ class FinanceReportController extends Controller
         $commissionSummary = DB::table('commission_ledgers')
             ->selectRaw('
                 COUNT(*) as total_transactions,
-                SUM(CASE WHEN amount > 0 THEN amount ELSE 0 END)::numeric as total_earned,
-                SUM(CASE WHEN amount < 0 THEN ABS(amount) ELSE 0 END)::numeric as total_paid
+                SUM(CASE WHEN type = \'credit\' THEN amount ELSE 0 END)::numeric as total_earned,
+                SUM(CASE WHEN type = \'debit\' THEN amount ELSE 0 END)::numeric as total_paid
             ')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->first();

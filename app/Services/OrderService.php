@@ -122,9 +122,8 @@ class OrderService
             $this->createPendingAffiliateRequestForGuest($order, $generated);
         }
 
-        // trigger commission calculation via CommissionService
-        $this->commissionService->calculateSponsorCommission($order);
-        $this->commissionService->calculateLevelCommission($order);
+        // Trigger commission by affiliate plan method (single-method execution).
+        $this->commissionService->calculateOrderCommissionByPlan($order);
 
         if ($shouldGenerateActivationCode) {
             $order->update([
@@ -132,6 +131,9 @@ class OrderService
                 'activation_codes_count' => $activationCodeCount,
             ]);
         }
+
+        // Update binary point volumes after successful payment.
+        $this->applyPointVolumesFromOrder($order);
 
         return $order;
     }
@@ -401,5 +403,93 @@ class OrderService
             'used_at' => now(),
             'notes' => trim($existingNotes . ' | ' . $autoNote, ' |'),
         ]);
+    }
+
+    /**
+     * Apply point volume from paid order to affiliate tree.
+     * - personal volume goes to order affiliate
+     * - left/right volume propagated to uplines based on branch position
+     */
+    private function applyPointVolumesFromOrder(Order $order): void
+    {
+        $originAffiliate = Affiliate::query()->find($order->affiliate_id);
+        if (!$originAffiliate) {
+            return;
+        }
+
+        $totalPoints = $this->calculateOrderPoints($order);
+        if ($totalPoints <= 0) {
+            return;
+        }
+
+        $originAffiliate->update([
+            'total_personal_volume' => (float) ($originAffiliate->total_personal_volume ?? 0) + $totalPoints,
+            'total_volume' => (float) ($originAffiliate->total_volume ?? 0) + $totalPoints,
+            'last_activity_at' => now(),
+        ]);
+
+        $current = $originAffiliate;
+        $guard = 0;
+
+        while ($current && $current->upline_id && $guard < 50) {
+            $parent = Affiliate::query()
+                ->where('user_id', $current->upline_id)
+                ->first();
+
+            if (!$parent) {
+                break;
+            }
+
+            $branch = strtolower((string) $current->position);
+            if ($branch === 'left') {
+                $parent->update([
+                    'left_volume' => (float) ($parent->left_volume ?? 0) + $totalPoints,
+                    'total_volume' => (float) ($parent->total_volume ?? 0) + $totalPoints,
+                    'last_activity_at' => now(),
+                ]);
+            } elseif ($branch === 'right') {
+                $parent->update([
+                    'right_volume' => (float) ($parent->right_volume ?? 0) + $totalPoints,
+                    'total_volume' => (float) ($parent->total_volume ?? 0) + $totalPoints,
+                    'last_activity_at' => now(),
+                ]);
+            } else {
+                // Fallback for legacy records without explicit position.
+                $parent->update([
+                    'total_volume' => (float) ($parent->total_volume ?? 0) + $totalPoints,
+                    'last_activity_at' => now(),
+                ]);
+            }
+
+            $current = $parent;
+            $guard++;
+        }
+    }
+
+    /**
+     * Sum point_value from order items.
+     */
+    private function calculateOrderPoints(Order $order): float
+    {
+        $points = (float) DB::table('order_items')
+            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+            ->where('order_items.order_id', $order->id)
+            ->sum(DB::raw('COALESCE(order_items.quantity, 0) * COALESCE(products.point_value, 0)'));
+
+        if ($points > 0) {
+            return round($points, 2);
+        }
+
+        if ($order->product_id) {
+            $fallbackPoint = (float) DB::table('products')
+                ->where('id', $order->product_id)
+                ->value('point_value');
+
+            if ($fallbackPoint > 0) {
+                return round($fallbackPoint * (int) ($order->quantity ?? 1), 2);
+            }
+        }
+
+        return 0.0;
     }
 }

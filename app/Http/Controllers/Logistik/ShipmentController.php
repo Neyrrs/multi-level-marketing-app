@@ -100,10 +100,18 @@ class ShipmentController extends Controller
             'notes' => $validated['notes'],
         ]);
 
+        $message = 'Shipment berhasil dibuat';
+
+        if ($request->header('X-Inertia')) {
+            return redirect()
+                ->route('logistik.shipments.show', $shipment->id)
+                ->with('success', $message);
+        }
+
         return response()->json([
             'success' => true,
             'shipment' => $shipment,
-            'message' => 'Shipment berhasil dibuat'
+            'message' => $message,
         ], 201);
     }
 
@@ -223,10 +231,18 @@ class ShipmentController extends Controller
             'tracked_at' => now(),
         ]);
 
+        $message = 'Pengiriman berhasil diperbarui dengan resi: ' . $validated['tracking_number'];
+
+        if ($request->header('X-Inertia')) {
+            return redirect()
+                ->route('logistik.shipments.show', $shipment->id)
+                ->with('success', $message);
+        }
+
         return response()->json([
             'success' => true,
             'shipment' => $shipment,
-            'message' => 'Pengiriman berhasil diperbarui dengan resi: ' . $validated['tracking_number']
+            'message' => $message,
         ]);
     }
 
@@ -254,10 +270,18 @@ class ShipmentController extends Controller
             'tracked_at' => now(),
         ]);
 
+        $message = 'Pengiriman berhasil dikonfirmasi';
+
+        if ($request->header('X-Inertia')) {
+            return redirect()
+                ->route('logistik.shipments.show', $shipment->id)
+                ->with('success', $message);
+        }
+
         return response()->json([
             'success' => true,
             'shipment' => $shipment,
-            'message' => 'Pengiriman berhasil dikonfirmasi'
+            'message' => $message,
         ]);
     }
 

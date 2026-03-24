@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { BarChart3, TrendingUp } from 'lucide-react';
+import { BarChart3 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface StatusItem {
@@ -25,7 +25,6 @@ interface TopCourier {
 interface Props {
     byStatus: StatusItem[];
     byCourier: CourierItem[];
-    avgDeliveryTime: number;
     topCouriers: TopCourier[];
     startDate: string;
     endDate: string;
@@ -49,7 +48,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function ShipmentReport({
     byStatus,
     byCourier,
-    avgDeliveryTime,
     topCouriers,
     startDate,
     endDate,
@@ -63,19 +61,6 @@ export default function ShipmentReport({
                     <BarChart3 className="w-8 h-8 md:block hidden" />
                     <h1 className="text-xl md:text-3xl font-bold">Laporan Pengiriman - Statistik</h1>
                 </div>
-
-                {/* Average Delivery Time */}
-                <Card className="bg-linear-to-br from-blue-50 to-blue-100 pt-0">
-                    <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-gray-600 font-semibold text-sm">Rata-rata Waktu Pengiriman</p>
-                                <p className="text-4xl font-bold text-blue-600 mt-2">{avgDeliveryTime} hari</p>
-                            </div>
-                            <TrendingUp className="w-16 h-16 text-blue-200" />
-                        </div>
-                    </CardContent>
-                </Card>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {/* Shipments by Status */}

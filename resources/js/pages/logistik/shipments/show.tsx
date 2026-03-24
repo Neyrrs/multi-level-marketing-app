@@ -9,13 +9,6 @@ import { Head, router, useForm } from '@inertiajs/react';
 import { ArrowLeft, CheckCircle, Loader, Package, Truck, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 
 interface TrackingHistory {
     id: number;
@@ -163,7 +156,6 @@ export default function ShipmentShow({ shipment }: Props) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Shipment Information */}
                     <Card className="md:col-span-2">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
@@ -218,7 +210,6 @@ export default function ShipmentShow({ shipment }: Props) {
                         </CardContent>
                     </Card>
 
-                    {/* Recipient Information */}
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-base">Penerima</CardTitle>
@@ -234,7 +225,7 @@ export default function ShipmentShow({ shipment }: Props) {
                             </div>
                             {shipment.receiver_name && (
                                 <div className="pt-2 border-t">
-                                    <p className="text-sm text-green-600 font-semibold">✓ Diterima oleh:</p>
+                                    <p className="text-sm text-green-600 font-semibold">Diterima oleh:</p>
                                     <p className="font-semibold">{shipment.receiver_name}</p>
                                 </div>
                             )}
@@ -242,14 +233,16 @@ export default function ShipmentShow({ shipment }: Props) {
                     </Card>
                 </div>
 
-                {/* Actions */}
                 {shipment.status === 'pending' && (
                     <Card className="border-blue-200 bg-blue-50">
                         <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                                <p className="text-sm text-blue-800">
-                                    📦 Silakan input nomor resi (tracking number) untuk menandai pengiriman sebagai terkirim
-                                </p>
+                            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-blue-900">Siap kirim pesanan ini?</p>
+                                    <p className="text-sm text-blue-800">
+                                        Input nomor resi untuk mengubah status menjadi <span className="font-semibold">Terkirim</span>.
+                                    </p>
+                                </div>
                                 <Dialog open={showTrackingForm} onOpenChange={setShowTrackingForm}>
                                     <DialogTrigger asChild>
                                         <Button className="gap-2">
@@ -259,22 +252,33 @@ export default function ShipmentShow({ shipment }: Props) {
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
-                                            <DialogTitle>Input Nomor Resi & Tandai Terkirim</DialogTitle>
+                                            <DialogTitle>Input Resi Pengiriman</DialogTitle>
                                         </DialogHeader>
                                         <form onSubmit={handleInputTracking} className="space-y-4">
-                                            <div>
-                                                <Label htmlFor="tracking_number">Nomor Resi *</Label>
+                                            <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+                                                Setelah disimpan, status shipment akan berubah ke <strong>Terkirim</strong>.
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="tracking_number">Nomor Resi</Label>
                                                 <Input
                                                     id="tracking_number"
                                                     type="text"
                                                     value={trackingData.tracking_number}
                                                     onChange={(e) => setTrackingData('tracking_number', e.target.value)}
-                                                    placeholder="Masukkan nomor resi dari kurir"
+                                                    placeholder="Contoh: JNE1234567890"
                                                     required
                                                 />
+                                                <p className="text-xs text-gray-500">Nomor resi harus unik per shipment.</p>
                                             </div>
-                                            <div>
-                                                <p className="text-sm text-gray-600">Kurir: {shipment.courier}</p>
+                                            <div className="grid grid-cols-2 gap-3 rounded-lg border p-3">
+                                                <div>
+                                                    <p className="text-xs text-gray-500">Kurir</p>
+                                                    <p className="font-medium">{shipment.courier}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xs text-gray-500">No. Pengiriman</p>
+                                                    <p className="font-medium">{shipment.shipment_number}</p>
+                                                </div>
                                             </div>
                                             <Button type="submit" disabled={trackingProcessing} className="w-full">
                                                 {trackingProcessing && <Loader className="w-4 h-4 animate-spin mr-2" />}
@@ -291,10 +295,11 @@ export default function ShipmentShow({ shipment }: Props) {
                 {shipment.status === 'shipped' && (
                     <Card className="border-purple-200 bg-purple-50">
                         <CardContent className="pt-6">
-                            <div className="flex items-center justify-between">
-                                <p className="text-sm text-purple-800">
-                                    🚚 Paket sedang dalam perjalanan. Konfirmasi penerimaan ketika barang sampai.
-                                </p>
+                            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-purple-900">Paket dalam perjalanan</p>
+                                    <p className="text-sm text-purple-800">Konfirmasi penerimaan ketika barang benar-benar sudah sampai ke penerima.</p>
+                                </div>
                                 <Dialog open={showDeliveryForm} onOpenChange={setShowDeliveryForm}>
                                     <DialogTrigger asChild>
                                         <Button className="gap-2">
@@ -307,8 +312,11 @@ export default function ShipmentShow({ shipment }: Props) {
                                             <DialogTitle>Konfirmasi Penerimaan Barang</DialogTitle>
                                         </DialogHeader>
                                         <form onSubmit={handleDeliveryConfirmation} className="space-y-4">
-                                            <div>
-                                                <Label htmlFor="receiver_name">Nama Penerima *</Label>
+                                            <div className="rounded-lg border border-purple-200 bg-purple-50 p-3 text-sm text-purple-900">
+                                                Gunakan nama penerima yang benar untuk kebutuhan pelacakan dan audit.
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="receiver_name">Nama Penerima</Label>
                                                 <Input
                                                     id="receiver_name"
                                                     type="text"
@@ -318,17 +326,20 @@ export default function ShipmentShow({ shipment }: Props) {
                                                     required
                                                 />
                                             </div>
-                                            <div className="flex items-center gap-2">
-                                                <input
-                                                    type="checkbox"
-                                                    id="signature"
-                                                    checked={deliveryData.signature_received}
-                                                    onChange={(e) => setDeliveryData('signature_received', e.target.checked)}
-                                                    className="w-4 h-4"
-                                                />
-                                                <Label htmlFor="signature" className="cursor-pointer">
-                                                    Barang diterima dengan tanda tangan
-                                                </Label>
+                                            <div className="rounded-lg border p-3">
+                                                <label htmlFor="signature" className="flex cursor-pointer items-center justify-between">
+                                                    <div>
+                                                        <p className="text-sm font-medium">Tanda tangan diterima</p>
+                                                        <p className="text-xs text-gray-500">Aktifkan jika penerima sudah tanda tangan.</p>
+                                                    </div>
+                                                    <input
+                                                        type="checkbox"
+                                                        id="signature"
+                                                        checked={deliveryData.signature_received}
+                                                        onChange={(e) => setDeliveryData('signature_received', e.target.checked)}
+                                                        className="h-4 w-4"
+                                                    />
+                                                </label>
                                             </div>
                                             <Button type="submit" disabled={deliveryProcessing} className="w-full">
                                                 {deliveryProcessing && <Loader className="w-4 h-4 animate-spin mr-2" />}
@@ -358,7 +369,6 @@ export default function ShipmentShow({ shipment }: Props) {
                     </Card>
                 )}
 
-                {/* Tracking History */}
                 {shipment.trackingHistories && shipment.trackingHistories.length > 0 && (
                     <Card>
                         <CardHeader>
@@ -380,7 +390,7 @@ export default function ShipmentShow({ shipment }: Props) {
                                         <div className="pb-4">
                                             <p className="font-semibold text-sm">{history.description}</p>
                                             {history.location && (
-                                                <p className="text-sm text-gray-500">📍 {history.location}</p>
+                                                <p className="text-sm text-gray-500">Lokasi: {history.location}</p>
                                             )}
                                             <p className="text-xs text-gray-400 mt-1">{history.tracked_at}</p>
                                         </div>

@@ -93,13 +93,6 @@ class ReportController extends Controller
             ->get()
             ->keyBy('courier');
 
-        // Average delivery time (in days)
-        $avgDeliveryTime = Shipment::whereNotNull('actual_delivery_date')
-            ->whereBetween('shipped_date', [$startDate, $endDate])
-            ->selectRaw('AVG(EXTRACT(DAY FROM (actual_delivery_date - shipped_date))) as avg_days')
-            ->first()
-            ->avg_days ?? 0;
-
         // Top performing couriers (by delivery rate) - PostgreSQL compatible SQL
         $topCouriers = Shipment::selectRaw("
             courier,
@@ -137,7 +130,6 @@ class ReportController extends Controller
                     'count' => $item->count,
                 ])->values()->toArray()
                 : [],
-            'avgDeliveryTime' => round($avgDeliveryTime, 1),
             'topCouriers' => $transformedTopCouriers,
             'startDate' => $startDate,
             'endDate' => $endDate,

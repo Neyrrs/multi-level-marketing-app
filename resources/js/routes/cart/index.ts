@@ -56,7 +56,7 @@ checkout.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     checkout.form = checkoutForm
 /**
 * @see \App\Http\Controllers\PublicCartController::cancel
- * @see app/Http/Controllers/PublicCartController.php:191
+ * @see app/Http/Controllers/PublicCartController.php:193
  * @route '/cart/cancel'
  */
 export const cancel = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -71,7 +71,7 @@ cancel.definition = {
 
 /**
 * @see \App\Http\Controllers\PublicCartController::cancel
- * @see app/Http/Controllers/PublicCartController.php:191
+ * @see app/Http/Controllers/PublicCartController.php:193
  * @route '/cart/cancel'
  */
 cancel.url = (options?: RouteQueryOptions) => {
@@ -80,7 +80,7 @@ cancel.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\PublicCartController::cancel
- * @see app/Http/Controllers/PublicCartController.php:191
+ * @see app/Http/Controllers/PublicCartController.php:193
  * @route '/cart/cancel'
  */
 cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -90,7 +90,7 @@ cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\PublicCartController::cancel
- * @see app/Http/Controllers/PublicCartController.php:191
+ * @see app/Http/Controllers/PublicCartController.php:193
  * @route '/cart/cancel'
  */
     const cancelForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -100,7 +100,7 @@ cancel.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\PublicCartController::cancel
- * @see app/Http/Controllers/PublicCartController.php:191
+ * @see app/Http/Controllers/PublicCartController.php:193
  * @route '/cart/cancel'
  */
         cancelForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

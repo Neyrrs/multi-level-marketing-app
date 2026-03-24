@@ -152,21 +152,11 @@ class ShopController extends Controller
             ]);
         }
 
-        // Priority: referral affiliate from public link session, fallback to current user's affiliate.
-        $sessionAffiliateId = (int) $request->session()->get('ref_affiliate_id', 0);
-        $affiliateId = null;
-
-        if ($sessionAffiliateId > 0) {
-            $affiliateId = Affiliate::where('id', $sessionAffiliateId)
-                ->where('is_active', true)
-                ->value('id');
-        }
-
-        if (!$affiliateId) {
-            $affiliateId = Affiliate::where('user_id', $user->id)
-                ->where('is_active', true)
-                ->value('id');
-        }
+        // In affiliate dashboard, order attribution must always belong to the
+        // currently logged-in affiliate (never from public referral session).
+        $affiliateId = Affiliate::where('user_id', $user->id)
+            ->where('is_active', true)
+            ->value('id');
 
         try {
             $order = DB::transaction(function () use ($cart, $user, $affiliateId) {

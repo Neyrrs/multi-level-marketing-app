@@ -43,11 +43,13 @@ class PublicCartController extends Controller
 
         $sessionAffiliateId = (int) $request->session()->get('ref_affiliate_id', 0);
         $affiliateId = null;
+        $isGuestUser = (bool) ($user && $user->hasRole('guest'));
+
         if ($user && $user->hasRole('affiliate')) {
             $affiliateId = $user->affiliate?->id;
         }
 
-        if ($sessionAffiliateId > 0) {
+        if ($isGuestUser && $sessionAffiliateId > 0) {
             $sessionAffiliate = Affiliate::where('id', $sessionAffiliateId)
                 ->where('is_active', true)
                 ->value('id');
@@ -56,7 +58,7 @@ class PublicCartController extends Controller
             }
         }
 
-        if (!$affiliateId && $user && $user->hasRole('guest')) {
+        if (!$affiliateId && $isGuestUser) {
             $randomAffiliate = app(\App\Services\AffiliateService::class)->assignRandomSponsor();
             if ($randomAffiliate) {
                 $affiliateId = $randomAffiliate->id;

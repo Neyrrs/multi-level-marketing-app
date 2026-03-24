@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
 export const show = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
 show.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -260,7 +260,7 @@ show.url = (args: { shipment: number | { id: number } } | [shipment: number | { 
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
 show.get = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,7 +269,7 @@ show.get = (args: { shipment: number | { id: number } } | [shipment: number | { 
 })
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
 show.head = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -279,7 +279,7 @@ show.head = (args: { shipment: number | { id: number } } | [shipment: number | {
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
     const showForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -289,7 +289,7 @@ show.head = (args: { shipment: number | { id: number } } | [shipment: number | {
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
         showForm.get = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ show.head = (args: { shipment: number | { id: number } } | [shipment: number | {
         })
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::show
- * @see app/Http/Controllers/Logistik/ShipmentController.php:113
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:121
  * @route '/logistik/shipments/{shipment}'
  */
         showForm.head = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ show.head = (args: { shipment: number | { id: number } } | [shipment: number | {
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
 export const edit = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -329,7 +329,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
 edit.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -362,7 +362,7 @@ edit.url = (args: { shipment: number | { id: number } } | [shipment: number | { 
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
 edit.get = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -371,7 +371,7 @@ edit.get = (args: { shipment: number | { id: number } } | [shipment: number | { 
 })
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
 edit.head = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -381,7 +381,7 @@ edit.head = (args: { shipment: number | { id: number } } | [shipment: number | {
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
     const editForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -391,7 +391,7 @@ edit.head = (args: { shipment: number | { id: number } } | [shipment: number | {
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
         editForm.get = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -400,7 +400,7 @@ edit.head = (args: { shipment: number | { id: number } } | [shipment: number | {
         })
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::edit
- * @see app/Http/Controllers/Logistik/ShipmentController.php:162
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:170
  * @route '/logistik/shipments/{shipment}/edit'
  */
         editForm.head = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -416,7 +416,7 @@ edit.head = (args: { shipment: number | { id: number } } | [shipment: number | {
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
 export const update = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -431,7 +431,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
 update.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -464,7 +464,7 @@ update.url = (args: { shipment: number | { id: number } } | [shipment: number | 
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
 update.put = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -473,7 +473,7 @@ update.put = (args: { shipment: number | { id: number } } | [shipment: number | 
 })
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
 update.patch = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -483,7 +483,7 @@ update.patch = (args: { shipment: number | { id: number } } | [shipment: number 
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
     const updateForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -498,7 +498,7 @@ update.patch = (args: { shipment: number | { id: number } } | [shipment: number 
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
         updateForm.put = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -512,7 +512,7 @@ update.patch = (args: { shipment: number | { id: number } } | [shipment: number 
         })
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::update
- * @see app/Http/Controllers/Logistik/ShipmentController.php:175
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:183
  * @route '/logistik/shipments/{shipment}'
  */
         updateForm.patch = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -528,7 +528,7 @@ update.patch = (args: { shipment: number | { id: number } } | [shipment: number 
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::destroy
- * @see app/Http/Controllers/Logistik/ShipmentController.php:298
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:322
  * @route '/logistik/shipments/{shipment}'
  */
 export const destroy = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -543,7 +543,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::destroy
- * @see app/Http/Controllers/Logistik/ShipmentController.php:298
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:322
  * @route '/logistik/shipments/{shipment}'
  */
 destroy.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -576,7 +576,7 @@ destroy.url = (args: { shipment: number | { id: number } } | [shipment: number |
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::destroy
- * @see app/Http/Controllers/Logistik/ShipmentController.php:298
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:322
  * @route '/logistik/shipments/{shipment}'
  */
 destroy.delete = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -586,7 +586,7 @@ destroy.delete = (args: { shipment: number | { id: number } } | [shipment: numbe
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::destroy
- * @see app/Http/Controllers/Logistik/ShipmentController.php:298
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:322
  * @route '/logistik/shipments/{shipment}'
  */
     const destroyForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -601,7 +601,7 @@ destroy.delete = (args: { shipment: number | { id: number } } | [shipment: numbe
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::destroy
- * @see app/Http/Controllers/Logistik/ShipmentController.php:298
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:322
  * @route '/logistik/shipments/{shipment}'
  */
         destroyForm.delete = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -617,7 +617,7 @@ destroy.delete = (args: { shipment: number | { id: number } } | [shipment: numbe
     destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markShipped
- * @see app/Http/Controllers/Logistik/ShipmentController.php:205
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:213
  * @route '/logistik/shipments/{shipment}/mark-shipped'
  */
 export const markShipped = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -632,7 +632,7 @@ markShipped.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markShipped
- * @see app/Http/Controllers/Logistik/ShipmentController.php:205
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:213
  * @route '/logistik/shipments/{shipment}/mark-shipped'
  */
 markShipped.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -665,7 +665,7 @@ markShipped.url = (args: { shipment: number | { id: number } } | [shipment: numb
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markShipped
- * @see app/Http/Controllers/Logistik/ShipmentController.php:205
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:213
  * @route '/logistik/shipments/{shipment}/mark-shipped'
  */
 markShipped.post = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -675,7 +675,7 @@ markShipped.post = (args: { shipment: number | { id: number } } | [shipment: num
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markShipped
- * @see app/Http/Controllers/Logistik/ShipmentController.php:205
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:213
  * @route '/logistik/shipments/{shipment}/mark-shipped'
  */
     const markShippedForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -685,7 +685,7 @@ markShipped.post = (args: { shipment: number | { id: number } } | [shipment: num
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markShipped
- * @see app/Http/Controllers/Logistik/ShipmentController.php:205
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:213
  * @route '/logistik/shipments/{shipment}/mark-shipped'
  */
         markShippedForm.post = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -696,7 +696,7 @@ markShipped.post = (args: { shipment: number | { id: number } } | [shipment: num
     markShipped.form = markShippedForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markDelivered
- * @see app/Http/Controllers/Logistik/ShipmentController.php:236
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:252
  * @route '/logistik/shipments/{shipment}/mark-delivered'
  */
 export const markDelivered = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -711,7 +711,7 @@ markDelivered.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markDelivered
- * @see app/Http/Controllers/Logistik/ShipmentController.php:236
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:252
  * @route '/logistik/shipments/{shipment}/mark-delivered'
  */
 markDelivered.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -744,7 +744,7 @@ markDelivered.url = (args: { shipment: number | { id: number } } | [shipment: nu
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markDelivered
- * @see app/Http/Controllers/Logistik/ShipmentController.php:236
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:252
  * @route '/logistik/shipments/{shipment}/mark-delivered'
  */
 markDelivered.post = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -754,7 +754,7 @@ markDelivered.post = (args: { shipment: number | { id: number } } | [shipment: n
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markDelivered
- * @see app/Http/Controllers/Logistik/ShipmentController.php:236
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:252
  * @route '/logistik/shipments/{shipment}/mark-delivered'
  */
     const markDeliveredForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -764,7 +764,7 @@ markDelivered.post = (args: { shipment: number | { id: number } } | [shipment: n
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::markDelivered
- * @see app/Http/Controllers/Logistik/ShipmentController.php:236
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:252
  * @route '/logistik/shipments/{shipment}/mark-delivered'
  */
         markDeliveredForm.post = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -775,7 +775,7 @@ markDelivered.post = (args: { shipment: number | { id: number } } | [shipment: n
     markDelivered.form = markDeliveredForm
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::addTracking
- * @see app/Http/Controllers/Logistik/ShipmentController.php:267
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:291
  * @route '/logistik/shipments/{shipment}/add-tracking'
  */
 export const addTracking = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -790,7 +790,7 @@ addTracking.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::addTracking
- * @see app/Http/Controllers/Logistik/ShipmentController.php:267
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:291
  * @route '/logistik/shipments/{shipment}/add-tracking'
  */
 addTracking.url = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -823,7 +823,7 @@ addTracking.url = (args: { shipment: number | { id: number } } | [shipment: numb
 
 /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::addTracking
- * @see app/Http/Controllers/Logistik/ShipmentController.php:267
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:291
  * @route '/logistik/shipments/{shipment}/add-tracking'
  */
 addTracking.post = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -833,7 +833,7 @@ addTracking.post = (args: { shipment: number | { id: number } } | [shipment: num
 
     /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::addTracking
- * @see app/Http/Controllers/Logistik/ShipmentController.php:267
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:291
  * @route '/logistik/shipments/{shipment}/add-tracking'
  */
     const addTrackingForm = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -843,7 +843,7 @@ addTracking.post = (args: { shipment: number | { id: number } } | [shipment: num
 
             /**
 * @see \App\Http\Controllers\Logistik\ShipmentController::addTracking
- * @see app/Http/Controllers/Logistik/ShipmentController.php:267
+ * @see app/Http/Controllers/Logistik/ShipmentController.php:291
  * @route '/logistik/shipments/{shipment}/add-tracking'
  */
         addTrackingForm.post = (args: { shipment: number | { id: number } } | [shipment: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -85,6 +85,25 @@ const getStatusLabel = (status: string) => {
     return labels[status] || status;
 };
 
+const formatWIBDateTime = (value?: string) => {
+    if (!value) return '-';
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+
+    const formatted = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    }).format(date);
+
+    return `${formatted.replace(',', '').replace(':', '.')} WIB`;
+};
+
 export default function ShipmentsIndex({ shipments = [], pagination, search = '', status = '' }: Props) {
     const [searchInput, setSearchInput] = useState(search);
     const [selectedStatus, setSelectedStatus] = useState(status);
@@ -180,7 +199,7 @@ export default function ShipmentsIndex({ shipments = [], pagination, search = ''
                                                 {getStatusLabel(shipment.status)}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell>{shipment.created_at}</TableCell>
+                                        <TableCell>{formatWIBDateTime(shipment.created_at)}</TableCell>
                                         <TableCell>
                                             <Button
                                                 variant="outline"

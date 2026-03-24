@@ -81,15 +81,12 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
     };
 
     const toggleRule = (ruleId: number) => {
-        if (data.selected_rule_ids.includes(ruleId)) {
-            setData(
-                'selected_rule_ids',
-                data.selected_rule_ids.filter((id) => id !== ruleId),
-            );
+        if (data.selected_rule_ids[0] === ruleId) {
+            setData('selected_rule_ids', []);
             return;
         }
 
-        setData('selected_rule_ids', [...data.selected_rule_ids, ruleId]);
+        setData('selected_rule_ids', [ruleId]);
     };
 
     const handleDelete = (id: number) => {
@@ -161,13 +158,14 @@ export default function PengaturanPlan({ plans = [], availableRules = [], affili
                     )}
 
                     <div className="md:col-span-5 rounded-md border p-3">
-                        <p className="mb-2 text-sm font-medium">Pilih Rule dari Pengaturan Komisi</p>
+                        <p className="mb-2 text-sm font-medium">Pilih Rule dari Pengaturan Komisi (1 rule / 1 method)</p>
                         {availableRules.length > 0 ? (
                             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                 {availableRules.map((rule) => (
                                     <label key={rule.id} className="flex items-center gap-2 text-sm">
                                         <input
-                                            type="checkbox"
+                                            type="radio"
+                                            name="selected_rule"
                                             checked={data.selected_rule_ids.includes(rule.id)}
                                             onChange={() => toggleRule(rule.id)}
                                         />

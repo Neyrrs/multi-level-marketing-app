@@ -12,6 +12,31 @@ use Illuminate\Support\Arr;
 
 class CommissionService
 {
+    public function calculateOrderCommissionByPlan(\App\Models\Order $order): void
+    {
+        $affiliate = $order->affiliate;
+        if (!$affiliate) {
+            return;
+        }
+
+        $methodFamily = $this->resolveAffiliateMethodFamily($affiliate);
+        if ($methodFamily === null) {
+            return;
+        }
+
+        if ($methodFamily === 'sponsor') {
+            $this->calculateSponsorCommission($order);
+            return;
+        }
+
+        if ($methodFamily === 'level') {
+            $this->calculateLevelCommission($order);
+            return;
+        }
+
+        // Matching is calculated on binary pair/volume cycle (daily), not per single order.
+    }
+
     public function calculateSponsorCommission(\App\Models\Order $order): ?Commission
     {
         $affiliate = $order->affiliate;
@@ -247,6 +272,52 @@ class CommissionService
     private function resolveMethodForAffiliate(?Affiliate $affiliate, array $types, array $names): ?CommissionMethod
     {
         return $this->resolveMethod($types, $names);
+    }
+
+    private function resolveAffiliateMethodFamily(Affiliate $affiliate): ?string
+    {
+        $plan = $affiliate->commissionPlan()
+            ->where('is_active', true)
+            ->first();
+
+        if (!$plan) {
+            $plan = CommissionPlan::query()
+                ->where('is_default', true)
+                ->where('is_active', true)
+                ->first();
+        }
+
+        if (!$plan) {
+            return null;
+        }
+
+        $rule = $plan->rules()
+            ->where('commission_rules.is_active', true)
+            ->with('method:id,name,calculation_type,is_active')
+            ->orderBy('commission_rules.priority')
+            ->orderBy('commission_rules.id')
+            ->first();
+
+        if (!$rule || !$rule->method || !$rule->method->is_active) {
+            return null;
+        }
+
+        $name = strtolower((string) $rule->method->name);
+        $type = strtolower((string) $rule->method->calculation_type);
+
+        if (str_contains($name, 'matching') || $type === 'matching_binary') {
+            return 'matching';
+        }
+
+        if (str_contains($name, 'level') || in_array($type, ['level_based', 'tier_based'], true)) {
+            return 'level';
+        }
+
+        if (str_contains($name, 'sponsor') || str_contains($name, 'direct')) {
+            return 'sponsor';
+        }
+
+        return null;
     }
 
     private function resolveRuleForAffiliate(

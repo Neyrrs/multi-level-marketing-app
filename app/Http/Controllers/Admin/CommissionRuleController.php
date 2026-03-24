@@ -90,11 +90,15 @@ class CommissionRuleController extends Controller
 
         if ($existing) {
             $existing->update($data);
-            return response()->json(['success' => true, 'rule' => $existing, 'updated_existing' => true]);
+            return redirect()
+                ->route('admin.commission-rules.index')
+                ->with('success', 'Rule komisi berhasil diperbarui untuk metode terpilih.');
         }
 
-        $rule = CommissionRule::create($data);
-        return response()->json(['success' => true, 'rule' => $rule, 'updated_existing' => false], 201);
+        CommissionRule::create($data);
+        return redirect()
+            ->route('admin.commission-rules.index')
+            ->with('success', 'Rule komisi berhasil dibuat.');
     }
 
     public function update(Request $request, CommissionRule $commissionRule)
@@ -128,13 +132,17 @@ class CommissionRuleController extends Controller
         }
 
         $commissionRule->update($data);
-        return response()->json(['success' => true, 'rule' => $commissionRule]);
+        return redirect()
+            ->route('admin.commission-rules.index')
+            ->with('success', 'Rule komisi berhasil disimpan.');
     }
 
     public function destroy(CommissionRule $commissionRule)
     {
         $commissionRule->delete();
-        return response()->json(['success' => true]);
+        return redirect()
+            ->route('admin.commission-rules.index')
+            ->with('success', 'Rule komisi berhasil dihapus.');
     }
 
     private function mergeDepthCondition(array $condition, ?int $depth, ?int $maxDepth): array

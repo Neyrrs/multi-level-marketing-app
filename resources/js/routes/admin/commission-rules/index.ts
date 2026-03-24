@@ -314,7 +314,7 @@ edit.head = (args: { commissionRule: number | { id: number } } | [commissionRule
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::update
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:100
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:104
  * @route '/admin/commission-rules/{commissionRule}'
  */
 export const update = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -329,7 +329,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::update
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:100
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:104
  * @route '/admin/commission-rules/{commissionRule}'
  */
 update.url = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -362,7 +362,7 @@ update.url = (args: { commissionRule: number | { id: number } } | [commissionRul
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::update
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:100
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:104
  * @route '/admin/commission-rules/{commissionRule}'
  */
 update.put = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -372,7 +372,7 @@ update.put = (args: { commissionRule: number | { id: number } } | [commissionRul
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::update
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:100
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:104
  * @route '/admin/commission-rules/{commissionRule}'
  */
     const updateForm = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -387,7 +387,7 @@ update.put = (args: { commissionRule: number | { id: number } } | [commissionRul
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::update
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:100
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:104
  * @route '/admin/commission-rules/{commissionRule}'
  */
         updateForm.put = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -403,7 +403,7 @@ update.put = (args: { commissionRule: number | { id: number } } | [commissionRul
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::destroy
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:134
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:140
  * @route '/admin/commission-rules/{commissionRule}'
  */
 export const destroy = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -418,7 +418,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::destroy
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:134
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:140
  * @route '/admin/commission-rules/{commissionRule}'
  */
 destroy.url = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -451,7 +451,7 @@ destroy.url = (args: { commissionRule: number | { id: number } } | [commissionRu
 
 /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::destroy
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:134
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:140
  * @route '/admin/commission-rules/{commissionRule}'
  */
 destroy.delete = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -461,7 +461,7 @@ destroy.delete = (args: { commissionRule: number | { id: number } } | [commissio
 
     /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::destroy
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:134
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:140
  * @route '/admin/commission-rules/{commissionRule}'
  */
     const destroyForm = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -476,7 +476,7 @@ destroy.delete = (args: { commissionRule: number | { id: number } } | [commissio
 
             /**
 * @see \App\Http\Controllers\Admin\CommissionRuleController::destroy
- * @see app/Http/Controllers/Admin/CommissionRuleController.php:134
+ * @see app/Http/Controllers/Admin/CommissionRuleController.php:140
  * @route '/admin/commission-rules/{commissionRule}'
  */
         destroyForm.delete = (args: { commissionRule: number | { id: number } } | [commissionRule: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
