@@ -73,12 +73,6 @@ class DashboardController extends Controller
                 'count' => $item->count,
             ]);
 
-        // Pending returns
-        $pendingReturns = Order::where('status', 'returned')
-            ->whereMonth('created_at', $thisMonth)
-            ->whereYear('created_at', $thisYear)
-            ->count();
-
         // Delivery success rate this month
         $totalShipmentsMonth = Shipment::whereMonth('created_at', $thisMonth)
             ->whereYear('created_at', $thisYear)
@@ -94,7 +88,6 @@ class DashboardController extends Controller
                 'deliveredThisMonth' => $deliveredThisMonth,
                 'shipmentsThisMonth' => $shipmentsThisMonth,
                 'deliverySuccessRate' => $deliverySuccessRate,
-                'pendingReturns' => $pendingReturns,
             ],
             'shipmentsByCourier' => $shipmentsByCourier,
             'recentShipments' => $recentShipments,

@@ -28,7 +28,6 @@ export default function CreateProduct() {
         diskon: '',
         point_value: '',
         type: 'single',
-        stock: '',
         image: null as File | null,
     });
 
@@ -78,8 +77,9 @@ export default function CreateProduct() {
                     <Input placeholder="Tipe: single / bundle" name="type" value={data.type} onChange={handleChange} />
                     {errors.type && <p className="text-sm text-red-600">{errors.type}</p>}
 
-                    <Input placeholder="Stok" name="stock" type="number" value={data.stock} onChange={handleChange} />
-                    {errors.stock && <p className="text-sm text-red-600">{errors.stock}</p>}
+                    <p className="text-sm text-muted-foreground">
+                        Stok dikelola oleh tim logistik melalui menu inventaris.
+                    </p>
 
                     <Input
                         type="file"

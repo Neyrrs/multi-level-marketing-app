@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Package, Truck, CheckCircle, AlertCircle, TrendingUp, RotateCcw } from 'lucide-react';
+import { Package, Truck, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -20,7 +20,6 @@ interface DashboardStats {
     deliveredThisMonth: number;
     shipmentsThisMonth: number;
     deliverySuccessRate: number;
-    pendingReturns: number;
 }
 
 interface ShipmentByCourier {
@@ -151,18 +150,6 @@ export default function LogistikDashboard({
                         </CardContent>
                     </Card>
 
-                    {/* Pending Returns */}
-                    <Card className='md:py-4 py-2'>
-                        <CardContent className="md:py-6 py-2">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-gray-600 text-sm font-medium md:text-base">Pengembalian Pending</p>
-                                    <p className="text-3xl font-bold mt-2">{stats.pendingReturns}</p>
-                                </div>
-                                <RotateCcw className="w-12 h-12 text-red-500" />
-                            </div>
-                        </CardContent>
-                    </Card>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

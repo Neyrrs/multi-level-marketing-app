@@ -8,8 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { type BreadcrumbItem } from '@/types';
-import { Head, usePage, Link } from '@inertiajs/react';
-import { Eye, Package, AlertTriangle, Minus } from 'lucide-react';
+import { Head, usePage, Link, router } from '@inertiajs/react';
+import { Eye, Package, AlertTriangle, Minus, Plus } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Logistik', href: '#' },
@@ -46,6 +46,31 @@ interface Pagination {
 export default function InventoryIndex() {
     const { products, stats, pagination, filters } = usePage().props as any;
     const [search, setSearch] = useState(filters?.search || '');
+
+    const handleAddStock = (product: Product) => {
+        const raw = window.prompt(`Tambah stok untuk ${product.name}. Masukkan jumlah:`, '1');
+        if (!raw) return;
+
+        const qty = Number(raw);
+        if (!Number.isInteger(qty) || qty <= 0) {
+            window.alert('Jumlah stok harus bilangan bulat lebih dari 0.');
+            return;
+        }
+
+        router.put(
+            `/logistik/inventory/${product.id}`,
+            {
+                quantity: qty,
+                reason: 'Restok manual dari menu inventaris logistik',
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    router.reload({ only: ['products', 'stats', 'pagination'] });
+                },
+            },
+        );
+    };
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -168,11 +193,22 @@ export default function InventoryIndex() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <Link href={`/logistik/inventory/${product.id}`}>
-                                                <Button variant="ghost" size="sm">
-                                                    <Eye className="h-4 w-4" />
+                                            <div className="flex items-center justify-center gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => handleAddStock(product)}
+                                                    className="gap-1"
+                                                >
+                                                    <Plus className="h-4 w-4" />
+                                                    Restok
                                                 </Button>
-                                            </Link>
+                                                <Link href={`/logistik/inventory/${product.id}`}>
+                                                    <Button variant="ghost" size="sm">
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
+                                                </Link>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}

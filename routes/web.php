@@ -260,8 +260,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('orders', Logistik\OrderController::class);
             Route::resource('shipments', Logistik\ShipmentController::class);
             Route::resource('inventory', Logistik\InventoryController::class);
-            Route::resource('returns', Logistik\ReturnController::class);
-
             // Shipment Actions
             Route::post('shipments/{shipment}/mark-shipped', [Logistik\ShipmentController::class , 'markAsShipped'])
                 ->name('shipments.mark-shipped');

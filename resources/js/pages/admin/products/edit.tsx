@@ -46,7 +46,6 @@ export default function EditProduct({ product }: Props) {
         diskon: product.diskon ?? '',
         point_value: product.point_value ?? '',
         type: product.type ?? 'single',
-        stock: product.stock ?? '',
         image: null as File | null,
     });
 
@@ -96,8 +95,9 @@ export default function EditProduct({ product }: Props) {
                     <Input placeholder="Tipe: single / bundle" name="type" value={data.type} onChange={handleChange} />
                     {errors.type && <p className="text-sm text-red-600">{errors.type}</p>}
 
-                    <Input placeholder="Stok" name="stock" type="number" value={data.stock} onChange={handleChange} />
-                    {errors.stock && <p className="text-sm text-red-600">{errors.stock}</p>}
+                    <p className="text-sm text-muted-foreground">
+                        Stok saat ini: <span className="font-medium">{product.stock ?? 0}</span> (ubah stok hanya dari logistik/inventaris).
+                    </p>
 
                     {product.image_url && (
                         <img

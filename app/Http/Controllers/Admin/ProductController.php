@@ -73,12 +73,12 @@ class ProductController extends Controller
             'diskon' => 'nullable|numeric|min:0|max:100',
             'point_value' => 'nullable|numeric|min:0',
             'type' => 'nullable|in:single,bundle',
-            'stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data['diskon'] = (float) ($data['diskon'] ?? 0);
-        $data['stock'] = (int) ($data['stock'] ?? 0);
+        // Stock tidak diinput dari admin, inisialisasi 0 dan dikelola logistik.
+        $data['stock'] = 0;
         $data['point_value'] = (float) ($data['point_value'] ?? 0);
         $data['type'] = $data['type'] ?? 'single';
         $data['slug'] = $this->generateUniqueSlug($data['name']);
@@ -107,12 +107,12 @@ class ProductController extends Controller
             'diskon' => 'nullable|numeric|min:0|max:100',
             'point_value' => 'nullable|numeric|min:0',
             'type' => 'nullable|in:single,bundle',
-            'stock' => 'nullable|integer|min:0',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data['diskon'] = (float) ($data['diskon'] ?? 0);
-        $data['stock'] = (int) ($data['stock'] ?? 0);
+        // Pastikan stok tidak bisa diubah dari endpoint admin.
+        unset($data['stock']);
         $data['point_value'] = (float) ($data['point_value'] ?? 0);
         $data['type'] = $data['type'] ?? 'single';
         $data['slug'] = $this->generateUniqueSlug($data['name'], $product->id);

@@ -17,7 +17,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Eye, PlusCircleIcon, Truck } from 'lucide-react';
+import { Eye, Truck } from 'lucide-react';
 import { useState } from 'react';
 import SearchInput from '@/components/fragments/search-input';
 import { Badge } from '@/components/ui/badge';
@@ -117,10 +117,6 @@ export default function ShipmentsIndex({ shipments = [], pagination, search = ''
                         <Truck className="w-8 h-8 md:block hidden" />
                         Daftar Pengiriman
                     </h1>
-                    <Button onClick={() => router.get('/logistik/shipments/create')} className="gap-2">
-                        <PlusCircleIcon className="w-4 h-4" />
-                        Buat Pengiriman Baru
-                    </Button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

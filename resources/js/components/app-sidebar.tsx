@@ -355,14 +355,6 @@ export function AppSidebar() {
                     ),
                 },
                 {
-                    title: 'Pengembalian',
-                    icon: Package,
-                    href: getHref(
-                        'logistik.returns.index',
-                        '/logistik/returns',
-                    ),
-                },
-                {
                     title: 'Laporan',
                     icon: Newspaper,
                     children: [

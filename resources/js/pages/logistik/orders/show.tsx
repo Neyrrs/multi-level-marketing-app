@@ -320,15 +320,7 @@ export default function OrderShow({ order }: Props) {
                     <Card className="border-yellow-200 bg-yellow-50">
                         <CardContent className="pt-6">
                             <p className="text-sm text-yellow-800">
-                                📦 Pesanan ini belum memiliki pengiriman. 
-                                <Button
-                                    variant="link"
-                                    size="sm"
-                                    onClick={() => router.get(`/logistik/shipments/create?order_id=${order.id}`)}
-                                    className="ml-1"
-                                >
-                                    Buat pengiriman sekarang
-                                </Button>
+                                Pesanan ini belum memiliki data pengiriman.
                             </p>
                         </CardContent>
                     </Card>

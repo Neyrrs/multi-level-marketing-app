@@ -132,19 +132,19 @@ class InventoryController extends Controller
     public function update(Request $request, Product $inventory)
     {
         $validated = $request->validate([
-            'stock' => 'required|integer|min:0',
+            'quantity' => 'required|integer|min:1',
             'reason' => 'nullable|string|max:500',
         ]);
 
         $oldStock = $inventory->stock;
-        $newStock = $validated['stock'];
-        $difference = $newStock - $oldStock;
+        $difference = (int) $validated['quantity'];
+        $newStock = $oldStock + $difference;
 
         $inventory->update(['stock' => $newStock]);
 
         return response()->json([
             'success' => true,
-            'message' => "Stok berhasil diperbarui dari {$oldStock} menjadi {$newStock}",
+            'message' => "Stok berhasil ditambah {$difference} (dari {$oldStock} menjadi {$newStock})",
             'data' => [
                 'product_id' => $inventory->id,
                 'old_stock' => $oldStock,

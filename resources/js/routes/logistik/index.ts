@@ -2,7 +2,6 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 import orders from './orders'
 import shipments from './shipments'
 import inventory from './inventory'
-import returns from './returns'
 import reports from './reports'
 /**
 * @see \App\Http\Controllers\Logistik\DashboardController::dashboard
@@ -87,7 +86,6 @@ const logistik = {
 orders: Object.assign(orders, orders),
 shipments: Object.assign(shipments, shipments),
 inventory: Object.assign(inventory, inventory),
-returns: Object.assign(returns, returns),
 reports: Object.assign(reports, reports),
 }
 
