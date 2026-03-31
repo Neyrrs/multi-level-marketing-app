@@ -62,7 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->middleware([RoleMiddleware::class . ':admin'])
             ->group(function () {
 
-            Route::get('dashboard', fn() => Inertia::render('admin/dashboard'))
+            Route::get('dashboard', [Admin\DashboardController::class , 'index'])
                 ->name('dashboard');
 
             // Pages with controllers (data fetching)
