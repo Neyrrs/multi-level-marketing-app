@@ -1,0 +1,495 @@
+   1: <?php
+   2: 
+   3: namespace App\Services;
+   4: 
+   5: use App\Models\Affiliate;
+   6: use App\Models\Order;
+   7: use App\Services\ActivationService;
+   8: use App\Services\AffiliateService;
+   9: use App\Models\OrderActivationCode;
+  10: use Midtrans\Config as MidtransConfig;
+  11: use Midtrans\Transaction;
+  12: use Illuminate\Http\Request;
+  13: use Illuminate\Support\Facades\DB;
+  14: use Illuminate\Support\Facades\Log;
+  15: use App\Services\CommissionService;
+  16: 
+  17: class OrderService
+  18: {
+  19:     protected ActivationService $activationService;
+  20:     protected AffiliateService $affiliateService;
+  21:     protected CommissionService $commissionService;
+  22: 
+  23:     public function __construct()
+  24:     {
+  25:         $this->activationService = new ActivationService();
+  26:         $this->affiliateService = new AffiliateService();
+  27:         $this->commissionService = new CommissionService();
+  28:     }
+  29: 
+  30:     public function createOrder(int $userId, int $productId, ?int $affiliateId = null): Order
+  31:     {
+  32:         $order = Order::create([
+  33:             'order_number' => 'ORD-' . uniqid(),
+  34:             'user_id' => $userId,
+  35:             'affiliate_id' => $affiliateId,
+  36:             'payment_method' => 'midtrans_va',
+  37:             'midtrans_order_id' => 'MT-' . uniqid(),
+  38:             'product_type' => 'bundle',
+  39:             'product_id' => $productId,
+  40:             'product_name' => 'bundle_' . $productId,
+  41:             'quantity' => 1,
+  42:             'price' => 0,
+  43:             'total_amount' => 0,
+  44:             'shipping_cost' => 0,
+  45:             'tax_amount' => 0,
+  46:             'grand_total' => 0,
+  47:             'payment_status' => 'pending',
+  48:             'status' => 'pending',
+  49:             'generates_activation_code' => true,
+  50:         ]);
+  51: 
+  52:         return $order;
+  53:     }
+  54: 
+  55:     public function processPayment(int $orderId, ?Request $request = null): ?Order
+  56:     {
+  57:         $order = Order::find($orderId);
+  58:         if (!$order) return null;
+  59: 
+  60:         // cancelled order should never be marked paid again
+  61:         if ($order->status === 'cancelled') {
+  62:             Log::warning('Payment ignored because order already cancelled: ' . $order->id);
+  63:             return null;
+  64:         }
+  65: 
+  66:         // idempotent: if already paid, skip re-processing
+  67:         if ($order->payment_status === 'paid') {
+  68:             return $order;
+  69:         }
+  70: 
+  71:         // If request present, optionally verify signature (basic placeholder)
+  72:         if ($request) {
+  73:             if (!$this->verifyMidtransSignature($request)) {
+  74:                 Log::warning('Midtrans signature verification failed for order ' . $order->id);
+  75:                 return null;
+  76:             }
+  77:         }
+  78: 
+  79:         // Mark paid
+  80:         $midtransPayload = $request ? $request->all() : [];
+  81: 
+  82:         $order->update([
+  83:             'payment_status' => 'paid',
+  84:             'status' => 'processing',
+  85:             'paid_at' => now(),
+  86:             'midtrans_data' => !empty($midtransPayload)
+  87:                 ? array_merge((array) ($order->midtrans_data ?? []), $midtransPayload)
+  88:                 : $order->midtrans_data,
+  89:             'payment_reference' => $request?->input('transaction_id')
+  90:                 ?? $request?->input('approval_code')
+  91:                 ?? $request?->input('order_id')
+  92:                 ?? $order->payment_reference,
+  93:         ]);
+  94: 
+  95:         // RO behavior: paid affiliate bundle order extends active period when expired.
+  96:         $wasAutoRenewedByBundleRo = $this->renewAffiliateActivePeriod($order);
+  97: 
+  98:         $activationCodeCount = (int) $order->items()
+  99:             ->where('gives_activation_code', true)
+ 100:             ->sum('quantity');
+ 101:         $shouldGenerateActivationCode = (bool) $order->generates_activation_code || $activationCodeCount > 0;
+ 102: 
+ 103:         if ($shouldGenerateActivationCode) {
+ 104:             if ($activationCodeCount <= 0) {
+ 105:                 $activationCodeCount = 1;
+ 106:             }
+ 107: 
+ 108:             $generated = $this->activationService->generateFromOrder($order, $activationCodeCount);
+ 109: 
+ 110:             // If affiliate was expired and got reactivated by bundle purchase, consume one code automatically for RO.
+ 111:             if ($wasAutoRenewedByBundleRo) {
+ 112:                 $this->consumeGeneratedCodeForAutoRo($order, $generated);
+ 113:             }
+ 114: 
+ 115:             foreach ($generated as $code) {
+ 116:                 OrderActivationCode::firstOrCreate([
+ 117:                     'order_id' => $order->id,
+ 118:                     'activation_code_id' => $code->id,
+ 119:                 ]);
+ 120:             }
+ 121: 
+ 122:             $this->createPendingAffiliateRequestForGuest($order, $generated);
+ 123:         }
+ 124: 
+ 125:         // Trigger commission by affiliate plan method (single-method execution).
+ 126:         $this->commissionService->calculateOrderCommissionByPlan($order);
+ 127: 
+ 128:         if ($shouldGenerateActivationCode) {
+ 129:             $order->update([
+ 130:                 'generates_activation_code' => true,
+ 131:                 'activation_codes_count' => $activationCodeCount,
+ 132:             ]);
+ 133:         }
+ 134: 
+ 135:         // Update binary point volumes after successful payment.
+ 136:         $this->applyPointVolumesFromOrder($order);
+ 137: 
+ 138:         return $order;
+ 139:     }
+ 140: 
+ 141:     private function createPendingAffiliateRequestForGuest(Order $order, array $generatedCodes): void
+ 142:     {
+ 143:         $buyer = $order->user;
+ 144:         if (!$buyer || !$buyer->hasRole('guest')) {
+ 145:             return;
+ 146:         }
+ 147: 
+ 148:         if ($buyer->affiliate()->exists()) {
+ 149:             return;
+ 150:         }
+ 151: 
+ 152:         $sponsorAffiliate = Affiliate::query()
+ 153:             ->whereKey($order->affiliate_id)
+ 154:             ->where('is_active', true)
+ 155:             ->first();
+ 156: 
+ 157:         if (!$sponsorAffiliate) {
+ 158:             return;
+ 159:         }
+ 160: 
+ 161:         $primaryCode = collect($generatedCodes)->first();
+ 162:         if (!$primaryCode) {
+ 163:             return;
+ 164:         }
+ 165: 
+ 166:         $existingPending = Affiliate::query()
+ 167:             ->where('user_id', $buyer->id)
+ 168:             ->where('sponsor_id', $sponsorAffiliate->user_id)
+ 169:             ->where('is_active', false)
+ 170:             ->latest('id')
+ 171:             ->first();
+ 172: 
+ 173:         if ($existingPending) {
+ 174:             $existingPending->update([
+ 175:                 'activation_code_id' => $primaryCode->id,
+ 176:             ]);
+ 177:             return;
+ 178:         }
+ 179: 
+ 180:         $this->affiliateService->registerPendingAffiliate(
+ 181:             $buyer,
+ 182:             $sponsorAffiliate,
+ 183:             $primaryCode,
+ 184:             'left'
+ 185:         );
+ 186:     }
+ 187: 
+ 188:     public function cancelPendingOrder(int $orderId, string $reason = '', string $paymentStatus = 'failed'): ?Order
+ 189:     {
+ 190:         $order = Order::with('items.product')->find($orderId);
+ 191:         if (!$order) {
+ 192:             return null;
+ 193:         }
+ 194: 
+ 195:         if ($order->payment_status !== 'pending' || $order->status === 'cancelled') {
+ 196:             return $order;
+ 197:         }
+ 198: 
+ 199:         if (!in_array($paymentStatus, ['failed', 'expired', 'pending', 'paid'], true)) {
+ 200:             $paymentStatus = 'failed';
+ 201:         }
+ 202: 
+ 203:         if ($paymentStatus === 'pending' || $paymentStatus === 'paid') {
+ 204:             $paymentStatus = 'failed';
+ 205:         }
+ 206: 
+ 207:         DB::transaction(function () use ($order, $reason, $paymentStatus) {
+ 208:             foreach ($order->items as $item) {
+ 209:                 if ($item->product_id && $item->product) {
+ 210:                     $item->product->increment('stock', (int) $item->quantity);
+ 211:                 }
+ 212:             }
+ 213: 
+ 214:             $noteSuffix = $reason !== '' ? " | {$reason}" : '';
+ 215:             $existingNotes = $order->notes ?? '';
+ 216: 
+ 217:             $order->update([
+ 218:                 'payment_status' => $paymentStatus,
+ 219:                 'status' => 'cancelled',
+ 220:                 'notes' => trim($existingNotes . $noteSuffix),
+ 221:             ]);
+ 222:         });
+ 223: 
+ 224:         return $order->fresh();
+ 225:     }
+ 226: 
+ 227:     public function syncMidtransStatus(Order $order): ?Order
+ 228:     {
+ 229:         if (empty($order->midtrans_order_id)) {
+ 230:             return $order;
+ 231:         }
+ 232: 
+ 233:         if ($order->payment_status === 'paid' || $order->status === 'cancelled') {
+ 234:             return $order;
+ 235:         }
+ 236: 
+ 237:         $this->configureMidtrans();
+ 238: 
+ 239:         try {
+ 240:             $status = (array) Transaction::status($order->midtrans_order_id);
+ 241:             $transactionStatus = (string) ($status['transaction_status'] ?? '');
+ 242:             $fraudStatus = (string) ($status['fraud_status'] ?? '');
+ 243: 
+ 244:             $order->update([
+ 245:                 'midtrans_data' => array_merge((array) ($order->midtrans_data ?? []), $status),
+ 246:             ]);
+ 247: 
+ 248:             $isPaid = $transactionStatus === 'settlement'
+ 249:                 || ($transactionStatus === 'capture' && ($fraudStatus === '' || $fraudStatus === 'accept'));
+ 250: 
+ 251:             if ($isPaid) {
+ 252:                 return $this->processPayment($order->id, null);
+ 253:             }
+ 254: 
+ 255:             if (in_array($transactionStatus, ['cancel', 'deny', 'failure'], true)) {
+ 256:                 return $this->cancelPendingOrder($order->id, 'Midtrans sync status: ' . $transactionStatus, 'failed');
+ 257:             }
+ 258: 
+ 259:             if ($transactionStatus === 'expire') {
+ 260:                 return $this->cancelPendingOrder($order->id, 'Midtrans sync status: expire', 'expired');
+ 261:             }
+ 262:         } catch (\Throwable $e) {
+ 263:             Log::warning('Failed to sync Midtrans status', [
+ 264:                 'order_id' => $order->id,
+ 265:                 'midtrans_order_id' => $order->midtrans_order_id,
+ 266:                 'error' => $e->getMessage(),
+ 267:             ]);
+ 268:         }
+ 269: 
+ 270:         return $order->fresh();
+ 271:     }
+ 272: 
+ 273:     public function completeOrder(int $orderId): ?Order
+ 274:     {
+ 275:         $order = Order::find($orderId);
+ 276:         if (!$order) return null;
+ 277:         $order->update(['status' => 'completed']);
+ 278:         return $order;
+ 279:     }
+ 280: 
+ 281:     public function attachActivationCode(int $orderId): array
+ 282:     {
+ 283:         $order = Order::find($orderId);
+ 284:         if (!$order) return [];
+ 285: 
+ 286:         $codes = [];
+ 287:         // generate 1 code
+ 288:         $acs = $this->activationService->generateFromOrder($order, 1);
+ 289:         foreach ($acs as $c) {
+ 290:             $codes[] = $c->code;
+ 291:         }
+ 292: 
+ 293:         $order->update(['activation_codes_count' => count($codes)]);
+ 294: 
+ 295:         return $codes;
+ 296:     }
+ 297: 
+ 298:     /**
+ 299:      * Basic placeholder for verifying Midtrans signature.
+ 300:      * Replace with real signature verification using Midtrans server key.
+ 301:      */
+ 302:     public function verifyMidtransSignature(Request $request): bool
+ 303:     {
+ 304:         $serverKey = config('services.midtrans.server_key')
+ 305:             ?? config('midtans.server_key')
+ 306:             ?? env('MIDTRANS_SERVER_KEY');
+ 307:         if (empty($serverKey)) {
+ 308:             Log::warning('Midtrans server key not configured');
+ 309:             return false;
+ 310:         }
+ 311: 
+ 312:         $orderId = $request->input('order_id') ?? $request->input('order_id');
+ 313:         $statusCode = $request->input('status_code');
+ 314:         $grossAmount = $request->input('gross_amount');
+ 315:         $signature = $request->input('signature_key') ?? $request->input('signature');
+ 316: 
+ 317:         if (!$orderId || !$statusCode || !$grossAmount || !$signature) {
+ 318:             Log::warning('Midtrans webhook missing required fields');
+ 319:             return false;
+ 320:         }
+ 321: 
+ 322:         $expected = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
+ 323: 
+ 324:         return hash_equals($expected, $signature);
+ 325:     }
+ 326: 
+ 327:     private function configureMidtrans(): void
+ 328:     {
+ 329:         MidtransConfig::$serverKey = config('midtans.server_key')
+ 330:             ?: config('services.midtrans.server_key')
+ 331:             ?: env('MIDTRANS_SERVER_KEY');
+ 332:         MidtransConfig::$isProduction = (bool) (config('midtans.is_production')
+ 333:             ?? config('services.midtrans.is_production')
+ 334:             ?? env('MIDTRANS_IS_PRODUCTION', false));
+ 335:         MidtransConfig::$isSanitized = (bool) (config('midtans.is_sanitized')
+ 336:             ?? env('MIDTRANS_IS_SANITIZED', true));
+ 337:         MidtransConfig::$is3ds = (bool) (config('midtans.is_3ds')
+ 338:             ?? env('MIDTRANS_IS_3DS', true));
+ 339:     }
+ 340: 
+ 341:     private function renewAffiliateActivePeriod(Order $order): bool
+ 342:     {
+ 343:         $buyer = $order->user;
+ 344:         if (!$buyer || !$buyer->hasRole('affiliate')) {
+ 345:             return false;
+ 346:         }
+ 347: 
+ 348:         $affiliate = $buyer->affiliate;
+ 349:         if (!$affiliate) {
+ 350:             return false;
+ 351:         }
+ 352: 
+ 353:         $hasBundleItem = $order->items()
+ 354:             ->whereHas('product', function ($q) {
+ 355:                 $q->whereRaw('LOWER(type) = ?', ['bundle']);
+ 356:             })
+ 357:             ->exists() || strtolower((string) $order->product_type) === 'bundle';
+ 358: 
+ 359:         if (!$hasBundleItem) {
+ 360:             return false;
+ 361:         }
+ 362: 
+ 363:         $isExpired = !$affiliate->active_until || now()->greaterThan($affiliate->active_until);
+ 364:         if (!$isExpired && $affiliate->is_active) {
+ 365:             // Active account buying bundle should still get code, but no RO extension.
+ 366:             return false;
+ 367:         }
+ 368: 
+ 369:         $affiliate->update([
+ 370:             'is_active' => true,
+ 371:             'activated_at' => $affiliate->activated_at ?? now(),
+ 372:             'active_until' => now()->addMonth(),
+ 373:             'last_activity_at' => now(),
+ 374:         ]);
+ 375: 
+ 376:         return true;
+ 377:     }
+ 378: 
+ 379:     /**
+ 380:      * Auto-consume one generated activation code when bundle payment is used as RO reactivation.
+ 381:      */
+ 382:     private function consumeGeneratedCodeForAutoRo(Order $order, array $generatedCodes): void
+ 383:     {
+ 384:         $buyer = $order->user;
+ 385:         if (!$buyer || empty($generatedCodes)) {
+ 386:             return;
+ 387:         }
+ 388: 
+ 389:         $code = $generatedCodes[0] ?? null;
+ 390:         if (!$code) {
+ 391:             return;
+ 392:         }
+ 393: 
+ 394:         $remaining = (int) ($code->remaining_usage ?? $code->usage_count ?? 1);
+ 395:         $remaining = max(0, $remaining - 1);
+ 396:         $existingNotes = trim((string) ($code->notes ?? ''));
+ 397:         $autoNote = 'Auto-used for RO reactivation (affiliate expired) order=' . $order->order_number;
+ 398: 
+ 399:         $code->update([
+ 400:             'remaining_usage' => $remaining,
+ 401:             'status' => $remaining <= 0 ? 'used' : 'available',
+ 402:             'used_by' => $buyer->id,
+ 403:             'used_at' => now(),
+ 404:             'notes' => trim($existingNotes . ' | ' . $autoNote, ' |'),
+ 405:         ]);
+ 406:     }
+ 407: 
+ 408:     /**
+ 409:      * Apply point volume from paid order to affiliate tree.
+ 410:      * - personal volume goes to order affiliate
+ 411:      * - left/right volume propagated to uplines based on branch position
+ 412:      */
+ 413:     private function applyPointVolumesFromOrder(Order $order): void
+ 414:     {
+ 415:         $originAffiliate = Affiliate::query()->find($order->affiliate_id);
+ 416:         if (!$originAffiliate) {
+ 417:             return;
+ 418:         }
+ 419: 
+ 420:         $totalPoints = $this->calculateOrderPoints($order);
+ 421:         if ($totalPoints <= 0) {
+ 422:             return;
+ 423:         }
+ 424: 
+ 425:         $originAffiliate->update([
+ 426:             'total_personal_volume' => (float) ($originAffiliate->total_personal_volume ?? 0) + $totalPoints,
+ 427:             'total_volume' => (float) ($originAffiliate->total_volume ?? 0) + $totalPoints,
+ 428:             'last_activity_at' => now(),
+ 429:         ]);
+ 430: 
+ 431:         $current = $originAffiliate;
+ 432:         $guard = 0;
+ 433: 
+ 434:         while ($current && $current->upline_id && $guard < 50) {
+ 435:             $parent = Affiliate::query()
+ 436:                 ->where('user_id', $current->upline_id)
+ 437:                 ->first();
+ 438: 
+ 439:             if (!$parent) {
+ 440:                 break;
+ 441:             }
+ 442: 
+ 443:             $branch = strtolower((string) $current->position);
+ 444:             if ($branch === 'left') {
+ 445:                 $parent->update([
+ 446:                     'left_volume' => (float) ($parent->left_volume ?? 0) + $totalPoints,
+ 447:                     'total_volume' => (float) ($parent->total_volume ?? 0) + $totalPoints,
+ 448:                     'last_activity_at' => now(),
+ 449:                 ]);
+ 450:             } elseif ($branch === 'right') {
+ 451:                 $parent->update([
+ 452:                     'right_volume' => (float) ($parent->right_volume ?? 0) + $totalPoints,
+ 453:                     'total_volume' => (float) ($parent->total_volume ?? 0) + $totalPoints,
+ 454:                     'last_activity_at' => now(),
+ 455:                 ]);
+ 456:             } else {
+ 457:                 // Fallback for legacy records without explicit position.
+ 458:                 $parent->update([
+ 459:                     'total_volume' => (float) ($parent->total_volume ?? 0) + $totalPoints,
+ 460:                     'last_activity_at' => now(),
+ 461:                 ]);
+ 462:             }
+ 463: 
+ 464:             $current = $parent;
+ 465:             $guard++;
+ 466:         }
+ 467:     }
+ 468: 
+ 469:     /**
+ 470:      * Sum point_value from order items.
+ 471:      */
+ 472:     private function calculateOrderPoints(Order $order): float
+ 473:     {
+ 474:         $points = (float) DB::table('order_items')
+ 475:             ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+ 476:             ->where('order_items.order_id', $order->id)
+ 477:             ->sum(DB::raw('COALESCE(order_items.quantity, 0) * COALESCE(products.point_value, 0)'));
+ 478: 
+ 479:         if ($points > 0) {
+ 480:             return round($points, 2);
+ 481:         }
+ 482: 
+ 483:         if ($order->product_id) {
+ 484:             $fallbackPoint = (float) DB::table('products')
+ 485:                 ->where('id', $order->product_id)
+ 486:                 ->value('point_value');
+ 487: 
+ 488:             if ($fallbackPoint > 0) {
+ 489:                 return round($fallbackPoint * (int) ($order->quantity ?? 1), 2);
+ 490:             }
+ 491:         }
+ 492: 
+ 493:         return 0.0;
+ 494:     }
+ 495: }

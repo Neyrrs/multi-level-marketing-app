@@ -56,6 +56,10 @@ const formatRupiah = (value: number = 0) =>
 const Cart = () => {
     const { auth, midtransConfig, flash } = usePage<InertiaPageProps>().props;
     const authUserId = auth.user?.id ? Number(auth.user.id) : null;
+    const roleNames = Array.isArray(auth.user?.roles)
+        ? auth.user.roles.map((r: any) => String(r?.name ?? '').toLowerCase())
+        : [];
+    const isGuestRole = roleNames.includes('guest');
     const [items, setItems] = useState<CartStorageItem[]>([]);
     const [isPaying, setIsPaying] = useState(false);
     const handledMidtransOrderRef = useRef<string | null>(null);
@@ -92,6 +96,17 @@ const Cart = () => {
     }, [midtransConfig?.clientKey, midtransConfig?.isProduction]);
 
     const updateQty = (id: number, delta: number) => {
+        const currentItem = items.find((item) => item.id === id);
+        const itemType = String(currentItem?.type ?? '').toLowerCase();
+        const isBundleItem = itemType === 'bundle' || itemType === 'package';
+
+        if (delta > 0 && isGuestRole && isBundleItem && (currentItem?.qty ?? 0) >= 1) {
+            toast.error('Batas produk bundle', {
+                description: 'Guest hanya bisa membeli 1 produk bundle.',
+            });
+            return;
+        }
+
         const updated = items.map((item) => {
             if (item.id !== id) return item;
             const newQty = Math.max(1, Math.min(item.qty + delta, item.stock));
@@ -322,7 +337,14 @@ const Cart = () => {
                                                         variant="outline"
                                                         size="icon"
                                                         onClick={() => updateQty(item.id, 1)}
-                                                        disabled={item.qty >= item.stock}
+                                                        disabled={
+                                                            item.qty >= item.stock
+                                                            || (
+                                                                isGuestRole
+                                                                && ['bundle', 'package'].includes(String(item.type ?? '').toLowerCase())
+                                                                && item.qty >= 1
+                                                            )
+                                                        }
                                                         className="h-8 w-8 rounded-md"
                                                     >
                                                         <Plus className="h-3 w-3" />

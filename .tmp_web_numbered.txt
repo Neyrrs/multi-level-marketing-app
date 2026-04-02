@@ -1,0 +1,455 @@
+   1: <?php
+   2: 
+   3: use Illuminate\Support\Facades\Route;
+   4: use Illuminate\Support\Facades\Auth;
+   5: use Illuminate\Support\Facades\Storage;
+   6: use Illuminate\Http\Request;
+   7: use Inertia\Inertia;
+   8: use Laravel\Fortify\Features;
+   9: use Spatie\Permission\Middleware\RoleMiddleware;
+  10: use App\Http\Controllers\Admin;
+  11: use App\Http\Controllers\Manager;
+  12: use App\Http\Controllers\Affiliate;
+  13: use App\Http\Controllers\Guest as GuestControllers;
+  14: use App\Http\Controllers\Logistik;
+  15: use App\Http\Controllers\Finance;
+  16: use App\Http\Controllers\Settings\ProfileController;
+  17: use App\Http\Controllers\ProductController;
+  18: use App\Http\Controllers\PublicCartController;
+  19: use App\Http\Middleware\EnsureAffiliateActivePeriod;
+  20: 
+  21: // Route::get('/', function () {
+  22: //     return Inertia::render('welcome', [
+  23: //         'canRegister' => Features::enabled(Features::registration()),
+  24: //     ]);
+  25: // })->name('home');
+  26: 
+  27: // Route::middleware(['auth', 'verified'])->group(function () {
+  28: //     Route::get('dashboard', function () {
+  29: //         return Inertia::render('dashboard');
+  30: //     })->name('dashboard');
+  31: // });
+  32: Route::middleware(['auth', 'verified'])->group(function () {
+  33: 
+  34:     Route::get('/profile/edit', [ProfileController::class , 'edit'])
+  35:         ->name('public.profile.edit');
+  36: 
+  37:     Route::put('/profile', [ProfileController::class , 'update'])
+  38:         ->name('public.profile.update');
+  39:     /*
+  40:      |--------------------------------------------------------------------------
+  41:      | GUEST
+  42:      |--------------------------------------------------------------------------
+  43:      */
+  44:     Route::middleware([RoleMiddleware::class . ':guest'])->group(function () {
+  45:             Route::get('/dashboard', fn() => Inertia::render('guest/dashboard'))
+  46:                 ->name('dashboard');
+  47:             Route::get('/shop', [GuestControllers\ShopController::class , 'index'])->name('shop.index');
+  48:             Route::post('/shop', [GuestControllers\ShopController::class , 'store'])->name('shop.store');
+  49:             Route::post('/shop/checkout', [GuestControllers\ShopController::class , 'checkout'])->name('shop.checkout');
+  50:             Route::post('/shop/cancel', [GuestControllers\ShopController::class , 'cancel'])->name('shop.cancel');
+  51:             Route::get('/shop-history', [GuestControllers\ShopHistoryController::class , 'index'])->name('shop-history');
+  52:         }
+  53:         );
+  54: 
+  55:         /*
+  56:      |--------------------------------------------------------------------------
+  57:      | ADMIN
+  58:      |--------------------------------------------------------------------------
+  59:      */
+  60:         Route::prefix('admin')
+  61:             ->name('admin.')
+  62:             ->middleware([RoleMiddleware::class . ':admin'])
+  63:             ->group(function () {
+  64: 
+  65:             Route::get('dashboard', [Admin\DashboardController::class , 'index'])
+  66:                 ->name('dashboard');
+  67: 
+  68:             // Pages with controllers (data fetching)
+  69:             Route::get('products', [Admin\ProductController::class , 'index'])->name('products.index');
+  70:             Route::get('products/create', [Admin\ProductController::class , 'create'])->name('products.create');
+  71:             Route::post('products', [Admin\ProductController::class , 'store'])->name('products.store');
+  72:             Route::get('products/{product}/edit', [Admin\ProductController::class , 'edit'])->name('products.edit');
+  73:             Route::put('products/{product}', [Admin\ProductController::class , 'update'])->name('products.update');
+  74:             Route::delete('products/{product}', [Admin\ProductController::class , 'destroy'])->name('products.destroy');
+  75: 
+  76:             Route::get('commission-methods', [Admin\CommissionMethodController::class , 'index'])->name('commission-methods.index');
+  77:             Route::get('commission-methods/create', [Admin\CommissionMethodController::class , 'create'])->name('commission-methods.create');
+  78:             Route::post('commission-methods', [Admin\CommissionMethodController::class , 'store'])->name('commission-methods.store');
+  79:             Route::get('commission-methods/{commissionMethod}/edit', [Admin\CommissionMethodController::class , 'edit'])->name('commission-methods.edit');
+  80:             Route::put('commission-methods/{commissionMethod}', [Admin\CommissionMethodController::class , 'update'])->name('commission-methods.update');
+  81:             Route::delete('commission-methods/{commissionMethod}', [Admin\CommissionMethodController::class , 'destroy'])->name('commission-methods.destroy');
+  82: 
+  83:             Route::get('commission-rules', [Admin\CommissionRuleController::class , 'index'])->name('commission-rules.index');
+  84:             Route::get('commission-rules/create', [Admin\CommissionRuleController::class , 'create'])->name('commission-rules.create');
+  85:             Route::post('commission-rules', [Admin\CommissionRuleController::class , 'store'])->name('commission-rules.store');
+  86:             Route::get('commission-rules/{commissionRule}/edit', [Admin\CommissionRuleController::class , 'edit'])->name('commission-rules.edit');
+  87:             Route::put('commission-rules/{commissionRule}', [Admin\CommissionRuleController::class , 'update'])->name('commission-rules.update');
+  88:             Route::delete('commission-rules/{commissionRule}', [Admin\CommissionRuleController::class , 'destroy'])->name('commission-rules.destroy');
+  89: 
+  90:             Route::get('affiliates', [Admin\AffiliatesController::class , 'index'])->name('affiliates.index');
+  91:             Route::post('affiliates/{affiliate}/approve', [Admin\AffiliatesController::class , 'approvePending'])->name('affiliates.approve');
+  92:             Route::post('affiliates/{affiliate}/set-sponsor', [Admin\AffiliatesController::class , 'setSponsor'])->name('affiliates.set-sponsor');
+  93:             Route::post('affiliates/{affiliate}/set-position', [Admin\AffiliatesController::class , 'setPosition'])->name('affiliates.set-position');
+  94: 
+  95:             // MLM Tree Structure
+  96:             Route::get('mlm-tree', [Admin\MlmTreeController::class , 'index'])->name('mlm-tree.index');
+  97:             Route::get('mlm-tree/{affiliate}', [Admin\MlmTreeController::class , 'show'])->name('mlm-tree.show');
+  98: 
+  99:             Route::get('withdrawals', [Admin\WithdrawalsController::class , 'index'])->name('withdrawals.index');
+ 100:             Route::post('withdrawals/{withdrawal}/approve', [Admin\WithdrawalsController::class , 'approve'])->name('withdrawals.approve');
+ 101:             Route::post('withdrawals/{withdrawal}/reject', [Admin\WithdrawalsController::class , 'reject'])->name('withdrawals.reject');
+ 102: 
+ 103:             Route::get('payout-report', [Admin\PayoutReportController::class , 'index'])->name('payout-report');
+ 104: 
+ 105:             Route::get('notifications', [Admin\NotificationsController::class , 'index'])->name('notifications.index');
+ 106:             Route::post('notifications/{id}/resend', [Admin\NotificationsController::class , 'resend'])->name('notifications.resend');
+ 107:             Route::delete('notifications/{id}', [Admin\NotificationsController::class , 'destroy'])->name('notifications.destroy');
+ 108: 
+ 109:             // Legacy routes (keep for backward compatibility)
+ 110:             Route::get('product-management', fn() => Inertia::render('admin/manajemen-produk/index'))
+ 111:                 ->name('product-management');
+ 112:             Route::get('affiliate-management', [Admin\ManajemenAffiliateController::class , 'index'])
+ 113:                 ->name('affiliate-management');
+ 114:             Route::get('commission-setting', fn() => Inertia::render('admin/pengaturan-komisi/index'))
+ 115:                 ->name('commission-setting');
+ 116:             Route::get('plan-setting', [Admin\PlanController::class , 'index'])
+ 117:                 ->name('plan-setting');
+ 118:             Route::post('plan-setting/assign', [Admin\PlanController::class , 'assignAffiliatePlan'])
+ 119:                 ->name('plan-setting.assign');
+ 120:             Route::post('plan-setting/{id}/set-default', [Admin\PlanController::class , 'setDefault'])
+ 121:                 ->name('plan-setting.set-default');
+ 122: 
+ 123:             // API Resources (with 'api' prefix in route names to avoid conflicts)
+ 124:             Route::apiResource('api/products', \App\Http\Controllers\ProductsController::class , ['names' => 'api.products']);
+ 125:             Route::apiResource('api/commission-methods', \App\Http\Controllers\CommissionMethodController::class , ['names' => 'api.commission-methods']);
+ 126:             Route::apiResource('api/commission-rules', \App\Http\Controllers\CommissionRuleController::class , ['names' => 'api.commission-rules']);
+ 127:             Route::apiResource('api/withdrawals', \App\Http\Controllers\WithdrawalController::class , ['names' => 'api.withdrawals']);
+ 128: 
+ 129:             // Legacy resource routes
+ 130:             Route::resource('UsersRole', Admin\UserRole::class);
+ 131:             Route::resource('MasterProduk', Admin\MasterProdukController::class);
+ 132:             Route::resource('ManajemenAffiliate', Admin\ManajemenAffiliateController::class);
+ 133:             Route::resource('PengaturanPlan', Admin\PlanController::class);
+ 134:             Route::resource('PengaturanKomisi', Admin\KomisiController::class);
+ 135: 
+ 136:             Route::resource('Orders', Admin\OrderController::class);
+ 137:             Route::resource('Transaksi', Admin\TransactionController::class);
+ 138: 
+ 139:             Route::get('reports/LaporanPenjualan', [Admin\Report\SalesReportController::class , 'index'])
+ 140:                 ->name('reports.LaporanPenjualan');
+ 141: 
+ 142:             Route::get('reports/LaporanAffiliate', [Admin\Report\AffiliateReportController::class , 'index'])
+ 143:                 ->name('reports.LaporanAffiliate');
+ 144:             Route::get('reports/LaporanKeuangan', [Admin\Report\FinanceReportController::class , 'index'])
+ 145:                 ->name('reports.LaporanKeuangan');
+ 146:             Route::get('reports/LaporanKomisi', [Admin\Report\KomisiReportController::class , 'index'])
+ 147:                 ->name('reports.LaporanKomisi');
+ 148:             Route::get('reports/LaporanProduk', [Admin\Report\ProductReportController::class , 'index'])
+ 149:                 ->name('reports.LaporanProduk');
+ 150:         }
+ 151:         );
+ 152: 
+ 153: 
+ 154:         /*
+ 155:      |--------------------------------------------------------------------------
+ 156:      | MANAGER
+ 157:      |--------------------------------------------------------------------------
+ 158:      */
+ 159:         Route::prefix('manager')
+ 160:             ->name('manager.')
+ 161:             ->middleware([RoleMiddleware::class . ':manager'])
+ 162:             ->group(function () {
+ 163: 
+ 164:             Route::get('dashboard', fn() => Inertia::render('manager/dashboard'))
+ 165:                 ->name('dashboard');
+ 166: 
+ 167:             Route::get('affiliate-management', [Manager\AffiliateManagementController::class , 'index'])
+ 168:                 ->name('affiliate-management.index');
+ 169:             Route::post('affiliate-management/{affiliate}/approve', [Manager\AffiliateManagementController::class , 'approve'])
+ 170:                 ->name('affiliate-management.approve');
+ 171: 
+ 172:             Route::get('reports/sold-record', [Manager\Report\SalesReportController::class , 'index'])
+ 173:                 ->name('reports.sold-record');
+ 174: 
+ 175:             Route::get('reports/finance-record', [Manager\Report\FinanceReportController::class , 'index'])
+ 176:                 ->name('reports.finance-record');
+ 177: 
+ 178:             Route::get('reports/product-record', [Manager\Report\ProductReportController::class , 'index'])
+ 179:                 ->name('reports.product-record');
+ 180: 
+ 181:             Route::get('reports/commission-record', [Manager\Report\CommissionReportController::class , 'index'])
+ 182:                 ->name('reports.commission-record');
+ 183: 
+ 184:             Route::get('reports/affiliate-record', [Manager\Report\AffiliateReportController::class , 'index'])
+ 185:                 ->name('reports.affiliate-record');
+ 186:         }
+ 187:         );
+ 188: 
+ 189: 
+ 190:         /*
+ 191:      |--------------------------------------------------------------------------
+ 192:      | AFFILIATE
+ 193:      |--------------------------------------------------------------------------
+ 194:      */
+ 195:         Route::prefix('affiliate')
+ 196:             ->name('affiliate.')
+ 197:             ->middleware([RoleMiddleware::class . ':affiliate', EnsureAffiliateActivePeriod::class])
+ 198:             ->group(function () {
+ 199: 
+ 200:             Route::get('dashboard', [Affiliate\DashboardController::class , 'index'])
+ 201:                 ->name('dashboard');
+ 202:             Route::get('binary', [Affiliate\BinaryController::class , 'index'])
+ 203:                 ->name('binary');
+ 204:             Route::get('komisi', [Affiliate\KomisiController::class , 'index'])
+ 205:                 ->name('komisi');
+ 206:             Route::get('kode', [Affiliate\KodeController::class , 'index'])
+ 207:                 ->name('kode');
+ 208:             Route::get('pengaturan', [Affiliate\PengaturanController::class , 'index'])
+ 209:                 ->name('pengaturan');
+ 210:             Route::post('pengaturan/bank-account', [Affiliate\PengaturanController::class , 'storeBankAccount'])
+ 211:                 ->name('pengaturan.bank-account.store');
+ 212:             Route::post('pengaturan/withdraw', [Affiliate\PengaturanController::class , 'requestWithdrawal'])
+ 213:                 ->name('pengaturan.withdraw.store');
+ 214:             Route::get('personal', [Affiliate\PersonalController::class , 'index'])
+ 215:                 ->name('personal');
+ 216:             Route::get('downline', [Affiliate\DownlineController::class , 'index'])
+ 217:                 ->name('downline');
+ 218:             Route::get('sponsor', [Affiliate\SponsorController::class , 'index'])
+ 219:                 ->name('sponsor');
+ 220:             Route::get('generation-ro', [Affiliate\GeneraionController::class , 'index'])
+ 221:                 ->name('generation-ro');
+ 222:             Route::get('matching-bonus', [Affiliate\MatchingController::class , 'index'])
+ 223:                 ->name('matching-bonus');
+ 224:             Route::get('pin-history', [Affiliate\PinHistoryController::class , 'index'])
+ 225:                 ->name('pin-history');
+ 226:             Route::get('shop-history', [Affiliate\ShopHistoryController::class , 'index'])
+ 227:                 ->name('shop-history');
+ 228:             Route::get('request', [Affiliate\AffiliateRequestController::class , 'index'])
+ 229:                 ->name('request.index');
+ 230: 
+ 231:             // UBAH NIH CONTROLLERNYA
+ 232:             Route::get('method-affiliate', [Affiliate\ShopHistoryController::class , 'index'])
+ 233:                 ->name('method-affiliate');
+ 234: 
+ 235:             Route::resource('tree', Affiliate\TreeController::class , ['names' => 'tree']);
+ 236:             Route::post('shop/checkout', [Affiliate\ShopController::class , 'checkout'])->name('shop.checkout');
+ 237:             Route::post('shop/cancel', [Affiliate\ShopController::class , 'cancel'])->name('shop.cancel');
+ 238:             Route::resource('shop', Affiliate\ShopController::class , ['names' => 'shop']);
+ 239:             Route::resource('pin-list', Affiliate\PinListController::class , ['names' => 'pin-list']);
+ 240:             Route::resource('personal-ro', Affiliate\PersonalController::class , ['names' => 'personal-ro']);
+ 241:             Route::resource('reward', Affiliate\ProductController::class , ['names' => 'reward']);
+ 242:             Route::resource('redeem', Affiliate\ReedemController::class , ['names' => 'redeem']);
+ 243:         }
+ 244:         );
+ 245: 
+ 246: 
+ 247:         /*
+ 248:      |--------------------------------------------------------------------------
+ 249:      | LOGISTIK
+ 250:      |--------------------------------------------------------------------------
+ 251:      */
+ 252:         Route::prefix('logistik')
+ 253:             ->name('logistik.')
+ 254:             ->middleware([RoleMiddleware::class . ':logistik'])
+ 255:             ->group(function () {
+ 256: 
+ 257:             Route::get('dashboard', [Logistik\DashboardController::class , 'index'])
+ 258:                 ->name('dashboard');
+ 259: 
+ 260:             Route::resource('orders', Logistik\OrderController::class);
+ 261:             Route::resource('shipments', Logistik\ShipmentController::class);
+ 262:             Route::resource('inventory', Logistik\InventoryController::class);
+ 263:             // Shipment Actions
+ 264:             Route::post('shipments/{shipment}/mark-shipped', [Logistik\ShipmentController::class , 'markAsShipped'])
+ 265:                 ->name('shipments.mark-shipped');
+ 266:             Route::post('shipments/{shipment}/mark-delivered', [Logistik\ShipmentController::class , 'markAsDelivered'])
+ 267:                 ->name('shipments.mark-delivered');
+ 268:             Route::post('shipments/{shipment}/add-tracking', [Logistik\ShipmentController::class , 'addTracking'])
+ 269:                 ->name('shipments.add-tracking');
+ 270: 
+ 271:             // Order Actions
+ 272:             Route::post('orders/{order}/mark-ready-to-ship', [Logistik\OrderController::class , 'markAsReadyToShip'])
+ 273:                 ->name('orders.mark-ready-to-ship');
+ 274:             Route::get('orders/awaiting-shipment', [Logistik\OrderController::class , 'getAwaitingShipment'])
+ 275:                 ->name('orders.awaiting-shipment');
+ 276: 
+ 277:             // Reports
+ 278:             Route::get('reports/delivery', [Logistik\ReportController::class , 'delivery'])
+ 279:                 ->name('reports.delivery');
+ 280:             Route::get('reports/shipment', [Logistik\ReportController::class , 'shipment'])
+ 281:                 ->name('reports.shipment');
+ 282:         }
+ 283:         );
+ 284: 
+ 285: 
+ 286:         /*
+ 287:      |--------------------------------------------------------------------------
+ 288:      | FINANCE
+ 289:      |--------------------------------------------------------------------------
+ 290:      */
+ 291:         Route::prefix('finance')
+ 292:             ->name('finance.')
+ 293:             ->middleware([RoleMiddleware::class . ':finance'])
+ 294:             ->group(function () {
+ 295: 
+ 296:             Route::get('dashboard', [Finance\DashboardController::class , 'index'])
+ 297:                 ->name('dashboard');
+ 298: 
+ 299:             Route::resource('transactions', Finance\TransactionController::class)->only(['index', 'show']);
+ 300:             Route::resource('withdrawals', Finance\WithdrawalController::class)->only(['index', 'show']);
+ 301: 
+ 302:             Route::post('withdrawals/{withdrawal}/approve', [Finance\WithdrawalController::class , 'approve'])
+ 303:                 ->name('withdrawals.approve');
+ 304:             Route::post('withdrawals/{withdrawal}/process', [Finance\WithdrawalController::class , 'process'])
+ 305:                 ->name('withdrawals.process');
+ 306:             Route::post('withdrawals/{withdrawal}/reject', [Finance\WithdrawalController::class , 'reject'])
+ 307:                 ->name('withdrawals.reject');
+ 308: 
+ 309:             Route::get('reports', [Finance\FinanceReportController::class , 'index'])
+ 310:                 ->name('reports.index');
+ 311: 
+ 312:             Route::get('network', [Finance\NetworkController::class , 'index'])
+ 313:                 ->name('network');
+ 314:         }
+ 315:         );
+ 316:     });
+ 317: 
+ 318: Route::get('/', function (Request $request) {
+ 319:    
+ 320:     if (!$request->session()->has('ref_affiliate_id')) {
+ 321:         $affiliate = app(\App\Services\AffiliateService::class)->assignRandomSponsor();
+ 322:         if ($affiliate) {
+ 323:             $request->session()->put('ref_affiliate_id', $affiliate->id);
+ 324:             $request->session()->put('ref_affiliate_slug', $affiliate->slug);
+ 325:         }
+ 326:     }
+ 327: 
+ 328:     $slug = $request->session()->get('ref_affiliate_slug');
+ 329:     if (!empty($slug)) {
+ 330:         return redirect('/' . $slug);
+ 331:     }
+ 332: 
+ 333:     return app(ProductController::class)->index();
+ 334: })->name('home');
+ 335: 
+ 336: Route::get('/product', [ProductController::class , 'produk'])->name('product');
+ 337: 
+ 338: // Route::get('/login', function () {
+ 339: //     return Inertia::render('login');
+ 340: // })->name('login');
+ 341: 
+ 342: // Route::get('/register', function () {
+ 343: //     return Inertia::render('register');
+ 344: // })->name('register');
+ 345: 
+ 346: Route::get('/mitra', function () {
+ 347:     return Inertia::render('mitra');
+ 348: })->name('mitra');
+ 349: 
+ 350: Route::get('/detail-product/{slug}', function ($slug) {
+ 351:     return Inertia::render('detail-product', [
+ 352:     'slug' => $slug,
+ 353:     ]);
+ 354: })->name('detail-product');
+ 355: 
+ 356: Route::get('/profile', function () {
+ 357:     return Inertia::render('profile');
+ 358: })->name('profile');
+ 359: 
+ 360: 
+ 361: Route::get('/cart', function (Request $request) {
+ 362:     $user = $request->user();
+ 363:     $profileAddress = null;
+ 364:     if ($user?->profile?->address) {
+ 365:         $address = $user->profile->address;
+ 366:         if (is_string($address)) {
+ 367:             $profileAddress = trim($address) !== '' ? trim($address) : null;
+ 368:         } elseif (is_array($address)) {
+ 369:             $profileAddress = $address['full_address'] ?? null;
+ 370:         }
+ 371:     }
+ 372: 
+ 373:     return Inertia::render('cart', [
+ 374:     'user' => $user ? [
+ 375:     'name' => $user->name,
+ 376:     'phone' => $user->phone,
+ 377:     'alamat' => $profileAddress,
+ 378:     'email' => $user->email,
+ 379:     ] : null,
+ 380:     ]);
+ 381: })->name('cart');
+ 382: 
+ 383: // Cart checkout + cancel (login required)
+ 384: Route::middleware(['auth'])->group(function () {
+ 385:     Route::post('/cart/checkout', [PublicCartController::class , 'checkout'])->name('cart.checkout');
+ 386:     Route::post('/cart/cancel', [PublicCartController::class , 'cancel'])->name('cart.cancel');
+ 387: });
+ 388: 
+ 389: Route::get('/edit-profile', function () {
+ 390:     return Inertia::render('edit-profile');
+ 391: })->name('edit-profile');
+ 392: 
+ 393: Route::post('/profile', [App\Http\Controllers\Settings\ProfileController::class , 'updateProfile'])
+ 394:     ->middleware('auth')
+ 395:     ->name('profile.update_public');
+ 396: 
+ 397: // Route::get('/dashboard-sementara', function () {
+ 398: //     return Inertia::render('dashboard/dashboard');
+ 399: // })->name('dashboard.dashboard');
+ 400: 
+ 401: // Public media proxy for local environments where /storage can return 403.
+ 402: Route::get('/media/{path}', function (string $path) {
+ 403:     if (!Storage::disk('public')->exists($path)) {
+ 404:         abort(404);
+ 405:     }
+ 406: 
+ 407:     return Storage::disk('public')->response($path);
+ 408: })->where('path', '.*')->name('media.public');
+ 409: 
+ 410: // Public affiliate referral link.
+ 411: Route::get('/a/{slug}', function (Request $request, string $slug) {
+ 412:     $affiliate = app(\App\Services\AffiliateService::class)->getAffiliateBySlug($slug);
+ 413: 
+ 414:     if (!$affiliate) {
+ 415:         return redirect()->route('home')->with('error', 'Link affiliate tidak ditemukan.');
+ 416:     }
+ 417: 
+ 418:     $request->session()->put('ref_affiliate_id', $affiliate->id);
+ 419:     $request->session()->put('ref_affiliate_slug', $affiliate->slug);
+ 420: 
+ 421:     return redirect()->route('home')->with('success', "Referral affiliate @{$affiliate->slug} aktif.");
+ 422: })->name('affiliate.ref');
+ 423: 
+ 424: // Public affiliate landing by slug: /{slug}
+ 425: Route::get('/{slug}', function (Request $request, string $slug) {
+ 426:     $affiliate = app(\App\Services\AffiliateService::class)->getAffiliateBySlug($slug);
+ 427:     if (!$affiliate) {
+ 428:         abort(404);
+ 429:     }
+ 430: 
+ 431:     $request->session()->put('ref_affiliate_id', $affiliate->id);
+ 432:     $request->session()->put('ref_affiliate_slug', $affiliate->slug);
+ 433: 
+ 434:     return app(ProductController::class)->index();
+ 435: })->where('slug', '^(?!login$|register$|logout$|produk$|mitra$|profile$|cart$|edit-profile$|dashboard-sementara$|storage$|media$|webhooks$|admin$|manager$|affiliate$|logistik$|finance$)[A-Za-z0-9_-]+$')
+ 436:     ->name('affiliate.landing');
+ 437: 
+ 438: // Force logout route: clear auth + session in one hit
+ 439: Route::get('/logout', function (Request $request) {
+ 440:     Auth::guard('web')->logout();
+ 441:     $request->session()->invalidate();
+ 442:     $request->session()->regenerateToken();
+ 443:     $request->session()->flush();
+ 444: 
+ 445:     return redirect('/login');
+ 446: })->name('logout.force');
+ 447: 
+ 448: // Webhooks (no auth required)
+ 449: Route::post('/webhooks/midtrans', [\App\Http\Controllers\Webhooks\MidtransController::class , 'handle'])->name('webhooks.midtrans');
+ 450: 
+ 451: require __DIR__ . '/settings.php';
+ 452: 
+ 453: 
+ 454: 
+ 455: 

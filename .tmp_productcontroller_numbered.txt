@@ -1,0 +1,117 @@
+   1: <?php
+   2: 
+   3: namespace App\Http\Controllers;
+   4: 
+   5: use App\Models\Product;
+   6: use Illuminate\Http\Request;
+   7: use Illuminate\Support\Facades\Storage;
+   8: use Inertia\Inertia;
+   9: 
+  10: class ProductController extends Controller
+  11: {
+  12:     /**
+  13:      * Fetch active products and render the home page.
+  14:      */
+  15:     public function index()
+  16:     {
+  17:         return Inertia::render('home', [
+  18:             'products' => $this->getActiveProducts(),
+  19:         ]);
+  20:     }
+  21: 
+  22:     /**
+  23:      * Fetch active products and render the /produk page.
+  24:      */
+  25:     public function produk(Request $request)
+  26:     {
+  27:         $search   = $request->input('search', '');
+  28:         $query    = Product::where('is_active', true)->orderBy('created_at', 'desc');
+  29: 
+  30:         if ($search) {
+  31:             $query->where(function ($q) use ($search) {
+  32:                 $q->where('name', 'like', "%{$search}%")
+  33:                   ->orWhere('description', 'like', "%{$search}%");
+  34:             });
+  35:         }
+  36: 
+  37:         return Inertia::render('product', [
+  38:             'products' => $query->get()->map(fn (Product $p) => [
+  39:                 'id'          => $p->id,
+  40:                 'name'        => $p->name,
+  41:                 'slug'        => $p->slug,
+  42:                 'description' => $p->description,
+  43:                 'harga_awal'  => (float) $p->harga_awal,
+  44:                 'diskon'      => (float) $p->diskon,
+  45:                 'harga_akhir' => (float) $p->harga_akhir,
+  46:                 'point_value' => (float) $p->point_value,
+  47:                 'type'        => $p->type,
+  48:                 'stock'       => (int) $p->stock,
+  49:                 'image'       => $this->resolveImageUrl($p),
+  50:             ]),
+  51:             'search' => $search,
+  52:         ]);
+  53:     }
+  54: 
+  55:     // ── Private ──────────────────────────────────────────────────────────
+  56: 
+  57:     private function getActiveProducts(): \Illuminate\Support\Collection
+  58:     {
+  59:         return Product::where('is_active', true)
+  60:             ->orderBy('created_at', 'desc')
+  61:             ->get()
+  62:             ->map(fn (Product $product) => [
+  63:                 'id'          => $product->id,
+  64:                 'name'        => $product->name,
+  65:                 'slug'        => $product->slug,
+  66:                 'description' => $product->description,
+  67:                 'harga_awal'  => (float) $product->harga_awal,
+  68:                 'diskon'      => (float) $product->diskon,
+  69:                 'harga_akhir' => (float) $product->harga_akhir,
+  70:                 'point_value' => (float) $product->point_value,
+  71:                 'type'        => $product->type,
+  72:                 'stock'       => (int) $product->stock,
+  73:                 'image'       => $this->resolveImageUrl($product),
+  74:             ]);
+  75:     }
+  76: 
+  77: 
+  78:     /**
+  79:      * Resolve the public image URL from a product's image field.
+  80:      */
+  81:     private function resolveImageUrl(Product $product): ?string
+  82:     {
+  83:         $image = $product->image;
+  84: 
+  85:         if (!is_array($image) || !isset($image[0])) {
+  86:             return null;
+  87:         }
+  88: 
+  89:         $first = $image[0];
+  90: 
+  91:         if (is_array($first)) {
+  92:             if (!empty($first['url'])) {
+  93:                 $url = (string) $first['url'];
+  94:                 return str_starts_with($url, 'http')
+  95:                     ? $url
+  96:                     : route('media.public', ['path' => $this->normalizePublicStoragePath($url)]);
+  97:             }
+  98:             if (!empty($first['path'])) {
+  99:                 return route('media.public', ['path' => ltrim((string) $first['path'], '/')]);
+ 100:             }
+ 101:         }
+ 102: 
+ 103:         if (is_string($first) && $first !== '') {
+ 104:             return str_starts_with($first, 'http')
+ 105:                 ? $first
+ 106:                 : route('media.public', ['path' => $this->normalizePublicStoragePath($first)]);
+ 107:         }
+ 108: 
+ 109:         return null;
+ 110:     }
+ 111: 
+ 112:     private function normalizePublicStoragePath(string $value): string
+ 113:     {
+ 114:         $normalized = ltrim($value, '/');
+ 115:         return preg_replace('#^storage/#', '', $normalized) ?? $normalized;
+ 116:     }
+ 117: }

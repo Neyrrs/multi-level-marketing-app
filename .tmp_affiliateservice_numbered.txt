@@ -1,0 +1,631 @@
+   1: <?php
+   2: 
+   3: namespace App\Services;
+   4: 
+   5: use App\Models\Affiliate;
+   6: use App\Models\ActivationCode;
+   7: use App\Services\ActivationService;
+   8: use App\Services\CommissionService;
+   9: use App\Models\Commission;
+  10: use App\Models\CommissionCalculation;
+  11: use App\Models\CommissionLedger;
+  12: use App\Models\CommissionMethod;
+  13: use App\Models\CommissionPlan;
+  14: use App\Models\MlmTree;
+  15: use App\Models\Order;
+  16: use App\Models\User;
+  17: use Illuminate\Support\Str;
+  18: use Illuminate\Http\Request;
+  19: 
+  20: class AffiliateService
+  21: {
+  22:     /**
+  23:      * Assign random sponsor dari active affiliates
+  24:      * Gunakan saat visitor baru akses app
+  25:      */
+  26:     public function assignRandomSponsor(): ?Affiliate
+  27:     {
+  28:         $randomActiveAffiliate = Affiliate::where('is_active', true)
+  29:             ->inRandomOrder()
+  30:             ->first();
+  31: 
+  32:         if ($randomActiveAffiliate) {
+  33:             return $randomActiveAffiliate;
+  34:         }
+  35: 
+  36:         return $this->getOrCreateAdminRootAffiliate();
+  37:     }
+  38: 
+  39:     /**
+  40:      * Get affiliate dari slug/username
+  41:      * Gunakan saat akses app.com/abdu
+  42:      */
+  43:     public function getAffiliateBySlug(string $slug): ?Affiliate
+  44:     {
+  45:         return Affiliate::where('slug', $slug)
+  46:             ->orWhere('username', $slug)
+  47:             ->where('is_active', true)
+  48:             ->first();
+  49:     }
+  50: 
+  51:     /**
+  52:      * Register new affiliate
+  53:      * Hanya bisa dilakukan oleh sponsor
+  54:      * 
+  55:      * @param User $newUser - Customer yang akan jadi affiliate
+  56:      * @param Affiliate $sponsor - Sponsor affiliate
+  57:      * @param string $position - 'left' atau 'right' dalam binary tree
+  58:      * @param ActivationCode $activationCode - Kode aktivasi
+  59:      */
+  60:     public function registerNewAffiliate(
+  61:         User $newUser,
+  62:         Affiliate $sponsor,
+  63:         string $position = 'left',
+  64:         ?ActivationCode $activationCode = null,
+  65:         ?Affiliate $placementUpline = null
+  66:     ): Affiliate {
+  67:         // Validate position
+  68:         if (!in_array($position, ['left', 'right'])) {
+  69:             throw new \InvalidArgumentException("Position harus 'left' atau 'right'");
+  70:         }
+  71: 
+  72:         // Validate user tidak sudah affiliate
+  73:         if ($newUser->affiliate()->exists()) {
+  74:             throw new \InvalidArgumentException("User sudah menjadi affiliate");
+  75:         }
+  76: 
+  77:         // Create activation code jika tidak provided
+  78:         if (!$activationCode) {
+  79:             $activationCode = $this->generateActivationCode($sponsor->user);
+  80:         }
+  81: 
+  82:         // Validate activation code
+  83:         if ($activationCode->status !== 'available') {
+  84:             throw new \InvalidArgumentException("Activation code tidak tersedia");
+  85:         }
+  86: 
+  87:         // Create username & slug dari user name
+  88:         $username = $this->generateUniqueUsername($newUser->name);
+  89:         $slug = Str::slug($username);
+  90: 
+  91:         $targetUpline = $placementUpline && ((int) $placementUpline->sponsor_id === (int) $sponsor->user_id || (int) $placementUpline->id === (int) $sponsor->id)
+  92:             ? $placementUpline
+  93:             : $sponsor;
+  94: 
+  95:         // Create affiliate record
+  96:         $defaultPlanId = $this->resolveDefaultPlanId();
+  97:         $newAffiliate = Affiliate::create([
+  98:             'user_id' => $newUser->id,
+  99:             'sponsor_id' => $sponsor->user_id,
+ 100:             'upline_id' => $targetUpline->user_id,
+ 101:             'activation_code_id' => $activationCode->id,
+ 102:             'commission_plan_id' => $defaultPlanId,
+ 103:             'username' => $username,
+ 104:             'slug' => $slug,
+ 105:             'position' => $position,
+ 106:             'level' => $targetUpline->level + 1,
+ 107:             'direct_downline' => 0,
+ 108:             'total_downline' => 0,
+ 109:             'left_count' => 0,
+ 110:             'right_count' => 0,
+ 111:             'pair_count' => 0,
+ 112:             'left_volume' => 0,
+ 113:             'right_volume' => 0,
+ 114:             'total_personal_volume' => 0,
+ 115:             'total_volume' => 0,
+ 116:             'is_active' => true,
+ 117:             'activated_at' => now(),
+ 118:             'active_until' => now()->addMonth(),
+ 119:         ]);
+ 120: 
+ 121:         // Ensure target upline has MLM tree node.
+ 122:         $parentTree = $targetUpline->mlmTree;
+ 123:         if (!$parentTree) {
+ 124:             $parentTree = MlmTree::create([
+ 125:                 'affiliate_id' => $targetUpline->id,
+ 126:                 'parent_id' => null,
+ 127:                 'position' => null,
+ 128:                 'depth' => 0,
+ 129:                 'left_position' => 1,
+ 130:                 'right_position' => 2,
+ 131:                 'path' => (string) $targetUpline->id,
+ 132:                 'lineage' => (string) $targetUpline->id,
+ 133:             ]);
+ 134:         }
+ 135: 
+ 136:         // Create MLM Tree node for new affiliate under sponsor tree.
+ 137:         MlmTree::create([
+ 138:             'affiliate_id' => $newAffiliate->id,
+ 139:             'parent_id' => $targetUpline->id,
+ 140:             'position' => $position,
+ 141:             'depth' => max(1, (int) $newAffiliate->level),
+ 142:             'left_position' => 0,
+ 143:             'right_position' => 0,
+ 144:             'path' => trim(($parentTree->path ? $parentTree->path . '/' : '') . $newAffiliate->id, '/'),
+ 145:             'lineage' => trim(($parentTree->lineage ? $parentTree->lineage . ' > ' : '') . $newAffiliate->id, ' >'),
+ 146:         ]);
+ 147: 
+ 148:         $this->updateNestedSet($newAffiliate->id);
+ 149: 
+ 150:         // Consume one usage from activation code.
+ 151:         $remainingUsage = (int) ($activationCode->remaining_usage ?? $activationCode->usage_count ?? 1);
+ 152:         $remainingUsage = max(0, $remainingUsage - 1);
+ 153: 
+ 154:         $activationCode->update([
+ 155:             'status' => $remainingUsage <= 0 ? 'used' : 'available',
+ 156:             'remaining_usage' => $remainingUsage,
+ 157:             'used_by' => $newUser->id,
+ 158:             'used_at' => now(),
+ 159:         ]);
+ 160: 
+ 161:         // Update sponsor + target upline counters
+ 162:         $sponsor->increment('direct_downline');
+ 163:         if ($position === 'left') {
+ 164:             $targetUpline->increment('left_count');
+ 165:         } else {
+ 166:             $targetUpline->increment('right_count');
+ 167:         }
+ 168: 
+ 169:         return $newAffiliate;
+ 170:     }
+ 171: 
+ 172:     /**
+ 173:      * Generate activation codes dari package purchase
+ 174:      * Codes diberikan ke SPONSOR (bukan buyer)
+ 175:      * 
+ 176:      * @param Order $order - Order yang just created
+ 177:      * @param int $count - Jumlah codes yang generate
+ 178:      */
+ 179:     public function generateActivationCodesFromOrder(Order $order, int $count = 1): array
+ 180:     {
+ 181:         // Delegate to ActivationService to centralize creation
+ 182:         $activationService = new ActivationService();
+ 183:         return $activationService->generateFromOrder($order, $count);
+ 184:     }
+ 185: 
+ 186:     /**
+ 187:      * Generate single activation code (manual)
+ 188:      */
+ 189:     public function generateActivationCode(
+ 190:         User $owner,
+ 191:         ?int $usageCount = 1,
+ 192:         ?string $productType = null
+ 193:     ): ActivationCode {
+ 194:         $activationService = new ActivationService();
+ 195:         // Use package_id = null when not known
+ 196:         return $activationService->generateCodeWithOwner($productType ? (int)$productType : 0, $owner->id, $usageCount ?? 1);
+ 197:     }
+ 198: 
+ 199:     /**
+ 200:      * Apply commission untuk order
+ 201:      * Follow commission method & rules yang sudah di-setup di database
+ 202:      * 
+ 203:      * @param Order $order
+ 204:      * @param CommissionMethod|null $method - Jika null, gunakan default
+ 205:      */
+ 206:     public function applyCommission(
+ 207:         Order $order,
+ 208:         ?CommissionMethod $method = null
+ 209:     ): array {
+ 210:         $commissions = [];
+ 211: 
+ 212:         // Get commission method (default: Direct Commission)
+ 213:         if (!$method) {
+ 214:             $method = CommissionMethod::where('name', 'Direct Commission - Percentage')
+ 215:                 ->where('is_active', true)
+ 216:                 ->first();
+ 217:         }
+ 218: 
+ 219:         if (!$method || !$method->is_active) {
+ 220:             return $commissions;
+ 221:         }
+ 222: 
+ 223:         // Get rules ordered by priority
+ 224:         $rules = $method->rules()
+ 225:             ->where('is_active', true)
+ 226:             ->orderBy('priority')
+ 227:             ->get();
+ 228: 
+ 229:         // Get seller affiliate
+ 230:         $currentAffiliate = $order->affiliate;
+ 231:         if (!$currentAffiliate) {
+ 232:             return $commissions;
+ 233:         }
+ 234: 
+ 235:         // Loop through levels & apply commission
+ 236:         $level = 1;
+ 237:         $tempAffiliate = $currentAffiliate;
+ 238: 
+ 239:         while ($tempAffiliate && $level <= 5) {  // Max 5 levels deep
+ 240:             // Find rule by priority matching level
+ 241:             $rule = $rules->where('priority', $level)->first();
+ 242:             if (!$rule) {
+ 243:                 break;
+ 244:             }
+ 245: 
+ 246:             // Calculate commission
+ 247:             $commissionAmount = $this->calculateCommissionAmount(
+ 248:                 $order->total_amount,
+ 249:                 $rule
+ 250:             );
+ 251: 
+ 252:             if ($commissionAmount <= 0) {
+ 253:                 break;
+ 254:             }
+ 255: 
+ 256:                 // Delegate creation to CommissionService
+ 257:                 $commissionService = new CommissionService();
+ 258:                 $commission = $commissionService->distributeCommission(
+ 259:                     $tempAffiliate->id,
+ 260:                     $commissionAmount,
+ 261:                     $method->id,
+ 262:                     $rule->id,
+ 263:                     'level',
+ 264:                     $order->id,
+ 265:                     $level
+ 266:                 );
+ 267: 
+ 268:                 $commissions[] = $commission;
+ 269: 
+ 270:             // Move to next level (parent affiliate)
+ 271:             $tempAffiliate = Affiliate::where('user_id', $tempAffiliate->upline_id)
+ 272:                 ->first();
+ 273:             $level++;
+ 274:         }
+ 275: 
+ 276:         return $commissions;
+ 277:     }
+ 278: 
+ 279:     /**
+ 280:      * Approve commission oleh admin
+ 281:      */
+ 282:     public function approveCommission(
+ 283:         Commission $commission,
+ 284:         User $approver
+ 285:     ): void {
+ 286:         $commission->update([
+ 287:             'status' => 'approved',
+ 288:             'approved_at' => now(),
+ 289:             'approved_by' => $approver->id,
+ 290:         ]);
+ 291: 
+ 292:         CommissionLedger::create([
+ 293:             'affiliate_id' => $commission->affiliate_id,
+ 294:             'commission_id' => $commission->id,
+ 295:             'order_id' => $commission->order_id,
+ 296:             'action' => 'approved',
+ 297:             'description' => "Commission approved by {$approver->name}",
+ 298:         ]);
+ 299:     }
+ 300: 
+ 301:     /**
+ 302:      * Get affiliate summary/statistics
+ 303:      */
+ 304:     public function getAffiliateSummary(Affiliate $affiliate): array
+ 305:     {
+ 306:         $totalSales = Order::where('affiliate_id', $affiliate->id)
+ 307:             ->where('status', 'completed')
+ 308:             ->sum('total_amount');
+ 309: 
+ 310:         $totalCommission = Commission::where('affiliate_id', $affiliate->id)
+ 311:             ->where('status', '!=', 'rejected')
+ 312:             ->sum('amount_net');
+ 313: 
+ 314:         $directDownline = Affiliate::where('upline_id', $affiliate->user_id)->count();
+ 315: 
+ 316:         $totalDownline = Affiliate::where('upline_id', $affiliate->user_id)
+ 317:             ->orWhere('sponsor_id', $affiliate->user_id)
+ 318:             ->count();
+ 319: 
+ 320:         return [
+ 321:             'affiliate_id' => $affiliate->id,
+ 322:             'name' => $affiliate->user->name,
+ 323:             'username' => $affiliate->username,
+ 324:             'slug' => $affiliate->slug,
+ 325:             'level' => $affiliate->level,
+ 326:             'generation' => $affiliate->total_downline,
+ 327:             'direct_downline' => $directDownline,
+ 328:             'total_downline' => $totalDownline,
+ 329:             'total_sales' => $totalSales,
+ 330:             'total_commission' => $totalCommission,
+ 331:             'left_volume' => $affiliate->left_volume,
+ 332:             'right_volume' => $affiliate->right_volume,
+ 333:             'pair_volume' => min($affiliate->left_volume, $affiliate->right_volume),
+ 334:             'status' => $affiliate->is_active ? 'Active' : 'Inactive',
+ 335:         ];
+ 336:     }
+ 337: 
+ 338:     /**
+ 339:      * Private helper: Generate unique code
+ 340:      */
+ 341:     private function generateUniqueCode(int $length = 12): string
+ 342:     {
+ 343:         do {
+ 344:             $code = strtoupper(Str::random($length));
+ 345:         } while (ActivationCode::where('code', $code)->exists());
+ 346: 
+ 347:         return $code;
+ 348:     }
+ 349: 
+ 350:     /**
+ 351:      * Private helper: Generate unique username
+ 352:      */
+ 353:     private function generateUniqueUsername(string $baseName): string
+ 354:     {
+ 355:         $username = Str::slug($baseName, '');
+ 356:         $original = $username;
+ 357:         $counter = 1;
+ 358: 
+ 359:         while (Affiliate::where('username', $username)->exists()) {
+ 360:             $username = $original . $counter;
+ 361:             $counter++;
+ 362:         }
+ 363: 
+ 364:         return $username;
+ 365:     }
+ 366: 
+ 367:     /**
+ 368:      * Private helper: Calculate commission amount
+ 369:      */
+ 370:     private function calculateCommissionAmount(float $orderAmount, $rule): float
+ 371:     {
+ 372:         // Check minimum sales requirement
+ 373:         if ($rule->min_sales && $orderAmount < $rule->min_sales) {
+ 374:             return 0;
+ 375:         }
+ 376: 
+ 377:         // Check maximum sales limit
+ 378:         if ($rule->max_sales && $orderAmount > $rule->max_sales) {
+ 379:             return 0;
+ 380:         }
+ 381: 
+ 382:         if ($rule->percentage) {
+ 383:             return ($orderAmount * $rule->percentage) / 100;
+ 384:         } elseif ($rule->fixed_amount) {
+ 385:             return $rule->fixed_amount;
+ 386:         }
+ 387: 
+ 388:         return 0;
+ 389:     }
+ 390: 
+ 391:     /**
+ 392:      * Create a downline affiliate under a sponsor.
+ 393:      * Returns the created Affiliate model.
+ 394:      */
+ 395:     public function createDownline(int $sponsorId, int $packageId, string $position = 'left') : Affiliate
+ 396:     {
+ 397:         $sponsor = Affiliate::findOrFail($sponsorId);
+ 398: 
+ 399:         // Create a user placeholder for the downline (email generated)
+ 400:         $user = User::create([
+ 401:             'name' => 'affiliate_' . uniqid(),
+ 402:             'email' => 'aff_' . uniqid() . '@example.local',
+ 403:             'password' => bcrypt('password'),
+ 404:             'email_verified_at' => now(),
+ 405:         ]);
+ 406: 
+ 407:         // Create affiliate using existing logic
+ 408:         return $this->registerNewAffiliate($user, $sponsor, $position, null);
+ 409:     }
+ 410: 
+ 411:     /**
+ 412:      * Place affiliate position (left/right) under its sponsor/upline.
+ 413:      */
+ 414:     public function placePosition(int $affiliateId, string $side): Affiliate
+ 415:     {
+ 416:         $affiliate = Affiliate::findOrFail($affiliateId);
+ 417:         if (!in_array($side, ['left', 'right'])) {
+ 418:             throw new \InvalidArgumentException('Side must be left or right');
+ 419:         }
+ 420: 
+ 421:         $affiliate->update(['position' => $side]);
+ 422:         return $affiliate;
+ 423:     }
+ 424: 
+ 425:     /**
+ 426:      * Calculate depth (level) of an affiliate in the tree.
+ 427:      */
+ 428:     public function calculateDepth(int $affiliateId): int
+ 429:     {
+ 430:         $affiliate = Affiliate::findOrFail($affiliateId);
+ 431:         $depth = 0;
+ 432:         $current = $affiliate;
+ 433:         while ($current && $current->upline_id) {
+ 434:             $depth++;
+ 435:             $current = Affiliate::where('user_id', $current->upline_id)->first();
+ 436:         }
+ 437: 
+ 438:         return $depth;
+ 439:     }
+ 440: 
+ 441:     /**
+ 442:      * Get tree structure (downlines) for visualization.
+ 443:      */
+ 444:     public function getTree(int $affiliateId): array
+ 445:     {
+ 446:         $root = Affiliate::with('user')->findOrFail($affiliateId);
+ 447: 
+ 448:         $build = function (Affiliate $node) use (&$build) {
+ 449:             $children = Affiliate::where('upline_id', $node->user_id)->get();
+ 450:             return [
+ 451:                 'id' => $node->id,
+ 452:                 'username' => $node->username,
+ 453:                 'user' => $node->user->name ?? null,
+ 454:                 'position' => $node->position,
+ 455:                 'children' => $children->map(fn($c) => $build($c))->toArray(),
+ 456:             ];
+ 457:         };
+ 458: 
+ 459:         return $build($root);
+ 460:     }
+ 461: 
+ 462:     /**
+ 463:      * Create a pending affiliate record (awaiting user confirmation).
+ 464:      */
+ 465:     public function registerPendingAffiliate(
+ 466:         User $user,
+ 467:         Affiliate $sponsor,
+ 468:         ?ActivationCode $activationCode = null,
+ 469:         string $requestedPosition = 'left'
+ 470:     ): Affiliate
+ 471:     {
+ 472:         $requestedPosition = in_array($requestedPosition, ['left', 'right'], true)
+ 473:             ? $requestedPosition
+ 474:             : 'left';
+ 475: 
+ 476:         // don't create mlm tree node yet; wait for confirmation
+ 477:         $affiliate = Affiliate::create([
+ 478:             'user_id' => $user->id,
+ 479:             'sponsor_id' => $sponsor->user_id,
+ 480:             'upline_id' => $sponsor->user_id,
+ 481:             'activation_code_id' => $activationCode?->id,
+ 482:             'commission_plan_id' => $this->resolveDefaultPlanId(),
+ 483:             'username' => $this->generateUniqueUsername($user->name),
+ 484:             'slug' => Str::slug($user->name) . '-' . uniqid(),
+ 485:             'position' => $requestedPosition,
+ 486:             'level' => $sponsor->level + 1,
+ 487:             'is_active' => false,
+ 488:         ]);
+ 489: 
+ 490:         return $affiliate;
+ 491:     }
+ 492: 
+ 493:     /**
+ 494:      * Confirm a pending affiliate and place them into the tree.
+ 495:      */
+ 496:     public function confirmAffiliate(int $affiliateId, string $position = 'left', ?Affiliate $placementUpline = null): Affiliate
+ 497:     {
+ 498:         $affiliate = Affiliate::findOrFail($affiliateId);
+ 499:         if ($affiliate->is_active) {
+ 500:             return $affiliate; // already active
+ 501:         }
+ 502: 
+ 503:         $sponsor = Affiliate::where('user_id', $affiliate->sponsor_id)->first();
+ 504:         $targetUpline = $placementUpline && $sponsor
+ 505:             && ((int) $placementUpline->sponsor_id === (int) $sponsor->user_id || (int) $placementUpline->id === (int) $sponsor->id)
+ 506:             ? $placementUpline
+ 507:             : $sponsor;
+ 508: 
+ 509:         // set position and active
+ 510:         $defaultPlanId = $this->resolveDefaultPlanId();
+ 511:         $affiliate->update([
+ 512:             'position' => in_array($position, ['left','right']) ? $position : 'none',
+ 513:             'upline_id' => $targetUpline?->user_id,
+ 514:             'level' => $targetUpline ? ($targetUpline->level + 1) : $affiliate->level,
+ 515:             'is_active' => true,
+ 516:             'activated_at' => now(),
+ 517:             'active_until' => now()->addMonth(),
+ 518:             'commission_plan_id' => $affiliate->commission_plan_id ?: $defaultPlanId,
+ 519:         ]);
+ 520: 
+ 521:         // Promote user role to affiliate only after approval.
+ 522:         $affiliate->user?->syncRoles(['affiliate']);
+ 523: 
+ 524:         // create mlm tree node under selected upline tree
+ 525:         $parentTree = $targetUpline?->mlmTree ?? null;
+ 526:         $parentId = $targetUpline?->id ?? null;
+ 527: 
+ 528:         $node = MlmTree::create([
+ 529:             'affiliate_id' => $affiliate->id,
+ 530:             'parent_id' => $parentId,
+ 531:             'position' => $affiliate->position,
+ 532:             'depth' => $affiliate->level ?? 1,
+ 533:             'path' => null,
+ 534:         ]);
+ 535: 
+ 536:         // recalc nested set
+ 537:         $this->updateNestedSet($affiliate->id);
+ 538: 
+ 539:         return $affiliate;
+ 540:     }
+ 541: 
+ 542:     /**
+ 543:      * Recalculate nested set positions for MLM tree.
+ 544:      * This is a recursive DFS assigner starting from root nodes.
+ 545:      */
+ 546:     public function updateNestedSet(?int $changedAffiliateId = null): void
+ 547:     {
+ 548:         // start from all root nodes (parent_id is null)
+ 549:         $counter = 1;
+ 550: 
+ 551:         $roots = MlmTree::whereNull('parent_id')->orderBy('id')->get();
+ 552: 
+ 553:         $recurse = function ($node) use (&$recurse, &$counter) {
+ 554:             $left = $counter++;
+ 555:             $children = MlmTree::where('parent_id', $node->affiliate_id)->orderBy('id')->get();
+ 556:             foreach ($children as $child) {
+ 557:                 $recurse($child);
+ 558:             }
+ 559:             $right = $counter++;
+ 560: 
+ 561:             $node->update(['left_position' => $left, 'right_position' => $right]);
+ 562:         };
+ 563: 
+ 564:         foreach ($roots as $root) {
+ 565:             $recurse($root);
+ 566:         }
+ 567:     }
+ 568: 
+ 569:     private function resolveDefaultPlanId(): ?int
+ 570:     {
+ 571:         $defaultPlan = CommissionPlan::query()
+ 572:             ->where('is_default', true)
+ 573:             ->where('is_active', true)
+ 574:             ->first();
+ 575: 
+ 576:         return $defaultPlan?->id;
+ 577:     }
+ 578: 
+ 579:     /**
+ 580:      * Fallback sponsor when network has no active affiliate:
+ 581:      * create/get root affiliate from first admin account.
+ 582:      */
+ 583:     private function getOrCreateAdminRootAffiliate(): ?Affiliate
+ 584:     {
+ 585:         $adminUser = User::query()
+ 586:             ->whereHas('roles', fn ($q) => $q->where('name', 'admin'))
+ 587:             ->orderBy('id')
+ 588:             ->first();
+ 589: 
+ 590:         if (!$adminUser) {
+ 591:             return null;
+ 592:         }
+ 593: 
+ 594:         $existing = Affiliate::query()->where('user_id', $adminUser->id)->first();
+ 595:         if ($existing) {
+ 596:             if (!$existing->is_active) {
+ 597:                 $existing->update([
+ 598:                     'is_active' => true,
+ 599:                     'activated_at' => $existing->activated_at ?? now(),
+ 600:                     'active_until' => $existing->active_until ?? now()->addMonth(),
+ 601:                 ]);
+ 602:             }
+ 603: 
+ 604:             return $existing;
+ 605:         }
+ 606: 
+ 607:         return Affiliate::create([
+ 608:             'user_id' => $adminUser->id,
+ 609:             'username' => 'admin' . $adminUser->id,
+ 610:             'slug' => 'admin-' . $adminUser->id,
+ 611:             'sponsor_id' => null,
+ 612:             'upline_id' => null,
+ 613:             'activation_code_id' => null,
+ 614:             'commission_plan_id' => $this->resolveDefaultPlanId(),
+ 615:             'position' => 'none',
+ 616:             'level' => 1,
+ 617:             'direct_downline' => 0,
+ 618:             'total_downline' => 0,
+ 619:             'left_count' => 0,
+ 620:             'right_count' => 0,
+ 621:             'pair_count' => 0,
+ 622:             'left_volume' => 0,
+ 623:             'right_volume' => 0,
+ 624:             'total_personal_volume' => 0,
+ 625:             'total_volume' => 0,
+ 626:             'is_active' => true,
+ 627:             'activated_at' => now(),
+ 628:             'active_until' => now()->addMonth(),
+ 629:         ]);
+ 630:     }
+ 631: }

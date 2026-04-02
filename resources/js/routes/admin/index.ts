@@ -173,7 +173,7 @@ payoutReport.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     payoutReport.form = payoutReportForm
 /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
 export const productManagement = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -187,7 +187,7 @@ productManagement.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
 productManagement.url = (options?: RouteQueryOptions) => {
@@ -195,7 +195,7 @@ productManagement.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
 productManagement.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -203,7 +203,7 @@ productManagement.get = (options?: RouteQueryOptions): RouteDefinition<'get'> =>
     method: 'get',
 })
 /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
 productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -212,7 +212,7 @@ productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 })
 
     /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
     const productManagementForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -221,7 +221,7 @@ productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     })
 
             /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
         productManagementForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -229,7 +229,7 @@ productManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
             method: 'get',
         })
             /**
- * @see routes/web.php:110
+ * @see routes/web.php:112
  * @route '/admin/product-management'
  */
         productManagementForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -322,7 +322,7 @@ affiliateManagement.head = (options?: RouteQueryOptions): RouteDefinition<'head'
     
     affiliateManagement.form = affiliateManagementForm
 /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
 export const commissionSetting = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -336,7 +336,7 @@ commissionSetting.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
 commissionSetting.url = (options?: RouteQueryOptions) => {
@@ -344,7 +344,7 @@ commissionSetting.url = (options?: RouteQueryOptions) => {
 }
 
 /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
 commissionSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -352,7 +352,7 @@ commissionSetting.get = (options?: RouteQueryOptions): RouteDefinition<'get'> =>
     method: 'get',
 })
 /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
 commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -361,7 +361,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
 })
 
     /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
     const commissionSettingForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -370,7 +370,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
     })
 
             /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
         commissionSettingForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -378,7 +378,7 @@ commissionSetting.head = (options?: RouteQueryOptions): RouteDefinition<'head'> 
             method: 'get',
         })
             /**
- * @see routes/web.php:114
+ * @see routes/web.php:116
  * @route '/admin/commission-setting'
  */
         commissionSettingForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

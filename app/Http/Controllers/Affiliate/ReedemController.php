@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\AffiliateService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -112,7 +113,6 @@ class ReedemController extends Controller
             'placement_affiliate_id' => 'nullable|integer|exists:affiliates,id',
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|string|email|max:255',
-            'password' => 'nullable|string|min:8|confirmed',
             'position' => 'required|in:left,right',
         ]);
 
@@ -192,9 +192,8 @@ class ReedemController extends Controller
 
             $name = trim((string) $request->input('name', ''));
             $email = trim((string) $request->input('email', ''));
-            $password = (string) $request->input('password', '');
 
-            if ($name === '' || $email === '' || $password === '') {
+            if ($name === '' || $email === '') {
                 throw new \InvalidArgumentException('Data user baru belum lengkap.');
             }
 
@@ -205,7 +204,7 @@ class ReedemController extends Controller
             $newUser = User::create([
                 'name' => $name,
                 'email' => $email,
-                'password' => Hash::make($password),
+                'password' => Hash::make(Str::random(16)),
                 'status' => 'active',
                 'email_verified_at' => now(),
             ]);

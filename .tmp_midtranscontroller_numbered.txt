@@ -1,0 +1,91 @@
+   1: <?php
+   2: 
+   3: namespace App\Http\Controllers\Webhooks;
+   4: 
+   5: use App\Http\Controllers\Controller;
+   6: use Illuminate\Http\Request;
+   7: use App\Services\OrderService;
+   8: use Illuminate\Support\Facades\Log;
+   9: use App\Models\Order;
+  10: 
+  11: class MidtransController extends Controller
+  12: {
+  13:     protected OrderService $orderService;
+  14: 
+  15:     public function __construct()
+  16:     {
+  17:         $this->orderService = new OrderService();
+  18:     }
+  19: 
+  20:     /**
+  21:      * Verify Midtrans webhook signature using OrderService helper.
+  22:      */
+  23:     public function verifySignature(Request $request): bool
+  24:     {
+  25:         try {
+  26:             return $this->orderService->verifyMidtransSignature($request);
+  27:         } catch (\Throwable $e) {
+  28:             Log::error('Midtrans signature verification error: ' . $e->getMessage());
+  29:             return false;
+  30:         }
+  31:     }
+  32: 
+  33:     /**
+  34:      * Production-ready webhook handler for Midtrans.
+  35:      */
+  36:     public function handle(Request $request)
+  37:     {
+  38:         // verify signature first
+  39:         if (!$this->verifySignature($request)) {
+  40:             Log::warning('Midtrans webhook: invalid signature');
+  41:             return response()->json(['error' => 'invalid signature'], 400);
+  42:         }
+  43: 
+  44:         $midtransOrderId = $request->input('order_id') ?: $request->input('orderId') ?: $request->input('order_id');
+  45:         if (!$midtransOrderId) {
+  46:             Log::warning('Midtrans webhook: missing order id');
+  47:             return response()->json(['error' => 'no order id'], 400);
+  48:         }
+  49: 
+  50:         $order = Order::where('midtrans_order_id', $midtransOrderId)->first();
+  51:         if (!$order) {
+  52:             Log::warning('Midtrans webhook: order not found ' . $midtransOrderId);
+  53:             // return 200 to acknowledge to Midtrans (prevents retries) but log for investigation
+  54:             return response()->json(['ok']);
+  55:         }
+  56: 
+  57:         try {
+  58:             $transactionStatus = (string) $request->input('transaction_status');
+  59:             $fraudStatus = (string) $request->input('fraud_status');
+  60: 
+  61:             $isPaid = $transactionStatus === 'settlement'
+  62:                 || ($transactionStatus === 'capture' && ($fraudStatus === '' || $fraudStatus === 'accept'));
+  63: 
+  64:             if ($isPaid) {
+  65:                 $processed = $this->orderService->processPayment($order->id, $request);
+  66:                 if ($processed) {
+  67:                     return response()->json(['ok']);
+  68:                 }
+  69: 
+  70:                 Log::warning('Midtrans webhook: paid processing failed for order ' . $order->id);
+  71:                 return response()->json(['error' => 'processing failed'], 500);
+  72:             }
+  73: 
+  74:             if (in_array($transactionStatus, ['cancel', 'deny', 'failure', 'expire'], true)) {
+  75:                 $this->orderService->cancelPendingOrder(
+  76:                     $order->id,
+  77:                     'Midtrans status: ' . $transactionStatus,
+  78:                     $transactionStatus === 'expire' ? 'expired' : 'failed'
+  79:                 );
+  80:                 return response()->json(['ok']);
+  81:             }
+  82: 
+  83:             // keep acknowledged for non-final statuses like pending/challenge
+  84:             return response()->json(['ok']);
+  85:         } catch (\Throwable $e) {
+  86:             Log::error('Midtrans webhook exception: ' . $e->getMessage());
+  87:             // Respond 200 to avoid repeated retries, but surface logs
+  88:             return response()->json(['ok']);
+  89:         }
+  90:     }
+  91: }

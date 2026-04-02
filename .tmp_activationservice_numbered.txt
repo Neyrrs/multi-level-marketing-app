@@ -1,0 +1,123 @@
+   1: <?php
+   2: 
+   3: namespace App\Services;
+   4: 
+   5: use App\Models\ActivationCode;
+   6: use App\Models\Package;
+   7: use Illuminate\Support\Str;
+   8: use App\Models\Order;
+   9: 
+  10: class ActivationService
+  11: {
+  12:     public function generateCode(int $packageId): ActivationCode
+  13:     {
+  14:         // minimal implementation: create unique code and link to package
+  15:         do {
+  16:             $code = strtoupper(Str::random(12));
+  17:         } while (ActivationCode::where('code', $code)->exists());
+  18: 
+  19:         return ActivationCode::create([
+  20:             'code' => $code,
+  21:             'package_id' => $packageId,
+  22:             'status' => 'available',
+  23:             'usage_count' => 1,
+  24:             'remaining_usage' => 1,
+  25:             'valid_from' => now(),
+  26:             'valid_until' => now()->addMonths(1),
+  27:         ]);
+  28:     }
+  29: 
+  30:     public function assignToUser(int $userId, string $code): ?ActivationCode
+  31:     {
+  32:         $ac = ActivationCode::where('code', $code)->first();
+  33:         if (!$ac) return null;
+  34: 
+  35:         $ac->update(['owner_id' => $userId]);
+  36:         return $ac;
+  37:     }
+  38: 
+  39:     public function validateCode(string $code): bool
+  40:     {
+  41:         $ac = ActivationCode::where('code', $code)->first();
+  42:         if (!$ac) return false;
+  43:         if ($ac->status !== 'available') return false;
+  44:         if ($ac->valid_until && now()->greaterThan($ac->valid_until)) return false;
+  45:         if ($ac->remaining_usage !== null && $ac->remaining_usage <= 0) return false;
+  46:         return true;
+  47:     }
+  48: 
+  49:     /**
+  50:      * Generate codes from an Order. Codes ownership assigned to sponsor if exists.
+  51:      */
+  52:     public function generateFromOrder(Order $order, int $count = 1): array
+  53:     {
+  54:         $codes = [];
+  55:         $ownerUserId = $order->affiliate?->user_id ?? $order->user_id;
+  56:         $generatedByUserId = $order->affiliate?->user_id ?? $order->user_id;
+  57:         $orderType = strtolower((string) $order->product_type);
+  58:         $isLegacyPackageOrder = $orderType === 'package';
+  59:         $isBundleOrder = $orderType === 'bundle'
+  60:             || $order->items()
+  61:                 ->whereHas('product', function ($q) {
+  62:                     $q->whereRaw('LOWER(type) = ?', ['bundle']);
+  63:                 })
+  64:                 ->exists();
+  65:         $isGuestBundleOrder = (bool) ($order->user?->hasRole('guest')) && $isBundleOrder;
+  66:         $generatedFrom = $isGuestBundleOrder ? 'guest_bundle_order' : 'order';
+  67:         $notesPrefix = $isGuestBundleOrder
+  68:             ? "Guest bundle redeem-only | request_user_id={$order->user_id}"
+  69:             : 'Generated dari order';
+  70: 
+  71:         for ($i = 0; $i < $count; $i++) {
+  72:             do {
+  73:                 $code = strtoupper(Str::random(12));
+  74:             } while (ActivationCode::where('code', $code)->exists());
+  75: 
+  76:             $ac = ActivationCode::create([
+  77:                 'code' => $code,
+  78:                 'owner_id' => $ownerUserId,
+  79:                 'generated_by' => $generatedByUserId,
+  80:                 'generated_from' => $generatedFrom,
+  81:                 // Main flow uses product "bundle" type.
+  82:                 // Keep legacy package compatibility for older data.
+  83:                 'product_id' => $isLegacyPackageOrder ? null : $order->product_id,
+  84:                 'package_id' => $isLegacyPackageOrder && !$isBundleOrder ? $order->product_id : null,
+  85:                 'price' => $order->total_amount,
+  86:                 'value' => $order->total_amount,
+  87:                 'gives_commission' => true,
+  88:                 'commission_value' => ($order->total_amount * 10) / 100,
+  89:                 'usage_count' => 1,
+  90:                 'remaining_usage' => 1,
+  91:                 'status' => 'available',
+  92:                 'valid_from' => now(),
+  93:                 'valid_until' => now()->addMonths(1),
+  94:                 'notes' => "{$notesPrefix} | order={$order->order_number}",
+  95:             ]);
+  96: 
+  97:             $codes[] = $ac;
+  98:         }
+  99: 
+ 100:         return $codes;
+ 101:     }
+ 102: 
+ 103:     /**
+ 104:      * Generate single code linked to owner
+ 105:      */
+ 106:     public function generateCodeWithOwner(int $packageId, int $ownerId, int $usageCount = 1): ActivationCode
+ 107:     {
+ 108:         do {
+ 109:             $code = strtoupper(Str::random(12));
+ 110:         } while (ActivationCode::where('code', $code)->exists());
+ 111: 
+ 112:         return ActivationCode::create([
+ 113:             'code' => $code,
+ 114:             'package_id' => $packageId,
+ 115:             'owner_id' => $ownerId,
+ 116:             'status' => 'available',
+ 117:             'usage_count' => $usageCount,
+ 118:             'remaining_usage' => $usageCount,
+ 119:             'valid_from' => now(),
+ 120:             'valid_until' => now()->addMonths(1),
+ 121:         ]);
+ 122:     }
+ 123: }

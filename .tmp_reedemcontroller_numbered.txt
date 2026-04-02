@@ -1,0 +1,220 @@
+   1: <?php
+   2: 
+   3: namespace App\Http\Controllers\Affiliate;
+   4: 
+   5: use App\Http\Controllers\Controller;
+   6: use App\Models\Affiliate;
+   7: use App\Models\ActivationCode;
+   8: use App\Models\User;
+   9: use App\Services\AffiliateService;
+  10: use Illuminate\Support\Facades\DB;
+  11: use Illuminate\Support\Facades\Hash;
+  12: use Illuminate\Http\Request;
+  13: use Inertia\Inertia;
+  14: 
+  15: class ReedemController extends Controller
+  16: {
+  17:     /**
+  18:      * Display redemption page with available codes
+  19:      */
+  20:     public function index(Request $request)
+  21:     {
+  22:         $user = $request->user();
+  23:         $sponsorAffiliate = $user->affiliate;
+  24: 
+  25:         if (!$sponsorAffiliate) {
+  26:             return Inertia::render('affiliate/redeem/index', [
+  27:                 'availableCodes' => [],
+  28:                 'placementOptions' => [],
+  29:                 'defaultPlacementAffiliateId' => null,
+  30:             ]);
+  31:         }
+  32: 
+  33:         $codes = ActivationCode::where('owner_id', $user->id)
+  34:             ->where('status', 'available')
+  35:             ->with(['product'])
+  36:             ->get();
+  37: 
+  38:         $pendingByCode = Affiliate::query()
+  39:             ->where('sponsor_id', $user->id)
+  40:             ->where('is_active', false)
+  41:             ->whereNotNull('activation_code_id')
+  42:             ->whereIn('activation_code_id', $codes->pluck('id'))
+  43:             ->with('user:id,name,email')
+  44:             ->get()
+  45:             ->keyBy('activation_code_id');
+  46: 
+  47:         // Get available codes that this user can redeem
+  48:         $availableCodes = $codes
+  49:             ->map(function ($item) use ($pendingByCode) {
+  50:                 $pending = $pendingByCode->get($item->id);
+  51: 
+  52:                 return [
+  53:                     'id' => $item->id,
+  54:                     'code' => $item->code,
+  55:                     'product_name' => $item->product?->name ?? '-',
+  56:                     'remaining_usage' => (int) ($item->remaining_usage ?? $item->usage_count ?? 1),
+  57:                     'request_user' => $pending && $pending->user ? [
+  58:                         'id' => $pending->user->id,
+  59:                         'name' => $pending->user->name,
+  60:                         'email' => $pending->user->email,
+  61:                     ] : null,
+  62:                 ];
+  63:             })
+  64:             ->toArray();
+  65: 
+  66:         $placementCandidates = Affiliate::query()
+  67:             ->where(function ($q) use ($user, $sponsorAffiliate) {
+  68:                 $q->where('id', $sponsorAffiliate->id)
+  69:                     ->orWhere('sponsor_id', $user->id);
+  70:             })
+  71:             ->where('is_active', true)
+  72:             ->with('user:id,name')
+  73:             ->orderBy('level')
+  74:             ->orderBy('id')
+  75:             ->get();
+  76: 
+  77:         $placementOptions = $placementCandidates->map(function (Affiliate $candidate) {
+  78:             $leftTaken = Affiliate::query()
+  79:                 ->where('upline_id', $candidate->user_id)
+  80:                 ->where('position', 'left')
+  81:                 ->exists();
+  82:             $rightTaken = Affiliate::query()
+  83:                 ->where('upline_id', $candidate->user_id)
+  84:                 ->where('position', 'right')
+  85:                 ->exists();
+  86: 
+  87:             return [
+  88:                 'id' => $candidate->id,
+  89:                 'name' => $candidate->user?->name ?? '-',
+  90:                 'username' => $candidate->username,
+  91:                 'level' => (int) $candidate->level,
+  92:                 'left_available' => !$leftTaken,
+  93:                 'right_available' => !$rightTaken,
+  94:             ];
+  95:         })->values()->toArray();
+  96: 
+  97:         return Inertia::render('affiliate/redeem/index', [
+  98:             'availableCodes' => $availableCodes,
+  99:             'placementOptions' => $placementOptions,
+ 100:             'defaultPlacementAffiliateId' => $sponsorAffiliate->id,
+ 101:         ]);
+ 102:     }
+ 103: 
+ 104:     /**
+ 105:      * Store redemption (use activation code)
+ 106:      */
+ 107:     public function store(Request $request)
+ 108:     {
+ 109:         $request->validate([
+ 110:             'code_id' => 'required|integer|exists:activation_codes,id',
+ 111:             'request_user_id' => 'nullable|integer|exists:users,id',
+ 112:             'placement_affiliate_id' => 'nullable|integer|exists:affiliates,id',
+ 113:             'name' => 'nullable|string|max:255',
+ 114:             'email' => 'nullable|string|email|max:255',
+ 115:             'password' => 'nullable|string|min:8|confirmed',
+ 116:             'position' => 'required|in:left,right',
+ 117:         ]);
+ 118: 
+ 119:         $user = $request->user();
+ 120:         $sponsorAffiliate = $user->affiliate;
+ 121: 
+ 122:         if (!$sponsorAffiliate) {
+ 123:             return back()->withErrors(['sponsor' => 'Akun ini belum terdaftar sebagai affiliate aktif.']);
+ 124:         }
+ 125: 
+ 126:         $placementAffiliate = Affiliate::query()
+ 127:             ->where('id', $request->integer('placement_affiliate_id', $sponsorAffiliate->id))
+ 128:             ->where('is_active', true)
+ 129:             ->first();
+ 130: 
+ 131:         if (
+ 132:             !$placementAffiliate
+ 133:             || ((int) $placementAffiliate->id !== (int) $sponsorAffiliate->id
+ 134:                 && (int) $placementAffiliate->sponsor_id !== (int) $sponsorAffiliate->user_id)
+ 135:         ) {
+ 136:             return back()->withErrors(['placement_affiliate_id' => 'Node penempatan tidak valid.']);
+ 137:         }
+ 138: 
+ 139:         $position = $request->string('position')->toString();
+ 140:         $positionTaken = Affiliate::where('upline_id', $placementAffiliate->user_id)
+ 141:             ->where('position', $position)
+ 142:             ->exists();
+ 143: 
+ 144:         if ($positionTaken) {
+ 145:             return back()->withErrors([
+ 146:                 'position' => "Posisi {$position} sudah terisi. Pilih posisi lain.",
+ 147:             ]);
+ 148:         }
+ 149: 
+ 150:         $code = ActivationCode::where('id', $request->integer('code_id'))
+ 151:             ->where('owner_id', $user->id)
+ 152:             ->first();
+ 153: 
+ 154:         $remainingUsage = (int) ($code?->remaining_usage ?? $code?->usage_count ?? 1);
+ 155:         if (!$code || $code->status !== 'available' || $remainingUsage <= 0) {
+ 156:             return back()->withErrors(['code' => 'Kode tidak valid atau sudah digunakan']);
+ 157:         }
+ 158: 
+ 159:         $requestUserId = $request->integer('request_user_id');
+ 160:         $isGuestBundleCode = strtolower((string) $code->generated_from) === 'guest_bundle_order';
+ 161:         $expectedRequestUserId = null;
+ 162:         if (preg_match('/request_user_id=(\d+)/', (string) $code->notes, $m)) {
+ 163:             $expectedRequestUserId = (int) $m[1];
+ 164:         }
+ 165: 
+ 166:         if ($isGuestBundleCode && $requestUserId <= 0) {
+ 167:             return back()->withErrors([
+ 168:                 'request_user_id' => 'Kode ini khusus untuk request guest. Pilih data request user terlebih dahulu.',
+ 169:             ]);
+ 170:         }
+ 171: 
+ 172:         if ($isGuestBundleCode && $expectedRequestUserId && $requestUserId > 0 && $requestUserId !== $expectedRequestUserId) {
+ 173:             return back()->withErrors([
+ 174:                 'request_user_id' => 'Request user tidak sesuai dengan data kode aktivasi ini.',
+ 175:             ]);
+ 176:         }
+ 177: 
+ 178:         DB::transaction(function () use ($request, $sponsorAffiliate, $placementAffiliate, $code, $position, $requestUserId) {
+ 179:             if ($requestUserId > 0) {
+ 180:                 $pendingAffiliate = Affiliate::query()
+ 181:                     ->where('user_id', $requestUserId)
+ 182:                     ->where('sponsor_id', $sponsorAffiliate->user_id)
+ 183:                     ->where('activation_code_id', $code->id)
+ 184:                     ->where('is_active', false)
+ 185:                     ->first();
+ 186: 
+ 187:                 if ($pendingAffiliate) {
+ 188:                     app(AffiliateService::class)->confirmAffiliate($pendingAffiliate->id, $position, $placementAffiliate);
+ 189:                     return;
+ 190:                 }
+ 191:             }
+ 192: 
+ 193:             $name = trim((string) $request->input('name', ''));
+ 194:             $email = trim((string) $request->input('email', ''));
+ 195:             $password = (string) $request->input('password', '');
+ 196: 
+ 197:             if ($name === '' || $email === '' || $password === '') {
+ 198:                 throw new \InvalidArgumentException('Data user baru belum lengkap.');
+ 199:             }
+ 200: 
+ 201:             if (User::where('email', $email)->exists()) {
+ 202:                 throw new \InvalidArgumentException('Email user sudah terdaftar.');
+ 203:             }
+ 204: 
+ 205:             $newUser = User::create([
+ 206:                 'name' => $name,
+ 207:                 'email' => $email,
+ 208:                 'password' => Hash::make($password),
+ 209:                 'status' => 'active',
+ 210:                 'email_verified_at' => now(),
+ 211:             ]);
+ 212: 
+ 213:             $newUser->assignRole('affiliate');
+ 214: 
+ 215:             app(AffiliateService::class)->registerNewAffiliate($newUser, $sponsorAffiliate, $position, $code, $placementAffiliate);
+ 216:         });
+ 217: 
+ 218:         return back()->with('success', 'Redeem berhasil, akun affiliate baru sudah dibuat.');
+ 219:     }
+ 220: }

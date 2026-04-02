@@ -521,17 +521,42 @@ class AffiliateService
         // Promote user role to affiliate only after approval.
         $affiliate->user?->syncRoles(['affiliate']);
 
-        // create mlm tree node under selected upline tree
+        // ensure selected upline has a tree node first
         $parentTree = $targetUpline?->mlmTree ?? null;
+        if ($targetUpline && !$parentTree) {
+            $parentTree = MlmTree::create([
+                'affiliate_id' => $targetUpline->id,
+                'parent_id' => null,
+                'position' => null,
+                'depth' => 0,
+                'left_position' => 1,
+                'right_position' => 2,
+                'path' => (string) $targetUpline->id,
+                'lineage' => (string) $targetUpline->id,
+            ]);
+        }
+
         $parentId = $targetUpline?->id ?? null;
 
-        $node = MlmTree::create([
-            'affiliate_id' => $affiliate->id,
+        // upsert tree node for affiliate (handle retry/idempotent flow safely)
+        $node = MlmTree::where('affiliate_id', $affiliate->id)->first();
+        $treePayload = [
             'parent_id' => $parentId,
             'position' => $affiliate->position,
-            'depth' => $affiliate->level ?? 1,
-            'path' => null,
-        ]);
+            'depth' => max(1, (int) ($affiliate->level ?? 1)),
+            'left_position' => 0,
+            'right_position' => 0,
+            'path' => trim(($parentTree?->path ? $parentTree->path . '/' : '') . $affiliate->id, '/'),
+            'lineage' => trim(($parentTree?->lineage ? $parentTree->lineage . ' > ' : '') . $affiliate->id, ' >'),
+        ];
+
+        if ($node) {
+            $node->update($treePayload);
+        } else {
+            $node = MlmTree::create(array_merge([
+                'affiliate_id' => $affiliate->id,
+            ], $treePayload));
+        }
 
         // recalc nested set
         $this->updateNestedSet($affiliate->id);

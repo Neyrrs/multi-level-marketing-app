@@ -15,14 +15,15 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::firstOrCreate(
-            ['email' => 'test@example.com'],
+        $user = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
             [
-                'name' => 'Test User',
+                'name' => 'Test admin',
                 'password' => 'password',
                 'email_verified_at' => now(),
             ]
         );
+        $user->assignRole('admin');
 
         $this->call(RoleSeeder::class);
         $this->call(CommissionMethodSeeder::class);

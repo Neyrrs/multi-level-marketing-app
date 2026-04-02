@@ -1,7 +1,6 @@
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import {
     cart,
-    dashboard,
     home,
     login,
     logout,
@@ -71,6 +70,16 @@ const NavigationBar = () => {
         { path: mitra.url(), name: 'Mitra', protected: false },
         { path: product.url(), name: 'Produk', protected: false },
     ];
+
+    const getRoleDashboardPath = (): string => {
+        if (roleNames.includes('admin')) return '/admin/dashboard';
+        if (roleNames.includes('manager')) return '/manager/dashboard';
+        if (roleNames.includes('logistik')) return '/logistik/dashboard';
+        if (roleNames.includes('finance')) return '/finance/dashboard';
+        if (roleNames.includes('affiliate')) return '/affiliate/dashboard';
+        if (roleNames.includes('guest')) return '/dashboard';
+        return '/';
+    };
 
     const handleLogout = () => {
         cleanup();
@@ -153,7 +162,7 @@ const NavigationBar = () => {
                                                 </Button>
                                             </Link>
                                             {!isGuestRole && (
-                                                <Link href={dashboard.url()}>
+                                                <Link href={getRoleDashboardPath()}>
                                                     <Button
                                                         variant={'ghost'}
                                                         className="flex w-full justify-start text-left text-sidebar-accent-foreground hover:opacity-80"

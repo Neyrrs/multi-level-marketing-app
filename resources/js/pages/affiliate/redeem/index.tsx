@@ -40,8 +40,6 @@ export default function Redeem({ availableCodes, placementOptions = [], defaultP
         placement_affiliate_id: defaultPlacementAffiliateId ? String(defaultPlacementAffiliateId) : '',
         name: '',
         email: '',
-        password: '',
-        password_confirmation: '',
         position: 'left',
     });
 
@@ -53,14 +51,12 @@ export default function Redeem({ availableCodes, placementOptions = [], defaultP
         () => placementOptions.find((item) => String(item.id) === data.placement_affiliate_id),
         [placementOptions, data.placement_affiliate_id],
     );
-    const hasRequestUser = !!selectedCode?.request_user;
-
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         post('/affiliate/redeem', {
             preserveScroll: true,
             onSuccess: () => {
-                reset('name', 'email', 'password', 'password_confirmation');
+                reset('name', 'email');
             },
         });
     };
@@ -132,30 +128,6 @@ export default function Redeem({ availableCodes, placementOptions = [], defaultP
                                     required
                                 />
                                 {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
-                            </div>
-
-                            <div className="grid gap-2 md:grid-cols-2">
-                                <div className="space-y-2">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Input
-                                        id="password"
-                                        type="password"
-                                        value={data.password}
-                                        onChange={(e) => setData('password', e.target.value)}
-                                        required={!hasRequestUser}
-                                    />
-                                    {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="password_confirmation">Konfirmasi Password</Label>
-                                    <Input
-                                        id="password_confirmation"
-                                        type="password"
-                                        value={data.password_confirmation}
-                                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                                        required={!hasRequestUser}
-                                    />
-                                </div>
                             </div>
 
                             <div className="grid gap-2">

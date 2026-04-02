@@ -28,6 +28,7 @@ export interface CartStorageItem {
     qty: number;
     image: string;
     stock: number;
+    type?: string;
     slug?: string;
 }
 
@@ -60,8 +61,11 @@ export function saveCart(items: CartStorageItem[], userId?: number | null): void
 export function addToCart(product: ProductItem, qty = 1, userId?: number | null): void {
     const cart = getCart(userId);
     const existing = cart.find((i) => i.id === product.id);
+    const productType = String(product.type ?? 'single').toLowerCase();
+    const isBundle = productType === 'bundle' || productType === 'package';
     if (existing) {
         existing.qty = Math.min(existing.qty + qty, product.stock ?? 99);
+        existing.type = existing.type ?? productType;
     } else {
         cart.push({
             id: product.id,
@@ -71,9 +75,23 @@ export function addToCart(product: ProductItem, qty = 1, userId?: number | null)
             qty,
             image: product.image ?? '',
             stock: product.stock ?? 99,
+            type: productType,
             slug: product.slug,
         });
     }
+
+    // Guest only: allow max 1 bundle item in cart at a time (frontend guard).
+    if (!userId && isBundle) {
+        const totalBundleQty = cart.reduce((sum, item) => {
+            const type = String(item.type ?? '').toLowerCase();
+            return sum + ((type === 'bundle' || type === 'package') ? (item.qty ?? 0) : 0);
+        }, 0);
+
+        if (totalBundleQty > 1) {
+            throw new Error('Guest hanya bisa menambahkan 1 produk bundle ke keranjang.');
+        }
+    }
+
     saveCart(cart, userId);
 }
 
@@ -93,6 +111,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }, [product.image]);
 
     const handleAddToCart = () => {
+        if (Number(product.stock ?? 0) <= 0) {
+            toast.error('Stok produk habis', {
+                description: 'Produk ini sedang tidak tersedia untuk ditambahkan ke keranjang.',
+            });
+            return;
+        }
+
         if (!auth.user) {
             toast.error('Harus login dulu', {
                 description: 'Silakan login dulu sebelum menambahkan produk ke keranjang.',
@@ -100,7 +125,34 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             return;
         }
 
-        addToCart(product, 1, auth.user.id);
+        try {
+            const productType = String(product.type ?? 'single').toLowerCase();
+            const isBundle = productType === 'bundle' || productType === 'package';
+            const currentCart = getCart(auth.user.id);
+            const currentBundleQty = currentCart.reduce((sum, item) => {
+                const type = String(item.type ?? '').toLowerCase();
+                return sum + ((type === 'bundle' || type === 'package') ? (item.qty ?? 0) : 0);
+            }, 0);
+
+            const roleNames = Array.isArray(auth.user.roles)
+                ? auth.user.roles.map((r: any) => String(r?.name ?? '').toLowerCase())
+                : [];
+            const isGuestRole = roleNames.includes('guest');
+
+            if (isGuestRole && isBundle && currentBundleQty >= 1) {
+                toast.error('Batas produk bundle', {
+                    description: 'Guest hanya bisa menambahkan 1 produk bundle ke keranjang.',
+                });
+                return;
+            }
+
+            addToCart(product, 1, auth.user.id);
+        } catch (error) {
+            toast.error('Tidak bisa menambah produk', {
+                description: error instanceof Error ? error.message : 'Terjadi kesalahan saat menambahkan produk.',
+            });
+            return;
+        }
         setAdded(true);
         setTimeout(() => setAdded(false), 1500);
     };
@@ -109,6 +161,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         `Rp${value.toLocaleString('id-ID')}`;
 
     const hasDiscount = product.diskon && product.diskon > 0;
+    const productType = String(product.type ?? 'single').toLowerCase();
+    const isBundle = productType === 'bundle' || productType === 'package';
+    const categoryLabel = isBundle ? 'Bundle' : 'Single';
 
     return (
         <div className="flex h-fit flex-col gap-0 rounded-xl bg-slate-200 shadow-md w-65 md:w-75 shrink-0 overflow-hidden">
@@ -129,11 +184,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <div className="flex h-fit min-h-50 w-full flex-col justify-between gap-4 md:gap-8 rounded-xl bg-white px-4 py-6">
                 <div className="flex flex-col gap-2">
+                    <div className="flex">
+                        <span
+                            className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                                isBundle
+                                    ? 'bg-blue-100 text-blue-700'
+                                    : 'bg-emerald-100 text-emerald-700'
+                            }`}
+                        >
+                            {categoryLabel}
+                        </span>
+                    </div>
                     <h2 className="text-base md:text-lg font-bold line-clamp-2">
                         {product.name}
                     </h2>
                     <p className="line-clamp-3 min-h-12 text-xs md:text-sm text-gray-500">
                         {product.description || 'Tidak ada deskripsi.'}
+                    </p>
+                    <p
+                        className={`text-xs font-medium ${
+                            (product.stock ?? 0) > 0 ? 'text-emerald-600' : 'text-red-600'
+                        }`}
+                    >
+                        {(product.stock ?? 0) > 0
+                            ? `Sisa stok: ${product.stock}`
+                            : 'Stok kosong!'}
                     </p>
                 </div>
 
@@ -153,9 +228,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         <Button
                             size={'lg'}
                             onClick={handleAddToCart}
-                            disabled={added || (product.stock ?? 0) === 0}
+                            disabled={added || Number(product.stock ?? 0) <= 0}
                             variant={added ? 'outline' : 'default'}
-                            className="transition-all duration-300"
+                            className="transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {added ? 'Ditambahkan ✓' : (
                                 <>Keranjang <ShoppingCart className="ml-1 h-4 w-4" /></>

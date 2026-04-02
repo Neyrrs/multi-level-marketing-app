@@ -17,6 +17,8 @@ use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicCartController;
 use App\Http\Middleware\EnsureAffiliateActivePeriod;
+use App\Models\Order;
+use App\Services\OrderService;
 
 // Route::get('/', function () {
 //     return Inertia::render('welcome', [
@@ -316,7 +318,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
 Route::get('/', function (Request $request) {
-    // Auto-assign random affiliate referral for new public session.
+   
     if (!$request->session()->has('ref_affiliate_id')) {
         $affiliate = app(\App\Services\AffiliateService::class)->assignRandomSponsor();
         if ($affiliate) {
@@ -357,9 +359,20 @@ Route::get('/profile', function () {
     return Inertia::render('profile');
 })->name('profile');
 
-// Cart page — render with user profile data (user may be null for guests)
+
 Route::get('/cart', function (Request $request) {
     $user = $request->user();
+    if ($user) {
+        Order::where('user_id', $user->id)
+            ->where('payment_method', 'midtrans_snap')
+            ->where('payment_status', 'pending')
+            ->where('status', 'pending')
+            ->latest('id')
+            ->limit(20)
+            ->get()
+            ->each(fn (Order $order) => app(OrderService::class)->syncMidtransStatus($order));
+    }
+
     $profileAddress = null;
     if ($user?->profile?->address) {
         $address = $user->profile->address;
@@ -449,3 +462,6 @@ Route::get('/logout', function (Request $request) {
 Route::post('/webhooks/midtrans', [\App\Http\Controllers\Webhooks\MidtransController::class , 'handle'])->name('webhooks.midtrans');
 
 require __DIR__ . '/settings.php';
+
+
+

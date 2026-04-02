@@ -528,7 +528,7 @@ update.patch = (args: { inventory: number | { id: number } } | [inventory: numbe
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Logistik\InventoryController::destroy
- * @see app/Http/Controllers/Logistik/InventoryController.php:161
+ * @see app/Http/Controllers/Logistik/InventoryController.php:156
  * @route '/logistik/inventory/{inventory}'
  */
 export const destroy = (args: { inventory: number | { id: number } } | [inventory: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -543,7 +543,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\InventoryController::destroy
- * @see app/Http/Controllers/Logistik/InventoryController.php:161
+ * @see app/Http/Controllers/Logistik/InventoryController.php:156
  * @route '/logistik/inventory/{inventory}'
  */
 destroy.url = (args: { inventory: number | { id: number } } | [inventory: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -576,7 +576,7 @@ destroy.url = (args: { inventory: number | { id: number } } | [inventory: number
 
 /**
 * @see \App\Http\Controllers\Logistik\InventoryController::destroy
- * @see app/Http/Controllers/Logistik/InventoryController.php:161
+ * @see app/Http/Controllers/Logistik/InventoryController.php:156
  * @route '/logistik/inventory/{inventory}'
  */
 destroy.delete = (args: { inventory: number | { id: number } } | [inventory: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -586,7 +586,7 @@ destroy.delete = (args: { inventory: number | { id: number } } | [inventory: num
 
     /**
 * @see \App\Http\Controllers\Logistik\InventoryController::destroy
- * @see app/Http/Controllers/Logistik/InventoryController.php:161
+ * @see app/Http/Controllers/Logistik/InventoryController.php:156
  * @route '/logistik/inventory/{inventory}'
  */
     const destroyForm = (args: { inventory: number | { id: number } } | [inventory: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -601,7 +601,7 @@ destroy.delete = (args: { inventory: number | { id: number } } | [inventory: num
 
             /**
 * @see \App\Http\Controllers\Logistik\InventoryController::destroy
- * @see app/Http/Controllers/Logistik/InventoryController.php:161
+ * @see app/Http/Controllers/Logistik/InventoryController.php:156
  * @route '/logistik/inventory/{inventory}'
  */
         destroyForm.delete = (args: { inventory: number | { id: number } } | [inventory: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

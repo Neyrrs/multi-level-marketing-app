@@ -15,7 +15,6 @@ class FortifyLoginResponse implements LoginResponseContract
     {
         $user = $request->user();
 
-        // Redirect based on role, fall back to generic dashboard
         if ($user->hasRole('admin')) {
             return redirect()->intended(route('admin.dashboard'));
         }

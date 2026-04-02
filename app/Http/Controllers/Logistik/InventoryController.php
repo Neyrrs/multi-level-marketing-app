@@ -142,17 +142,12 @@ class InventoryController extends Controller
 
         $inventory->update(['stock' => $newStock]);
 
-        return response()->json([
-            'success' => true,
-            'message' => "Stok berhasil ditambah {$difference} (dari {$oldStock} menjadi {$newStock})",
-            'data' => [
-                'product_id' => $inventory->id,
-                'old_stock' => $oldStock,
-                'new_stock' => $newStock,
-                'difference' => $difference,
-                'reason' => $validated['reason'] ?? null,
-            ],
-        ]);
+        $message = "Stok berhasil ditambah {$difference} (dari {$oldStock} menjadi {$newStock})";
+        if (!empty($validated['reason'])) {
+            $message .= " | Catatan: {$validated['reason']}";
+        }
+
+        return back()->with('success', $message);
     }
 
     /**
