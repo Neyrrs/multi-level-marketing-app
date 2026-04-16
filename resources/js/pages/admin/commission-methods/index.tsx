@@ -38,6 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CommissionMethodsIndex({ methods = [], locked_methods = true }: Props) {
+    const actionsDisabled = true;
     const [search, setSearch] = useState('');
 
     const handleSearch = (value: string) => {
@@ -70,8 +71,8 @@ export default function CommissionMethodsIndex({ methods = [], locked_methods = 
                     <Button
                         onClick={() => router.get('/admin/commission-methods/create')}
                         className="gap-2"
-                        disabled={locked_methods}
-                        title={locked_methods ? 'Metode komisi dikunci' : undefined}
+                        disabled={actionsDisabled || locked_methods}
+                        title="Aksi metode komisi dinonaktifkan"
                     >
                         <PlusCircleIcon className="w-4 h-4" />
                         Tambah Metode
@@ -106,6 +107,8 @@ export default function CommissionMethodsIndex({ methods = [], locked_methods = 
                                             <Button
                                                 variant="outline"
                                                 size="sm"
+                                                disabled={actionsDisabled}
+                                                title="Aksi metode komisi dinonaktifkan"
                                                 onClick={() => router.get(`/admin/commission-methods/${method.id}/edit`)}
                                             >
                                                 <Edit className="w-4 h-4" />
@@ -113,7 +116,8 @@ export default function CommissionMethodsIndex({ methods = [], locked_methods = 
                                             <Button
                                                 variant="destructive"
                                                 size="sm"
-                                                disabled={locked_methods}
+                                                disabled={actionsDisabled || locked_methods}
+                                                title="Aksi metode komisi dinonaktifkan"
                                                 onClick={() => handleDelete(method.id)}
                                             >
                                                 <Trash2 className="w-4 h-4" />

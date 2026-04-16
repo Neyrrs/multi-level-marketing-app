@@ -134,10 +134,17 @@ class ProductController extends Controller
             ->with('success', 'Produk berhasil diperbarui');
     }
 
-    public function destroy(Product $product)
+    public function destroy(Request $request, Product $product)
     {
         $product->delete();
-        return response()->json(['success' => true]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil dihapus');
     }
 
     private function generateUniqueSlug(string $name, ?int $ignoreId = null): string

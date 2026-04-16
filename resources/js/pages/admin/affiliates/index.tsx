@@ -18,8 +18,9 @@ interface Affiliate {
     user?: { name: string; email: string };
     is_active: boolean;
     position?: string;
+    upline_id?: number | null;
     sponsor_id?: number;
-    sponsor?: { username: string };
+    sponsor?: { name?: string; username?: string };
 }
 
 interface Props {
@@ -82,6 +83,19 @@ export default function AffiliatesAdminIndex({ affiliates = [] }: Props) {
                             <TableBody>
                                 {activeAffiliates.length > 0 ? (
                                     activeAffiliates.map((aff, idx) => (
+                                        (() => {
+                                            const normalizedPosition = (aff.position ?? '').toLowerCase();
+                                            const isRootNode =
+                                                (aff.upline_id ?? null) === null &&
+                                                (aff.sponsor_id ?? null) === null;
+                                            const positionLabel =
+                                                normalizedPosition && normalizedPosition !== 'none'
+                                                    ? normalizedPosition
+                                                    : isRootNode
+                                                        ? 'parent'
+                                                        : 'none';
+
+                                            return (
                                         <TableRow key={aff.id}>
                                             <TableCell>{idx + 1}</TableCell>
                                             <TableCell>{aff.username}</TableCell>
@@ -89,14 +103,16 @@ export default function AffiliatesAdminIndex({ affiliates = [] }: Props) {
                                             <TableCell>{aff.user?.email || '-'}</TableCell>
                                             <TableCell>
                                                 <span className="capitalize">
-                                                    {aff.position || 'none'}
+                                                    {positionLabel}
                                                 </span>
                                             </TableCell>
-                                            <TableCell>{aff.sponsor?.username || '-'}</TableCell>
+                                            <TableCell>{aff.sponsor?.name || aff.sponsor?.username || '-'}</TableCell>
                                             <TableCell>
                                                 <span className="text-green-600">Aktif</span>
                                             </TableCell>
                                         </TableRow>
+                                            );
+                                        })()
                                     ))
                                 ) : (
                                     <TableRow>

@@ -67,6 +67,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function PengaturanKomisi() {
+    const actionsDisabled = true;
     const [search, setSearch] = useState<string>('');
 
     const [perPage, setPerPage] = useState('10');
@@ -134,7 +135,7 @@ export default function PengaturanKomisi() {
                                 />
                             </div>
                             <DialogCreateProduct>
-                                <Button>
+                                <Button disabled={actionsDisabled} title="Aksi pengaturan komisi dinonaktifkan">
                                     <PlusCircleIcon /> Buat Komisi
                                 </Button>
                             </DialogCreateProduct>
@@ -183,6 +184,8 @@ export default function PengaturanKomisi() {
                                             <Button
                                                 size={'sm'}
                                                 variant={'default'}
+                                                disabled={actionsDisabled}
+                                                title="Aksi pengaturan komisi dinonaktifkan"
                                             >
                                                 <Edit /> Edit
                                             </Button>
@@ -191,6 +194,8 @@ export default function PengaturanKomisi() {
                                             onClick={handleDelete}
                                             size={'sm'}
                                             variant={'destructive'}
+                                            disabled={actionsDisabled}
+                                            title="Aksi pengaturan komisi dinonaktifkan"
                                         >
                                             <Trash2 /> Hapus
                                         </Button>

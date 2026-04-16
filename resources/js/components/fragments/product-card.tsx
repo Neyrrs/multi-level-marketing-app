@@ -160,7 +160,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const formatRupiah = (value: number) =>
         `Rp${value.toLocaleString('id-ID')}`;
 
-    const hasDiscount = product.diskon && product.diskon > 0;
+    const hargaAwal = Number(product.harga_awal ?? 0);
+    const hargaAkhir = Number(product.harga_akhir ?? 0);
+    const diskon = Number(product.diskon ?? 0);
+    const hasDiscount = diskon > 0 && hargaAwal > 0 && hargaAwal > hargaAkhir;
     const productType = String(product.type ?? 'single').toLowerCase();
     const isBundle = productType === 'bundle' || productType === 'package';
     const categoryLabel = isBundle ? 'Bundle' : 'Single';
@@ -217,11 +220,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         <p className="font-semibold text-xs text-gray-400">Harga</p>
                         {hasDiscount && (
                             <p className="text-xs line-through text-gray-400">
-                                {formatRupiah(product.harga_awal ?? product.harga_akhir)}
+                                {formatRupiah(hargaAwal)}
                             </p>
                         )}
                         <p className="text-base md:text-lg font-extrabold text-primary">
-                            {formatRupiah(product.harga_akhir)}
+                            {formatRupiah(hargaAkhir)}
                         </p>
                     </div>
                     <div className="w-fit">

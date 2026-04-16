@@ -16,7 +16,8 @@ interface User {
 }
 
 interface Sponsor {
-    username: string;
+    name?: string;
+    username?: string;
 }
 
 interface Affiliate {
@@ -24,6 +25,8 @@ interface Affiliate {
     username: string;
     user?: User;
     sponsor?: Sponsor;
+    sponsor_id?: number | null;
+    upline_id?: number | null;
     is_active: boolean;
     position?: string;
     total_downline: number;
@@ -172,11 +175,24 @@ export default function ManajemenAffiliate({ affiliates = [], pagination, search
                         <TableBody>
                             {affiliates.length > 0 ? (
                                 affiliates.map((affiliate) => (
+                                    (() => {
+                                        const normalizedPosition = (affiliate.position ?? '').toLowerCase();
+                                        const isRootNode =
+                                            (affiliate.upline_id ?? null) === null &&
+                                            (affiliate.sponsor_id ?? null) === null;
+                                        const positionLabel =
+                                            normalizedPosition && normalizedPosition !== 'none'
+                                                ? normalizedPosition
+                                                : isRootNode
+                                                    ? 'parent'
+                                                    : 'none';
+
+                                        return (
                                     <TableRow key={affiliate.id}>
                                         <TableCell className="font-medium">{affiliate.username}</TableCell>
                                         <TableCell>{affiliate.user?.name || '-'}</TableCell>
                                         <TableCell>{affiliate.user?.email || '-'}</TableCell>
-                                        <TableCell>{affiliate.sponsor?.username || '-'}</TableCell>
+                                        <TableCell>{affiliate.sponsor?.name || affiliate.sponsor?.username || '-'}</TableCell>
                                         <TableCell className="text-right">{affiliate.total_downline || 0}</TableCell>
                                         <TableCell className="text-right">Rp {((affiliate.total_volume || 0) / 1000000).toFixed(2)}M</TableCell>
                                         <TableCell>
@@ -192,7 +208,7 @@ export default function ManajemenAffiliate({ affiliates = [], pagination, search
                                         </TableCell>
                                         <TableCell>
                                             <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">
-                                                {affiliate.position || 'none'}
+                                                {positionLabel}
                                             </span>
                                         </TableCell>
                                         <TableCell className="flex h-fit w-fit items-center gap-2">
@@ -212,6 +228,8 @@ export default function ManajemenAffiliate({ affiliates = [], pagination, search
                                             </Button>
                                         </TableCell>
                                     </TableRow>
+                                        );
+                                    })()
                                 ))
                             ) : (
                                 <TableRow>

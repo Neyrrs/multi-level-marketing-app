@@ -40,6 +40,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function CommissionRulesIndex({ rules = [], locked_single_rule = true }: Props) {
+    const actionsDisabled = true;
     const [search, setSearch] = useState('');
 
     const handleSearch = (value: string) => {
@@ -63,8 +64,8 @@ export default function CommissionRulesIndex({ rules = [], locked_single_rule = 
                     <Button
                         onClick={() => router.get('/admin/commission-rules/create')}
                         className="gap-2"
-                        disabled={locked_single_rule}
-                        title={locked_single_rule ? 'Rule dikunci: 1 metode = 1 rule' : undefined}
+                        disabled={actionsDisabled || locked_single_rule}
+                        title="Aksi rule komisi dinonaktifkan"
                     >
                         <PlusCircleIcon className="w-4 h-4" />
                         Tambah Rule
@@ -112,6 +113,8 @@ export default function CommissionRulesIndex({ rules = [], locked_single_rule = 
                                             <Button
                                                 variant="outline"
                                                 size="sm"
+                                                disabled={actionsDisabled}
+                                                title="Aksi rule komisi dinonaktifkan"
                                                 onClick={() => router.get(`/admin/commission-rules/${rule.id}/edit`)}
                                             >
                                                 <Edit className="w-4 h-4" />
@@ -119,6 +122,8 @@ export default function CommissionRulesIndex({ rules = [], locked_single_rule = 
                                             <Button
                                                 variant="destructive"
                                                 size="sm"
+                                                disabled={actionsDisabled}
+                                                title="Aksi rule komisi dinonaktifkan"
                                                 onClick={() => handleDelete(rule.id)}
                                             >
                                                 <Trash2 className="w-4 h-4" />

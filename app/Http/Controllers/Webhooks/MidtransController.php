@@ -50,7 +50,7 @@ class MidtransController extends Controller
         $order = Order::where('midtrans_order_id', $midtransOrderId)->first();
         if (!$order) {
             Log::warning('Midtrans webhook: order not found ' . $midtransOrderId);
-            // return 200 to acknowledge to Midtrans (prevents retries) but log for investigation
+            // return 200 to acknoawledge to Midtrans (prevents retries) but log for investigation
             return response()->json(['ok']);
         }
 

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Affiliate;
+use App\Models\CommissionPlan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
@@ -58,6 +61,7 @@ class UserRole extends Controller
         }
 
         $user->assignRole($request->role);
+        $this->ensureAffiliateProfileIfNeeded($user, (string) $request->role);
 
         return redirect()->route('admin.UsersRole.index')
             ->with('success', 'User berhasil ditambahkan');
@@ -118,6 +122,7 @@ class UserRole extends Controller
     }
 
     $user->syncRoles([$request->role]);
+    $this->ensureAffiliateProfileIfNeeded($user, (string) $request->role);
 
     return redirect()->route('admin.UsersRole.index')
         ->with('success', 'User berhasil diupdate');
@@ -156,5 +161,76 @@ class UserRole extends Controller
         ]);
 
         return !empty($parts) ? implode(', ', $parts) : null;
+    }
+
+    private function ensureAffiliateProfileIfNeeded(User $user, string $role): void
+    {
+        if ($role !== 'affiliate') {
+            return;
+        }
+
+        if (Affiliate::where('user_id', $user->id)->exists()) {
+            return;
+        }
+
+        $username = $this->generateUniqueAffiliateUsername($user->name);
+        $slug = $this->generateUniqueAffiliateSlug($username);
+
+        $defaultPlanId = CommissionPlan::query()
+            ->where('is_default', true)
+            ->where('is_active', true)
+            ->value('id');
+
+        Affiliate::create([
+            'user_id' => $user->id,
+            'username' => $username,
+            'slug' => $slug,
+            'sponsor_id' => null,
+            'upline_id' => null,
+            'activation_code_id' => null,
+            'commission_plan_id' => $defaultPlanId,
+            'position' => 'none',
+            'level' => 1,
+            'direct_downline' => 0,
+            'total_downline' => 0,
+            'left_count' => 0,
+            'right_count' => 0,
+            'pair_count' => 0,
+            'left_volume' => 0,
+            'right_volume' => 0,
+            'total_personal_volume' => 0,
+            'total_volume' => 0,
+            'is_active' => true,
+            'activated_at' => now(),
+            'active_until' => now()->addMonth(),
+        ]);
+    }
+
+    private function generateUniqueAffiliateUsername(string $baseName): string
+    {
+        $base = Str::slug($baseName, '') ?: 'affiliate';
+        $username = $base;
+        $counter = 1;
+
+        while (Affiliate::where('username', $username)->exists()) {
+            $username = $base . $counter;
+            $counter++;
+        }
+
+        return $username;
+    }
+
+    private function generateUniqueAffiliateSlug(string $baseName): string
+    {
+        $base = Str::slug($baseName) ?: 'affiliate';
+        $slug = $base;
+        $counter = 1;
+
+        while (Affiliate::where('slug', $slug)->exists()) {
+            $slug = $base . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
 }

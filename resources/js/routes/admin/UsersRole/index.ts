@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\UserRole::index
- * @see app/Http/Controllers/Admin/UserRole.php:14
+ * @see app/Http/Controllers/Admin/UserRole.php:17
  * @route '/admin/UsersRole'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Admin\UserRole::create
- * @see app/Http/Controllers/Admin/UserRole.php:25
+ * @see app/Http/Controllers/Admin/UserRole.php:28
  * @route '/admin/UsersRole/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\Admin\UserRole::store
- * @see app/Http/Controllers/Admin/UserRole.php:34
+ * @see app/Http/Controllers/Admin/UserRole.php:37
  * @route '/admin/UsersRole'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::store
- * @see app/Http/Controllers/Admin/UserRole.php:34
+ * @see app/Http/Controllers/Admin/UserRole.php:37
  * @route '/admin/UsersRole'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::store
- * @see app/Http/Controllers/Admin/UserRole.php:34
+ * @see app/Http/Controllers/Admin/UserRole.php:37
  * @route '/admin/UsersRole'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::store
- * @see app/Http/Controllers/Admin/UserRole.php:34
+ * @see app/Http/Controllers/Admin/UserRole.php:37
  * @route '/admin/UsersRole'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::store
- * @see app/Http/Controllers/Admin/UserRole.php:34
+ * @see app/Http/Controllers/Admin/UserRole.php:37
  * @route '/admin/UsersRole'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
 export const show = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
 show.url = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -255,7 +255,7 @@ show.url = (args: { UsersRole: string | number } | [UsersRole: string | number ]
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
 show.get = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -264,7 +264,7 @@ show.get = (args: { UsersRole: string | number } | [UsersRole: string | number ]
 })
 /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
 show.head = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -274,7 +274,7 @@ show.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
     const showForm = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -284,7 +284,7 @@ show.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
         showForm.get = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -293,7 +293,7 @@ show.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
         })
             /**
 * @see \App\Http\Controllers\Admin\UserRole::show
- * @see app/Http/Controllers/Admin/UserRole.php:66
+ * @see app/Http/Controllers/Admin/UserRole.php:70
  * @route '/admin/UsersRole/{UsersRole}'
  */
         showForm.head = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -309,7 +309,7 @@ show.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
 export const edit = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -324,7 +324,7 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
 edit.url = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -352,7 +352,7 @@ edit.url = (args: { UsersRole: string | number } | [UsersRole: string | number ]
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
 edit.get = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -361,7 +361,7 @@ edit.get = (args: { UsersRole: string | number } | [UsersRole: string | number ]
 })
 /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
 edit.head = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -371,7 +371,7 @@ edit.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
     const editForm = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -381,7 +381,7 @@ edit.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
         editForm.get = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -390,7 +390,7 @@ edit.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
         })
             /**
 * @see \App\Http\Controllers\Admin\UserRole::edit
- * @see app/Http/Controllers/Admin/UserRole.php:75
+ * @see app/Http/Controllers/Admin/UserRole.php:79
  * @route '/admin/UsersRole/{UsersRole}/edit'
  */
         editForm.head = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -406,7 +406,7 @@ edit.head = (args: { UsersRole: string | number } | [UsersRole: string | number 
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
 export const update = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -421,7 +421,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
 update.url = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -449,7 +449,7 @@ update.url = (args: { UsersRole: string | number } | [UsersRole: string | number
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
 update.put = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -458,7 +458,7 @@ update.put = (args: { UsersRole: string | number } | [UsersRole: string | number
 })
 /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
 update.patch = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -468,7 +468,7 @@ update.patch = (args: { UsersRole: string | number } | [UsersRole: string | numb
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
     const updateForm = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -483,7 +483,7 @@ update.patch = (args: { UsersRole: string | number } | [UsersRole: string | numb
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
         updateForm.put = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -497,7 +497,7 @@ update.patch = (args: { UsersRole: string | number } | [UsersRole: string | numb
         })
             /**
 * @see \App\Http\Controllers\Admin\UserRole::update
- * @see app/Http/Controllers/Admin/UserRole.php:90
+ * @see app/Http/Controllers/Admin/UserRole.php:94
  * @route '/admin/UsersRole/{UsersRole}'
  */
         updateForm.patch = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -513,7 +513,7 @@ update.patch = (args: { UsersRole: string | number } | [UsersRole: string | numb
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Admin\UserRole::destroy
- * @see app/Http/Controllers/Admin/UserRole.php:126
+ * @see app/Http/Controllers/Admin/UserRole.php:131
  * @route '/admin/UsersRole/{UsersRole}'
  */
 export const destroy = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -528,7 +528,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::destroy
- * @see app/Http/Controllers/Admin/UserRole.php:126
+ * @see app/Http/Controllers/Admin/UserRole.php:131
  * @route '/admin/UsersRole/{UsersRole}'
  */
 destroy.url = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -556,7 +556,7 @@ destroy.url = (args: { UsersRole: string | number } | [UsersRole: string | numbe
 
 /**
 * @see \App\Http\Controllers\Admin\UserRole::destroy
- * @see app/Http/Controllers/Admin/UserRole.php:126
+ * @see app/Http/Controllers/Admin/UserRole.php:131
  * @route '/admin/UsersRole/{UsersRole}'
  */
 destroy.delete = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -566,7 +566,7 @@ destroy.delete = (args: { UsersRole: string | number } | [UsersRole: string | nu
 
     /**
 * @see \App\Http\Controllers\Admin\UserRole::destroy
- * @see app/Http/Controllers/Admin/UserRole.php:126
+ * @see app/Http/Controllers/Admin/UserRole.php:131
  * @route '/admin/UsersRole/{UsersRole}'
  */
     const destroyForm = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -581,7 +581,7 @@ destroy.delete = (args: { UsersRole: string | number } | [UsersRole: string | nu
 
             /**
 * @see \App\Http\Controllers\Admin\UserRole::destroy
- * @see app/Http/Controllers/Admin/UserRole.php:126
+ * @see app/Http/Controllers/Admin/UserRole.php:131
  * @route '/admin/UsersRole/{UsersRole}'
  */
         destroyForm.delete = (args: { UsersRole: string | number } | [UsersRole: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

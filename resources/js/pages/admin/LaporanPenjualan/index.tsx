@@ -14,7 +14,7 @@ import AppLayout from '@/layouts/app-layout';
 
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { DownloadIcon, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -59,10 +59,6 @@ export default function LaporanPenjualan({ salesData, filters, summary }: Props)
 
     const handleRefresh = () => {
         router.get('/admin/reports/LaporanPenjualan', {}, { preserveState: true });
-    };
-
-    const handleExport = () => {
-        alert('Export PDF/Excel akan segera diimplementasikan');
     };
 
     const getStatusColor = (status: string) => {
@@ -138,15 +134,6 @@ export default function LaporanPenjualan({ salesData, filters, summary }: Props)
                             >
                                 <RefreshCw className="h-4 w-4" />
                                 Refresh
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleExport}
-                                className="gap-2"
-                            >
-                                <DownloadIcon className="h-4 w-4" />
-                                Export
                             </Button>
                         </div>
                     </div>

@@ -71,6 +71,8 @@ export default function LaporanAffiliate({
         totalCommission: 0,
     } 
 }: Props) {
+    const formatRupiah = (value: number) => `Rp ${Number(value || 0).toLocaleString('id-ID')}`;
+
     const [search, setSearch] = useState(initialSearch);
     const [perPage, setPerPage] = useState(pagination?.perPage?.toString() || '15');
 
@@ -129,14 +131,14 @@ export default function LaporanAffiliate({
                     <Card className="p-6">
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-600">Total Penjualan</p>
-                            <p className="text-3xl font-bold">Rp {((statistics?.totalSalesVolume || 0) / 1000000).toFixed(1)}M</p>
+                            <p className="text-3xl font-bold">{formatRupiah(statistics?.totalSalesVolume || 0)}</p>
                             <p className="text-xs text-gray-500">Semua Affiliate</p>
                         </div>
                     </Card>
                     <Card className="p-6">
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-600">Total Komisi</p>
-                            <p className="text-3xl font-bold">Rp {((statistics?.totalCommission || 0) / 1000).toFixed(0)}K</p>
+                            <p className="text-3xl font-bold">{formatRupiah(statistics?.totalCommission || 0)}</p>
                             <p className="text-xs text-gray-500">Periode Ini</p>
                         </div>
                     </Card>
@@ -202,8 +204,8 @@ export default function LaporanAffiliate({
                                         <TableCell>{affiliate.user?.name || '-'}</TableCell>
                                         <TableCell>{affiliate.user?.email || '-'}</TableCell>
                                         <TableCell className="text-right">{affiliate.downline_count ?? affiliate.total_downline ?? 0}</TableCell>
-                                        <TableCell className="text-right">Rp {((affiliate.total_volume || 0) / 1000000).toFixed(1)}M</TableCell>
-                                        <TableCell className="text-right">Rp {((affiliate.total_commission || 0)).toLocaleString('id-ID')}</TableCell>
+                                        <TableCell className="text-right">{formatRupiah(affiliate.total_volume || 0)}</TableCell>
+                                        <TableCell className="text-right">{formatRupiah(affiliate.total_commission || 0)}</TableCell>
                                         <TableCell>
                                             <span className={`text-xs px-2 py-1 rounded ${affiliate.is_active ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                                                 {affiliate.is_active ? 'Aktif' : 'Pending'}
