@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Logistik;
 use App\Http\Controllers\Controller;
 use App\Models\Shipment;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,7 +20,11 @@ class ReportController extends Controller
         $endDate = $request->input('end_date', now()->format('Y-m-d'));
         $courier = $request->input('courier', '');
 
-        $query = Shipment::whereBetween('created_at', [$startDate, $endDate]);
+        // Treat date inputs as whole-day ranges (endDate inclusive until 23:59:59)
+        $start = Carbon::parse($startDate)->startOfDay();
+        $end = Carbon::parse($endDate)->endOfDay();
+
+        $query = Shipment::whereBetween('created_at', [$start, $end]);
 
         if ($courier) {
             $query->where('courier', $courier);
@@ -80,15 +85,19 @@ class ReportController extends Controller
         $startDate = $request->input('start_date', now()->subDays(30)->format('Y-m-d'));
         $endDate = $request->input('end_date', now()->format('Y-m-d'));
 
+        // Treat date inputs as whole-day ranges (endDate inclusive until 23:59:59)
+        $start = Carbon::parse($startDate)->startOfDay();
+        $end = Carbon::parse($endDate)->endOfDay();
+
         // Get shipment statistics
         $byStatus = Shipment::selectRaw('status, count(*) as count')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [$start, $end])
             ->groupBy('status')
             ->get()
             ->keyBy('status');
 
         $byCourier = Shipment::selectRaw('courier, count(*) as count')
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [$start, $end])
             ->groupBy('courier')
             ->get()
             ->keyBy('courier');
@@ -100,7 +109,7 @@ class ReportController extends Controller
             SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END) as delivered,
             ROUND(SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END)::numeric / COUNT(*) * 100, 2) as delivery_rate
         ")
-            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereBetween('created_at', [$start, $end])
             ->groupBy('courier')
             ->havingRaw("COUNT(*) > 0")
             ->orderByRaw("ROUND(SUM(CASE WHEN status = 'delivered' THEN 1 ELSE 0 END)::numeric / COUNT(*) * 100, 2) DESC")
@@ -133,7 +142,7 @@ class ReportController extends Controller
             'topCouriers' => $transformedTopCouriers,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'hasData' => Shipment::whereBetween('created_at', [$startDate, $endDate])->count() > 0,
+            'hasData' => Shipment::whereBetween('created_at', [$start, $end])->count() > 0,
         ]);
     }
 }

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
 export const delivery = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ delivery.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
 delivery.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ delivery.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
 delivery.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ delivery.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
 delivery.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ delivery.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
     const deliveryForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ delivery.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
         deliveryForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ delivery.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Logistik\ReportController::delivery
- * @see app/Http/Controllers/Logistik/ReportController.php:16
+ * @see app/Http/Controllers/Logistik/ReportController.php:17
  * @route '/logistik/reports/delivery'
  */
         deliveryForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ delivery.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     delivery.form = deliveryForm
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
 export const shipment = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ shipment.definition = {
 
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
 shipment.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ shipment.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
 shipment.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ shipment.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
 shipment.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ shipment.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
     const shipmentForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ shipment.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
         shipmentForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ shipment.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Logistik\ReportController::shipment
- * @see app/Http/Controllers/Logistik/ReportController.php:78
+ * @see app/Http/Controllers/Logistik/ReportController.php:83
  * @route '/logistik/reports/shipment'
  */
         shipmentForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
