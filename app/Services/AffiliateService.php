@@ -42,8 +42,10 @@ class AffiliateService
      */
     public function getAffiliateBySlug(string $slug): ?Affiliate
     {
-        return Affiliate::where('slug', $slug)
-            ->orWhere('username', $slug)
+        return Affiliate::query()
+            ->where(function ($q) use ($slug) {
+                $q->where('slug', $slug)->orWhere('username', $slug);
+            })
             ->where('is_active', true)
             ->first();
     }
@@ -356,6 +358,34 @@ class AffiliateService
         $original = $username;
         $counter = 1;
 
+        // Reserved words that conflict with existing public/admin prefixes and pages.
+        $reserved = [
+            'a',
+            'admin',
+            'affiliate',
+            'cart',
+            'dashboard',
+            'editprofile',
+            'finance',
+            'guest',
+            'logistik',
+            'login',
+            'manager',
+            'media',
+            'mitra',
+            'product',
+            'profile',
+            'register',
+            'storage',
+            'logout',
+            'webhooks',
+        ];
+
+        if (in_array(strtolower($username), $reserved, true)) {
+            $username = $original . $counter;
+            $counter++;
+        }
+
         while (Affiliate::where('username', $username)->exists()) {
             $username = $original . $counter;
             $counter++;
@@ -473,16 +503,19 @@ class AffiliateService
             ? $requestedPosition
             : 'left';
 
-        // don't create mlm tree node yet; wait for confirmation
+        // Don't lock left/right slot yet; wait until confirmation to place them.
+        $username = $this->generateUniqueUsername($user->name);
+        $slug = Str::slug($username);
+
         $affiliate = Affiliate::create([
             'user_id' => $user->id,
             'sponsor_id' => $sponsor->user_id,
             'upline_id' => $sponsor->user_id,
             'activation_code_id' => $activationCode?->id,
             'commission_plan_id' => $this->resolveDefaultPlanId(),
-            'username' => $this->generateUniqueUsername($user->name),
-            'slug' => Str::slug($user->name) . '-' . uniqid(),
-            'position' => $requestedPosition,
+            'username' => $username,
+            'slug' => $slug,
+            'position' => 'none',
             'level' => $sponsor->level + 1,
             'is_active' => false,
         ]);
@@ -506,20 +539,54 @@ class AffiliateService
             ? $placementUpline
             : $sponsor;
 
+        $position = in_array($position, ['left', 'right'], true) ? $position : 'none';
+
+        // Prevent double-occupying a slot (only active affiliates count as "taken").
+        if ($targetUpline && in_array($position, ['left', 'right'], true)) {
+            $taken = Affiliate::query()
+                ->where('upline_id', $targetUpline->user_id)
+                ->where('position', $position)
+                ->where('is_active', true)
+                ->exists();
+
+            if ($taken) {
+                throw new \InvalidArgumentException("Posisi {$position} sudah terisi.");
+            }
+        }
+
         // set position and active
         $defaultPlanId = $this->resolveDefaultPlanId();
         $affiliate->update([
-            'position' => in_array($position, ['left','right']) ? $position : 'none',
+            'position' => $position,
             'upline_id' => $targetUpline?->user_id,
             'level' => $targetUpline ? ($targetUpline->level + 1) : $affiliate->level,
             'is_active' => true,
             'activated_at' => now(),
             'active_until' => now()->addMonth(),
             'commission_plan_id' => $affiliate->commission_plan_id ?: $defaultPlanId,
+            // Make sure public link uses consistent slug: /{username}
+            'slug' => Str::slug((string) ($affiliate->username ?? '')),
         ]);
 
         // Promote user role to affiliate only after approval.
         $affiliate->user?->syncRoles(['affiliate']);
+
+        // Consume activation code usage on confirm (pending flow).
+        if ($affiliate->activation_code_id) {
+            $activationCode = ActivationCode::query()->find($affiliate->activation_code_id);
+            if ($activationCode && $activationCode->status === 'available') {
+                $remainingUsage = (int) ($activationCode->remaining_usage ?? $activationCode->usage_count ?? 1);
+                if ($remainingUsage > 0 && ($activationCode->used_by === null || (int) $activationCode->used_by === (int) $affiliate->user_id)) {
+                    $remainingUsage = max(0, $remainingUsage - 1);
+                    $activationCode->update([
+                        'status' => $remainingUsage <= 0 ? 'used' : 'available',
+                        'remaining_usage' => $remainingUsage,
+                        'used_by' => $affiliate->user_id,
+                        'used_at' => now(),
+                    ]);
+                }
+            }
+        }
 
         // ensure selected upline has a tree node first
         $parentTree = $targetUpline?->mlmTree ?? null;

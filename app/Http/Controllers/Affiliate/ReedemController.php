@@ -79,10 +79,12 @@ class ReedemController extends Controller
             $leftTaken = Affiliate::query()
                 ->where('upline_id', $candidate->user_id)
                 ->where('position', 'left')
+                ->where('is_active', true)
                 ->exists();
             $rightTaken = Affiliate::query()
                 ->where('upline_id', $candidate->user_id)
                 ->where('position', 'right')
+                ->where('is_active', true)
                 ->exists();
 
             return [
@@ -139,6 +141,7 @@ class ReedemController extends Controller
         $position = $request->string('position')->toString();
         $positionTaken = Affiliate::where('upline_id', $placementAffiliate->user_id)
             ->where('position', $position)
+            ->where('is_active', true)
             ->exists();
 
         if ($positionTaken) {
@@ -175,44 +178,48 @@ class ReedemController extends Controller
             ]);
         }
 
-        DB::transaction(function () use ($request, $sponsorAffiliate, $placementAffiliate, $code, $position, $requestUserId) {
-            if ($requestUserId > 0) {
-                $pendingAffiliate = Affiliate::query()
-                    ->where('user_id', $requestUserId)
-                    ->where('sponsor_id', $sponsorAffiliate->user_id)
-                    ->where('activation_code_id', $code->id)
-                    ->where('is_active', false)
-                    ->first();
+        try {
+            DB::transaction(function () use ($request, $sponsorAffiliate, $placementAffiliate, $code, $position, $requestUserId) {
+                if ($requestUserId > 0) {
+                    $pendingAffiliate = Affiliate::query()
+                        ->where('user_id', $requestUserId)
+                        ->where('sponsor_id', $sponsorAffiliate->user_id)
+                        ->where('activation_code_id', $code->id)
+                        ->where('is_active', false)
+                        ->first();
 
-                if ($pendingAffiliate) {
-                    app(AffiliateService::class)->confirmAffiliate($pendingAffiliate->id, $position, $placementAffiliate);
-                    return;
+                    if ($pendingAffiliate) {
+                        app(AffiliateService::class)->confirmAffiliate($pendingAffiliate->id, $position, $placementAffiliate);
+                        return;
+                    }
                 }
-            }
 
-            $name = trim((string) $request->input('name', ''));
-            $email = trim((string) $request->input('email', ''));
+                $name = trim((string) $request->input('name', ''));
+                $email = trim((string) $request->input('email', ''));
 
-            if ($name === '' || $email === '') {
-                throw new \InvalidArgumentException('Data user baru belum lengkap.');
-            }
+                if ($name === '' || $email === '') {
+                    throw new \InvalidArgumentException('Data user baru belum lengkap.');
+                }
 
-            if (User::where('email', $email)->exists()) {
-                throw new \InvalidArgumentException('Email user sudah terdaftar.');
-            }
+                if (User::where('email', $email)->exists()) {
+                    throw new \InvalidArgumentException('Email user sudah terdaftar.');
+                }
 
-            $newUser = User::create([
-                'name' => $name,
-                'email' => $email,
-                'password' => Hash::make(Str::random(16)),
-                'status' => 'active',
-                'email_verified_at' => now(),
-            ]);
+                $newUser = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => Hash::make(Str::random(16)),
+                    'status' => 'active',
+                    'email_verified_at' => now(),
+                ]);
 
-            $newUser->assignRole('affiliate');
+                $newUser->assignRole('affiliate');
 
-            app(AffiliateService::class)->registerNewAffiliate($newUser, $sponsorAffiliate, $position, $code, $placementAffiliate);
-        });
+                app(AffiliateService::class)->registerNewAffiliate($newUser, $sponsorAffiliate, $position, $code, $placementAffiliate);
+            });
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['redeem' => $e->getMessage()]);
+        }
 
         return back()->with('success', 'Redeem berhasil, akun affiliate baru sudah dibuat.');
     }

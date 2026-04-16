@@ -1,6 +1,7 @@
 import ContainerWrapper from '@/components/fragments/container-wrapper';
 import MainLayout from '@/components/fragments/main-layout';
 import { ProductCard, type ProductItem } from '@/components/fragments/product-card';
+import { product } from '@/routes';
 import { Head, router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
@@ -16,7 +17,7 @@ const Product = ({ products = [], search = '' }: ProductPageProps) => {
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         router.get(
-            '/produk',
+            product.url(),
             { search: searchTerm },
             { preserveState: true, replace: true }
         );
@@ -81,7 +82,7 @@ const Product = ({ products = [], search = '' }: ProductPageProps) => {
                                 <button
                                     onClick={() => {
                                         setSearchTerm('');
-                                        router.get('/produk');
+                                        router.get(product.url());
                                     }}
                                     className="mt-6 text-primary font-medium hover:underline"
                                 >
